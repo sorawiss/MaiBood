@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Nav from './coponents/Nav';
 import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
+import Add from './coponents/Add'
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/fridge" element={<Fridge />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='*' element={<Home />} />
+          <Route path='/add' element={<Add />} />
 
         </Routes>
       </div>
