@@ -69,7 +69,7 @@
 
 .third-container {
     width: 22.5rem;
-    margin-bottom: 7rem;
+    margin-bottom: 2rem;
 }
 
 .th-top-wrapper {
@@ -123,8 +123,8 @@
 }
 
 .exp-date {
-    width: 3.5rem;
-    height: 1rem;
+    width: 5rem;
+    height: 1.25rem;
     border-radius: 16px;
     margin-top: 1.5rem;
     margin-left: 0.5rem;
@@ -135,7 +135,7 @@
 }
 
 .exp {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
     color: var(--color-white-bg);
 }
 
@@ -147,8 +147,8 @@
 }
 
 .price {
-    width: 1.5rem;
-    height: 1rem;
+    width: 2rem;
+    height: 1.3rem;
     border-radius: 16px;
     background-color: var(--color-aceent);
     display: flex;
@@ -157,7 +157,7 @@
 }
 
 .price-number {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
     color: var(--color-primary);
 }
 
