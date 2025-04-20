@@ -36,6 +36,10 @@
     color: var(--color-white-bg);
 }
 
+.fridge {
+    color: var(--color-primary);
+}
+
 .slide-bar {
     width: 4.75rem;
     height: 2rem;
@@ -74,6 +78,30 @@
     padding-left: 1rem;
 }
 
+.foodname-input {
+    width: 20.5rem;
+}
+
+.foodname-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.exp-input {
+    width: 20.5rem;
+}
+
+.exp-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.category-input {
+    width: 20.5rem;
+}
+
+.category-input::placeholder {
+    color: var(--color-secondary);
+}
+
 .price {
     width: 100%;
     height: 3rem;
@@ -87,6 +115,10 @@
 .price-input {
     color: var(--color-secondary);
     text-align: center;
+}
+
+.price-input::placeholder {
+    color: var(--color-secondary);
 }
 
 .post {
