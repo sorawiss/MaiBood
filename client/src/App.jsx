@@ -7,6 +7,7 @@ import Nav from './coponents/Nav';
 import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
 import Add from './coponents/Add'
+import AddtoFridge from './coponents/AddtoFridge'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='*' element={<Home />} />
           <Route path='/add' element={<Add />} />
+          <Route path='/addtofridge' element={<AddtoFridge />} />
 
         </Routes>
       </div>
