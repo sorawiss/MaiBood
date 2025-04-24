@@ -38,6 +38,11 @@ function AddtoFridge() {
             <div className="post">
               <p className='add-post'>บันทึก</p>
             </div>
+            <div className="bottom-text-wrapper">
+                <p className='end-text'>อาหารจะถูกบันทึกไว้ในตู้เย็นของคุณและ</p>
+                <p className='end-text'>เราจะแจ้งเตือนเมื่อใกล้หมดอายุ</p>
+            </div>
+            
           </div>
 
         </div>
