@@ -1,0 +1,137 @@
+/*overall*/
+
+.overall {
+    justify-content: center;
+    align-items: center;
+}
+
+/*add-wrapper*/
+
+.add-wrapper {
+    width: 22.5rem;
+    height: 22.5rem;
+    background-color: var(--color-white-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sell-fridge {
+    width: 9.75rem;
+    height: 2rem;
+    background-color: var(--color-aceent);
+    border-radius: 16px;
+    position: relative;
+}
+
+.text-wrapper {
+    position: absolute;
+    display: flex;
+    padding-left: 1.5rem;
+    gap: 2.5rem;
+    padding-top: 0.2rem;
+}
+
+.sell {
+    color: var(--color-white-bg);
+}
+
+.fridge {
+    color: var(--color-primary);
+}
+
+.slide-bar {
+    width: 4.75rem;
+    height: 2rem;
+    background-color: var(--color-primary);
+    border-radius: 16px;
+}
+
+.details {
+    margin-top: 1.5rem;
+    height: 19.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.food-details {
+    width: 100%;
+    height: 9.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.add-detail {
+    width: 100%;
+    height: 2.5rem;
+    background-color: var(--color-background);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.foodname-input {
+    width: 20.5rem;
+}
+
+.foodname-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.exp-input {
+    width: 20.5rem;
+}
+
+.exp-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.category-input {
+    width: 20.5rem;
+}
+
+.category-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.price {
+    width: 100%;
+    height: 3rem;
+    background-color: var(--color-primary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.price-input {
+    color: var(--color-secondary);
+    text-align: center;
+}
+
+.price-input::placeholder {
+    color: var(--color-secondary);
+}
+
+.post {
+    width: 100%;
+    height: 3.8rem;
+    background-color: var(--color-aceent);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-post {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+}
