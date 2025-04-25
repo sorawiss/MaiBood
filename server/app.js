@@ -1,12 +1,15 @@
 import express from "express"
 import "dotenv/config"
 import cors from "cors"
+import dotenv from "dotenv"
 
-import router from "./routes/router.js"
+// Routes Import
+import auth from './routes/auth.js'
 
 
 var app = express()
 app.use(express.json())
+dotenv.config()
 
 
 const allowedOrigins = process.env.ORIGIN || "http://localhost:5173"
@@ -19,9 +22,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+// Use Routes
+app.use(auth)
 
 
-app.use(router)
 
 
 const port = process.env.PORT || 8080;
