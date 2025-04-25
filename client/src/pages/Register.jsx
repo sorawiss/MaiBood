@@ -1,7 +1,27 @@
 import React from 'react'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from "rizzui";
+
+
+const baseURL = import.meta.env.VITE_BASE_URL;
+async function fetchRegister(data) {
+    const response = await fetch(`${baseURL}/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok')
+    }
+
+    return response.json
+}
 
 
 function Login() {
@@ -13,6 +33,7 @@ function Login() {
         password: ''
     })
     const [errorMessage, setErrorMessage] = useState('')
+    const navigate = useNavigate();
 
 
     // Handle Change
@@ -30,8 +51,29 @@ function Login() {
     // Handle Submit
     function handleSubmit(e) {
         e.preventDefault()
-        console.log(formData)
+
+        const dataToSend = {
+            fname: formData.fname,
+            lname: formData.lname,
+            phone_number: String(formData.phone_number),
+            password: formData.password
+        };
+
+        mutation.mutate(dataToSend)
     }
+
+
+    // Use Mutation
+    const mutation = useMutation({
+        mutationFn: fetchRegister,
+        onSuccess: (data) => {
+            console.log("Register Success", data)
+            navigate('/home')
+        },
+        onError: (error) => {
+            console.log("Register Error", error)
+        }
+    })
 
     return (
         <main className="max-w-none flex flex-col items-center justify-end w-full h-screen bg-[#FCDB29] box-border mx-auto pt-[270px] max-md:max-w-[991px] max-sm:max-w-screen-sm">

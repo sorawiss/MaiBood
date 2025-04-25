@@ -27,6 +27,7 @@ router.post('/register', async (req, res) => {
             [phone_number]
         );
         if (existingUsers.length > 0) {
+            console.log('User with this email already exists')
             return res.status(409).json({ message: 'User with this email already exists' });
         }
 
@@ -48,16 +49,16 @@ router.post('/register', async (req, res) => {
         console.error('Registration error:', error);
         res.status(500).json({ message: 'Internal server error during registration' });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-                console.log("Database connection released.")
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
+    // finally {
+    //     if (connection) {
+    //         try {
+    //             await connection.release();
+    //             console.log("Database connection released.")
+    //         } catch (releaseError) {
+    //             console.error('Error releasing database connection:', releaseError);
+    //         }
+    //     }
+    // }
     })
 
 
