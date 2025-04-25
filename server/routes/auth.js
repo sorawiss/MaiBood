@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
     }
 
-    
+
     let connection;
     try {
         connection = await pool.getConnection();
@@ -59,7 +59,47 @@ router.post('/register', async (req, res) => {
     //         }
     //     }
     // }
-    })
+})
+
+
+// Login
+router.post('/login', async (req, res) => {
+    const { phone_number, password } = req.body;
+    if (!phone_number || !password) {
+        return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    let connection;
+    try {
+        connection = await pool.getConnection();
+
+        const [rows] = await connection.execute(
+            'SELECT * FROM members WHERE phone_number = ?',
+            [phone_number]
+        );
+
+        if (rows.length === 0) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        const user = rows[0];
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+
+        return res.status(200).json({
+            message: 'Login successful',
+            user
+        });
+    }
+    catch (error) {
+        console.error('Login error:', error);
+    }
+})
 
 
 
