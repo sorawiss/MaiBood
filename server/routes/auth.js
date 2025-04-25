@@ -66,7 +66,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { phone_number, password } = req.body;
     if (!phone_number || !password) {
-        return res.status(400).json({ message: 'Please provide email and password' });
+        return res.status(400).json({ message: 'Please provide phone_number and password' });
     }
 
     let connection;
@@ -79,6 +79,7 @@ router.post('/login', async (req, res) => {
         );
 
         if (rows.length === 0) {
+            console.log('Invalid email or password')
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
