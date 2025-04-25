@@ -3,6 +3,7 @@
 
 html {
   font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(12px, 4vw, 18px);
 }
 
 h2 {
@@ -16,6 +17,10 @@ p {
 .p2 {
   font-size: 0.625rem;
   font-weight: 300;
+}
+
+.alert {
+  color: red
 }
 
 :root {

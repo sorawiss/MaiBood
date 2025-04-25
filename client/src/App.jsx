@@ -9,13 +9,15 @@ import Login from './pages/Login';
 import Add from './coponents/Add';
 import AddtoFridge from './coponents/AddtoFridge';
 import Layout from './coponents/layout';
+import Register from './pages/Register';
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/fridge" element={<Fridge />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/add" element={<Add />} />
@@ -24,6 +26,7 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
