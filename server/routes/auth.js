@@ -96,7 +96,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const [password, ...rest] = user;
+        const {password: passwordHash , ...rest} = user;
 
         const token = jwt.sign({ userId: user.id }, SECRET_KEY);
 
