@@ -8,6 +8,7 @@ import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
 import Add from './coponents/Add'
 import AddtoFridge from './coponents/AddtoFridge'
+import Inpost from './coponents/Inpost'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path='*' element={<Home />} />
           <Route path='/add' element={<Add />} />
           <Route path='/addtofridge' element={<AddtoFridge />} />
+          <Route path='/inpost' element={<Inpost />} />
 
         </Routes>
       </div>
