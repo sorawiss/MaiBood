@@ -1,11 +1,16 @@
 import express from 'express'
 import pool from '../util/db.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 const router = express.Router();
 
 const SALTROUNDS = 10;
+const SECRET_KEY = process.env.TOKEN;
+if (!SECRET_KEY) {
+    console.error("FATAL ERROR: TOKEN environment variable is not set.");
+}
 
 
 // Register
@@ -49,16 +54,16 @@ router.post('/register', async (req, res) => {
         console.error('Registration error:', error);
         res.status(500).json({ message: 'Internal server error during registration' });
     }
-    // finally {
-    //     if (connection) {
-    //         try {
-    //             await connection.release();
-    //             console.log("Database connection released.")
-    //         } catch (releaseError) {
-    //             console.error('Error releasing database connection:', releaseError);
-    //         }
-    //     }
-    // }
+    finally {
+        if (connection) {
+            try {
+                await connection.release();
+                console.log("Database connection released.")
+            } catch (releaseError) {
+                console.error('Error releasing database connection:', releaseError);
+            }
+        }
+    }
 })
 
 
@@ -66,7 +71,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { phone_number, password } = req.body;
     if (!phone_number || !password) {
-        return res.status(400).json({ message: 'Please provide email and password' });
+        return res.status(400).json({ message: 'Please provide phone_number and password' });
     }
 
     let connection;
@@ -79,6 +84,7 @@ router.post('/login', async (req, res) => {
         );
 
         if (rows.length === 0) {
+            console.log('Invalid email or password')
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
@@ -90,16 +96,94 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        const { password: passwordHash, ...rest } = user;
 
+        const token = jwt.sign({ userId: user.id }, SECRET_KEY);
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        })
         return res.status(200).json({
-            message: 'Login successful',
-            user
+            message: 'Login successful', rest
         });
     }
     catch (error) {
         console.error('Login error:', error);
     }
+    finally {
+        // --- This block is crucial ---
+        if (connection) {
+            try {
+                await connection.release();
+                // console.log("DB connection released in /login"); // Optional log
+            } catch (releaseError) {
+                console.error('Error releasing database connection in /login:', releaseError);
+            }
+        }
+    }
 })
+
+
+// auth
+router.get('/authentication', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.sendStatus(401);
+
+    let connection;
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+
+        const userId = decoded.userId;
+        if (!userId) {
+            console.warn('Token verified but missing userId payload:', decoded);
+            res.clearCookie('token');
+            return res.status(401).json({ message: 'Invalid token payload' });
+        }
+
+
+        connection = await pool.getConnection();
+        const [rows] = await connection.execute(
+            'SELECT id, fname, lname, phone_number FROM members WHERE id = ? LIMIT 1',
+            [userId]
+        );
+
+        if (rows.length === 0) {
+            console.warn('User ID from valid token not found in DB:', userId);
+            res.clearCookie('token');
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        const rest = rows[0];
+
+        return res.status(200).json(rest);
+
+
+    } catch (err) {
+        res.sendStatus(403);
+    }
+    finally {
+        // --- This block is crucial ---
+        if (connection) {
+            try {
+                await connection.release();
+                // console.log("DB connection released in /authentication"); // Optional log
+            } catch (releaseError) {
+                console.error('Error releasing database connection in /authentication:', releaseError);
+            }
+        }
+        // --- End crucial block ---
+    }
+});
+
+
+// Logout
+router.post('/api/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out' });
+});
 
 
 
