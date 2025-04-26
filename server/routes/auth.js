@@ -1,11 +1,16 @@
 import express from 'express'
 import pool from '../util/db.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 const router = express.Router();
 
 const SALTROUNDS = 10;
+const SECRET_KEY = process.env.TOKEN;
+if (!SECRET_KEY) {
+    console.error("FATAL ERROR: TOKEN environment variable is not set.");
+}
 
 
 // Register
@@ -91,7 +96,15 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        const token = jwt.sign({ userId: user.id }, SECRET_KEY);
 
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        })
         return res.status(200).json({
             message: 'Login successful',
             user
@@ -101,6 +114,27 @@ router.post('/login', async (req, res) => {
         console.error('Login error:', error);
     }
 })
+
+
+// auth
+router.get('/authentication', (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.sendStatus(401);
+
+    try {
+        const user = jwt.verify(token, SECRET_KEY);
+        res.json({ message: `authentication confirm`, user });
+    } catch (err) {
+        res.sendStatus(403);
+    }
+});
+
+
+// Logout
+router.post('/api/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out' });
+});
 
 
 

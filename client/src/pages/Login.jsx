@@ -1,28 +1,9 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
-
-const baseURL = import.meta.env.VITE_BASE_URL;
-async function fetchLogin(data) {
-    const response = await fetch(`${baseURL}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-
-    if (response.ok) {
-        const result = await response.json()
-        return result
-    } else {
-        const error = await response.json()
-        throw new Error(error.message)
-    }
-
-}
 
 
 function Login() {
@@ -33,10 +14,11 @@ function Login() {
     })
     const [errors, setErrors] = useState({})
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
 
     const mutation = useMutation({
-        mutationFn: fetchLogin,
+        mutationFn: login,
         onSuccess: (data) => {
             console.log("Login success", data)
             navigate('/home')
