@@ -1,7 +1,9 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
+
+import { AuthContext } from '../AuthContext';
 
 import { Button } from "rizzui";
 
@@ -13,18 +15,20 @@ async function fetchRegister(data) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
 
     if (!response.ok) {
         throw new Error('Network response was not ok')
     }
 
-    return response.json
+    const dataFromServer = await response.json()
+    return dataFromServer
 }
 
 
-function Login() {
+function Register() {
     // Vaiables
     const [formData, setFormData] = useState({
         fname: '',
@@ -34,6 +38,7 @@ function Login() {
     })
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
+    const { setUser, refreshUser } = useContext(AuthContext);
 
 
     // Handle Change
@@ -66,8 +71,10 @@ function Login() {
     // Use Mutation
     const mutation = useMutation({
         mutationFn: fetchRegister,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             console.log("Register Success", data)
+            await setUser(data)
+            await refreshUser
             navigate('/home')
         },
         onError: (error) => {
@@ -165,4 +172,4 @@ function Login() {
     )
 }
 
-export default Login
+export default Register

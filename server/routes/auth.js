@@ -6,11 +6,18 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
+// Constrant
 const SALTROUNDS = 10;
 const SECRET_KEY = process.env.TOKEN;
 if (!SECRET_KEY) {
     console.error("FATAL ERROR: TOKEN environment variable is not set.");
 }
+
+
+// Utility function 
+const generateToken = (userId) => {
+    return jwt.sign({ userId }, SECRET_KEY, { expiresIn: '7d' });
+};
 
 
 // Register
@@ -44,10 +51,28 @@ router.post('/register', async (req, res) => {
             [fname, lname, phone_number, hashedPassword]
         );
 
-        res.status(201).json({
-            message: 'User registered successfully',
-            result
+        const newUserId = result.insertId; // Get the ID of the newly created user
+
+
+
+        // Generate JWT
+        const token = generateToken(newUserId); // Use your utility function
+        // Set the cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'None', // Requires secure: true
+            secure: true,     // Ensure your server runs HTTPS or adjust for local HTTP dev
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
+
+        const userDataToSend = {
+            id: newUserId,
+            fname: fname,
+            lname: lname,
+            phone_number: phone_number
+        };
+
+        return res.status(201).json(userDataToSend);
 
     }
     catch (error) {
@@ -180,7 +205,7 @@ router.get('/authentication', async (req, res) => {
 
 
 // Logout
-router.post('/api/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Logged out' });
 });
