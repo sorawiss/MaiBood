@@ -117,13 +117,39 @@ router.post('/login', async (req, res) => {
 
 
 // auth
-router.get('/authentication', (req, res) => {
+router.get('/authentication', async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.sendStatus(401);
 
+    let connection;
     try {
-        const user = jwt.verify(token, SECRET_KEY);
-        res.json({ message: `authentication confirm`, user });
+        const decoded = jwt.verify(token, SECRET_KEY); 
+       
+        const userId = decoded.userId;
+        if (!userId) {
+            console.warn('Token verified but missing userId payload:', decoded);
+            res.clearCookie('token');
+            return res.status(401).json({ message: 'Invalid token payload' });
+        }
+
+
+        connection = await pool.getConnection();
+        const [rows] = await connection.execute(
+            'SELECT id, fname, lname, phone_number FROM members WHERE id = ? LIMIT 1',
+            [userId]
+        );
+
+        if (rows.length === 0) {
+            console.warn('User ID from valid token not found in DB:', userId);
+            res.clearCookie('token');
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        const rest = rows[0];
+
+        return res.status(200).json(rest);
+
+
     } catch (err) {
         res.sendStatus(403);
     }

@@ -12,7 +12,7 @@ function Add() {
             <div className="text-wrapper">
               <p className='sell'>ขาย</p>
               <p className='fridge'>
-              <Link to={'/addtofridge'}>ใส่ตู้เย็น</Link></p>
+              <Link to={'/add-to-fridge'}>ใส่ตู้เย็น</Link></p>
             </div>
             <div className="slide-bar" ></div>
           </div>

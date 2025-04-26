@@ -40,7 +40,6 @@ function Login() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        console.log(formData)
         mutation.mutate(formData)
     }
 

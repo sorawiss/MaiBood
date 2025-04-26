@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
+      console.log('start checking...')
       const response = await fetch(`${baseURL}/authentication`, {
         method: 'GET',
         credentials: 'include',
@@ -18,24 +19,30 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         setUser(null);
+        console.log('AuthContext failed')
         return;
       }
 
       const data = await response.json();
       setUser(data);
+      console.log('AuthContext success')
+      return;
+
 
     } catch (error) {
       setUser(null);
+      console.log('Error in checkAuth:', error);
+      return;
+
     } finally {
+      console.log('checkAuth finally');
       setLoading(false);
     }
   };
 
 
   useEffect(() => {
-    console.log('checkAuth');
     checkAuth();
-    console.log('checked')
   }, []);
 
 
@@ -56,7 +63,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const data = await response.json()
-    setUser(data);
+    setUser(data.rest);
     return data;
   }
 
