@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       console.log('start checking...')
+      setLoading(true)
       const response = await fetch(`${baseURL}/authentication`, {
         method: 'GET',
         credentials: 'include',
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         setUser(null);
-        console.log('AuthContext failed')
+        console.log('AuthContext not correct')
         return;
       }
 
@@ -44,6 +45,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     checkAuth();
   }, []);
+
+
+  function refreshUser() {
+    checkAuth();
+  }
 
 
   async function login(user) {
@@ -80,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, setUser, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
