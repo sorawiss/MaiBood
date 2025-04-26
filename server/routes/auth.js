@@ -54,16 +54,16 @@ router.post('/register', async (req, res) => {
         console.error('Registration error:', error);
         res.status(500).json({ message: 'Internal server error during registration' });
     }
-    // finally {
-    //     if (connection) {
-    //         try {
-    //             await connection.release();
-    //             console.log("Database connection released.")
-    //         } catch (releaseError) {
-    //             console.error('Error releasing database connection:', releaseError);
-    //         }
-    //     }
-    // }
+    finally {
+        if (connection) {
+            try {
+                await connection.release();
+                console.log("Database connection released.")
+            } catch (releaseError) {
+                console.error('Error releasing database connection:', releaseError);
+            }
+        }
+    }
 })
 
 
@@ -96,7 +96,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const {password: passwordHash , ...rest} = user;
+        const { password: passwordHash, ...rest } = user;
 
         const token = jwt.sign({ userId: user.id }, SECRET_KEY);
 
@@ -113,6 +113,17 @@ router.post('/login', async (req, res) => {
     catch (error) {
         console.error('Login error:', error);
     }
+    finally {
+        // --- This block is crucial ---
+        if (connection) {
+            try {
+                await connection.release();
+                // console.log("DB connection released in /login"); // Optional log
+            } catch (releaseError) {
+                console.error('Error releasing database connection in /login:', releaseError);
+            }
+        }
+    }
 })
 
 
@@ -123,8 +134,8 @@ router.get('/authentication', async (req, res) => {
 
     let connection;
     try {
-        const decoded = jwt.verify(token, SECRET_KEY); 
-       
+        const decoded = jwt.verify(token, SECRET_KEY);
+
         const userId = decoded.userId;
         if (!userId) {
             console.warn('Token verified but missing userId payload:', decoded);
@@ -152,6 +163,18 @@ router.get('/authentication', async (req, res) => {
 
     } catch (err) {
         res.sendStatus(403);
+    }
+    finally {
+        // --- This block is crucial ---
+        if (connection) {
+            try {
+                await connection.release();
+                // console.log("DB connection released in /authentication"); // Optional log
+            } catch (releaseError) {
+                console.error('Error releasing database connection in /authentication:', releaseError);
+            }
+        }
+        // --- End crucial block ---
     }
 });
 
