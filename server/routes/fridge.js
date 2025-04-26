@@ -46,6 +46,7 @@ router.post('/add-to-fridge', async (req, res) => {
 })
 
 
+// Get from fridge
 router.get('/fridge/:ownerId', async (req, res) => {
     const { ownerId } = req.params;
 
@@ -56,7 +57,7 @@ router.get('/fridge/:ownerId', async (req, res) => {
         console.log(`Database connection acquired for fetching fridge items for owner: ${ownerId}`);
 
         const [items] = await connection.execute(
-            'SELECT id, material, exp, is_store, created_at FROM fridge WHERE owner = ? ORDER BY exp ASC',
+            'SELECT id, material, exp, is_store FROM fridge WHERE owner = ? ORDER BY exp ASC',
             [ownerId]
         );
 

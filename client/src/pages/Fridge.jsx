@@ -1,10 +1,51 @@
 import React from 'react'
 import FridgeList from '../coponents/FridgeList'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../AuthContext'
+import { useContext } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
+
+const baseURL = import.meta.env.VITE_BASE_URL
+async function fetchFridge(id) {
+  const response = await fetch(`${baseURL}/fridge/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Network response was not ok (${response.status})`);
+  }
+
+  return response.json();
+}
+
 
 function Fridge() {
+  const { user } = useContext(AuthContext)
 
-  const listItem = Array.from({ length: 5 })
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['fridge'],
+    queryFn: () => fetchFridge(user.id),
+  });
+
+  const listItem = data;
+
+
+  if (isLoading) {
+    return (
+      <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
+        <p>Loading fridge...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
@@ -19,11 +60,14 @@ function Fridge() {
       <div className="content-section flex flex-col items-center w-full gap-[1rem] ">
         <h2>ตู้เย็นของ บอล</h2>
 
-        {listItem.map((items, index) => {
-          return (
-            <FridgeList key={index} />
-          )
-        })}
+        {listItem && listItem.length > 0 ? (
+          listItem.map((items) => (
+            <FridgeList key={items.id} material={items.material} exp={items.exp} />
+          ))
+        ) : (
+          <p>ยังไม่มีอาหารในตู้เย็น กดเพิ่ม ➕ ได้ด้านล่างเลยครับ</p>
+        )}
+
 
       </div>
 
