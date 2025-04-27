@@ -46,6 +46,46 @@ router.post('/add-to-fridge', async (req, res) => {
 })
 
 
+// Delete from fridge
+router.delete('/fridge/:id', async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: 'Missing required field: id' });
+    }
+
+
+    let connection;
+    try {
+        connection = await pool.getConnection();
+        const [result] = await connection.execute(
+            'DELETE FROM fridge WHERE id = ?',
+            [id]
+        )
+
+
+        res.status(200).json({
+            message: 'Item deleted from fridge'
+        })
+
+    }
+    catch (error) {
+        console.error('Error deleting item from fridge', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+    finally {
+        if (connection) {
+            try {
+                await connection.release();
+                console.log(`Database connection released for fetching fridge items for owner: ${ownerId}`);
+            } catch (releaseError) {
+                console.error('Error releasing database connection:', releaseError);
+            }
+        }
+    }
+
+})
+
+
 // Get from fridge
 router.get('/fridge/:ownerId', async (req, res) => {
     const { ownerId } = req.params;
@@ -65,11 +105,11 @@ router.get('/fridge/:ownerId', async (req, res) => {
 
         res.status(200).json(items);
 
-    } 
+    }
     catch (error) {
         console.error(`Error fetching fridge items for owner ${ownerId}:`, error);
         res.status(500).json({ message: 'Internal server error while fetching fridge items', error: error.message });
-    } 
+    }
     finally {
         if (connection) {
             try {
