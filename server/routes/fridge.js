@@ -6,6 +6,7 @@ import pool from '../util/db.js';
 const router = express.Router();
 
 
+// Add to fridge
 router.post('/add-to-fridge', async (req, res) => {
     const { owner, material, exp } = req.body;
     if (!owner || !material || !exp) {
@@ -44,6 +45,43 @@ router.post('/add-to-fridge', async (req, res) => {
 
 })
 
+
+// Get from fridge
+router.get('/fridge/:ownerId', async (req, res) => {
+    const { ownerId } = req.params;
+
+
+    let connection;
+    try {
+        connection = await pool.getConnection();
+        console.log(`Database connection acquired for fetching fridge items for owner: ${ownerId}`);
+
+        const [items] = await connection.execute(
+            'SELECT id, material, exp, is_store FROM fridge WHERE owner = ? ORDER BY exp ASC',
+            [ownerId]
+        );
+
+        console.log(`Found ${items.length} items for owner ${ownerId}.`);
+
+        res.status(200).json(items);
+
+    } 
+    catch (error) {
+        console.error(`Error fetching fridge items for owner ${ownerId}:`, error);
+        res.status(500).json({ message: 'Internal server error while fetching fridge items', error: error.message });
+    } 
+    finally {
+        if (connection) {
+            try {
+                await connection.release();
+                console.log(`Database connection released for fetching fridge items for owner: ${ownerId}`);
+            } catch (releaseError) {
+                console.error('Error releasing database connection:', releaseError);
+            }
+        }
+    }
+
+})
 
 
 

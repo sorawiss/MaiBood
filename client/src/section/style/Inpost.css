@@ -1,0 +1,101 @@
+.Inpost-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-wrapper {
+    width: 9rem;
+    height: 2.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+}
+
+.inpost-text {
+    color: var(--color-primary);
+}
+
+.show-pic {
+    width: 22.5rem;
+    height: 30rem;
+    background-color: var(--color-background);
+    border-radius: 16px;
+}
+
+.inpost-detail {
+    width: 12rem;
+    height: 10.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.text-details {
+    height: 8.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.name-price {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nameofmaterial {
+    color: var(--color-primary);
+}
+
+.inpost-price {
+    color: var(--color-aceent);
+}
+
+.contact {
+    height: 4.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contact-detail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.exp-detail {
+    width: 12rem;
+    height: 2rem;
+    background-color: var(--color-background);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exp-detail-text {
+    color: var(--color-secondary);
+}
+
+.remove-after-sell {
+    width: 22.5rem;
+    height: 3rem;
+    background-color: var(--color-aceent);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

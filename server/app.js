@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 
 // Routes Import
 import auth from './routes/auth.js'
-import addFridge from './routes/addFridge.js'
+import fridge from './routes/fridge.js'
 
 
 dotenv.config()
@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 
 // Use Routes
 app.use(auth)
-app.use(addFridge)
+app.use(fridge)
 
 
 

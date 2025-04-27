@@ -1,6 +1,6 @@
 import React from 'react'
 
-function FridgeList() {
+function FridgeList({material, exp}) {
     return (
         <div className='fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between items-center rounded-[16px] '>
             {/* Bin SVG */}
@@ -9,8 +9,8 @@ function FridgeList() {
             </svg>
 
             <div className="info-wrapper flex flex-col justify-between items-center w-full max-w-[14.37rem] ">
-                <h2>อกไก่ 4 โล</h2>
-                <p className='p2 ' >29-04-2025</p>
+                <h2>{material}</h2>
+                <p className='p2 ' >{exp}</p>
             </div>
 
             <div className="sale px-[0.5rem]  bg-aceent rounded-[1rem] flex justify-center items-center ">
