@@ -47,7 +47,7 @@ router.post('/add-to-fridge', async (req, res) => {
 
 
 // Delete from fridge
-router.delete('/fridge/:id', async (req, res) => {
+router.delete('/delete-from-fridge/:id', async (req, res) => {
     const { id } = req.params;
     if (!id) {
         return res.status(400).json({ message: 'Missing required field: id' });

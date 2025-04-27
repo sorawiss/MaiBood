@@ -62,7 +62,7 @@ function Fridge() {
 
         {listItem && listItem.length > 0 ? (
           listItem.map((items) => (
-            <FridgeList key={items.id} material={items.material} exp={items.exp} />
+            <FridgeList key={items.id} id={items.id} material={items.material} exp={items.exp} />
           ))
         ) : (
           <p>ยังไม่มีอาหารในตู้เย็น กดเพิ่ม ➕ ได้ด้านล่างเลยครับ</p>
