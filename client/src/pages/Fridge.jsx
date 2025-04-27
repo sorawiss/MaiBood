@@ -35,6 +35,9 @@ function Fridge() {
     queryFn: () => fetchFridge(user.id),
   });
 
+  if (isError) {
+    console.log(error)
+  }
   const listItem = data;
 
 
@@ -65,7 +68,7 @@ function Fridge() {
             <FridgeList key={items.id} id={items.id} material={items.material} exp={items.exp} />
           ))
         ) : (
-          <p>ยังไม่มีอาหารในตู้เย็น กดเพิ่ม ➕ ได้ด้านล่างเลยครับ</p>
+            <p className='text-secondary text-center my-[5rem] p-[3rem] ' >ยังไม่มีอาหารในตู้เย็น กดเพิ่ม ➕ ได้ด้านล่างเลยครับ</p>
         )}
 
 

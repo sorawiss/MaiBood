@@ -1,13 +1,14 @@
 import express from 'express'
 
 import pool from '../util/db.js';
+import AuthMiddleware from '../util/AuthMiddleware.js';
 
 
 const router = express.Router();
 
 
 // Add to fridge
-router.post('/add-to-fridge', async (req, res) => {
+router.post('/add-to-fridge', AuthMiddleware ,async (req, res) => {
     const { owner, material, exp } = req.body;
     if (!owner || !material || !exp) {
         return res.status(400).json({ message: 'Missing required fields: id, material, or exp' });
@@ -47,7 +48,7 @@ router.post('/add-to-fridge', async (req, res) => {
 
 
 // Delete from fridge
-router.delete('/delete-from-fridge/:id', async (req, res) => {
+router.delete('/delete-from-fridge/:id', AuthMiddleware, async (req, res) => {
     const { id } = req.params;
     if (!id) {
         return res.status(400).json({ message: 'Missing required field: id' });
@@ -87,8 +88,9 @@ router.delete('/delete-from-fridge/:id', async (req, res) => {
 
 
 // Get from fridge
-router.get('/fridge/:ownerId', async (req, res) => {
+router.get('/fridge/:ownerId', AuthMiddleware, async (req, res) => {
     const { ownerId } = req.params;
+    console.log('debug1 start ')
 
 
     let connection;
