@@ -6,9 +6,12 @@ import { AuthProvider } from './AuthContext';
 import Home from './pages/Home';
 import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
+
+import Add from './coponents/Add'
+import AddtoFridge from './coponents/AddtoFridge'
+import Inpost from './coponents/Inpost'
+
 import Login from './pages/Login';
-import Add from './coponents/Add';
-import AddtoFridge from './coponents/AddtoFridge';
 import Layout from './coponents/layout';
 import Register from './pages/Register';
 import ProtectedRoute from './ProtectedRoute';
@@ -20,16 +23,19 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+
           <Route element={<Layout />}>
             <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/fridge" element={<ProtectedRoute><Fridge /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
             <Route path="/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
+            <Route path="/inpost" element={<ProtectedRoute><Inpost /></ProtectedRoute>} />
             <Route path="*" element={<Home />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
         </Routes>
       </Router>
     </AuthProvider>
