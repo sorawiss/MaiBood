@@ -72,7 +72,7 @@ function Fridge() {
       </div>
 
 
-      <Link to={'/add-to-fridge'} >
+      <Link to={'/fridge/add-to-fridge'} >
         <div className="add-food flex flex-col items-center justify-center ">
           {/* Plus SVG */}
           <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">

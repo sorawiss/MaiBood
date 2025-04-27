@@ -29,7 +29,7 @@ function App() {
             <Route path="/fridge" element={<ProtectedRoute><Fridge /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
-            <Route path="/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
+            <Route path="/fridge/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
             <Route path="/inpost" element={<ProtectedRoute><Inpost /></ProtectedRoute>} />
             <Route path="*" element={<Home />} />
           </Route>
