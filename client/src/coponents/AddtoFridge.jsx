@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
 
 import { Input, Button } from "rizzui";
+import BackArrow from './BackArrow';
 
 import { AuthContext } from '../AuthContext';
 
@@ -33,6 +34,7 @@ function AddtoFridge() {
       material : '',
       exp : ''
   })
+  const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
 
 
@@ -47,7 +49,12 @@ function AddtoFridge() {
   const mutation = useMutation({
     mutationFn: fetchAddFridge,
     onSuccess: (data) => {
-      console.log("Add fridge success", data)
+      console.log("Add fridge success")
+      setError('')
+      setForm({
+        material : '',
+        exp : ''
+      })
     },
     onError: (error) => {
       console.log("Add fridge error", error)
@@ -57,6 +64,11 @@ function AddtoFridge() {
 
   function submitForm(e) {
     e.preventDefault()
+
+    if (!form.material || !form.exp) {
+      setError('*กรุณากรอกข้อมูลให้ครบถ้วน')
+      return
+    }
 
     const dataTosend = {
       material : form.material,
@@ -72,6 +84,7 @@ function AddtoFridge() {
 
     return (
     <div className='overall min-h-screen bg-white-bg w-full flex '>
+      <BackArrow />
 
       <div className="add-wrapper">
 
@@ -89,17 +102,21 @@ function AddtoFridge() {
             <div className="add-detail">
               <input
                 type="text"
+                value={form.material}
                 placeholder="ใส่ชื่ออาหาร..."
                 className="foodname-input"
                 name='material'
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="add-detail">
               <Input
                 type="date"
                 name='exp'
+                value={form.exp}
                 onChange={handleChange}
+                required
               />
             </div>
           </div>
@@ -107,6 +124,9 @@ function AddtoFridge() {
           <Button onClick={submitForm} className="post">
             <p className='add-post'>บันทึก</p>
           </Button>
+
+          {error && error.length > 0 && <p className='alert' >{error}</p>}
+
           <div className="bottom-text-wrapper">
             <p className='end-text'>อาหารจะถูกบันทึกไว้ในตู้เย็นของคุณและ</p>
             <p className='end-text'>เราจะแจ้งเตือนเมื่อใกล้หมดอายุ</p>
