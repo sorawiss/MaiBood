@@ -1,64 +1,21 @@
-import React from 'react'
+import React, { use } from 'react'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import thaiDate from '../lib/thaiDate.js';
+import isExpiringSoon from '../lib/expCheck.js';
+import deleteFridgeItem from '../lib/deleteFridgeItem.js';
 
 import ModalCustom from './Modal'
 
 
-const baseURL = import.meta.env.VITE_BASE_URL
-const deleteFridgeItem = async (itemId) => {
-    const response = await fetch(`${baseURL}/delete-from-fridge/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include'
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Failed to delete item ${itemId}. Status: ${response.status}`);
-    }
-
-
-    return response.json();
-};
-
-
-function thaiDate(date) {
-    const thaiFormat = new Intl.DateTimeFormat('th-TH', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }).format(date);
-
-    return thaiFormat;
-}
-
-
-// EXP Check
-function isExpiringSoon(expirationDate) {
-    const now = new Date();
-    const expDate = new Date(expirationDate);
-
-    // Difference in milliseconds
-    const diffTime = expDate - now;
-
-    // Convert to days
-    const diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-    return diffDays <= 3 && diffDays >= 0; // Between 0 and 3 days
-}
-
-
-
-
-
 function FridgeList({ material, exp, id }) {
     const [open, setOpen] = useState(false);
+    const [sellOpen, setSellOpen] = useState(false);
     const queryClient = useQueryClient();
 
     const handleOpen = () => setOpen(!open);
+    const handleSellOpen = () => setSellOpen(!sellOpen);
 
     const date = new Date(exp);
 
@@ -93,7 +50,9 @@ function FridgeList({ material, exp, id }) {
                     </svg>)} >
 
                 <div className="modal flex flex-col items-center justify-center 
-                w-full h-screen bg-transparent backdrop-blur-sm ">
+                    w-full h-screen bg-transparent backdrop-blur-sm "
+                    onClick={handleOpen}
+                >
                     <div className="modal-container flex flex-col items-center justify-center gap-[1rem]
                          ">
                         <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
@@ -108,8 +67,6 @@ function FridgeList({ material, exp, id }) {
                     </div>
 
                 </div>
-
-
             </ModalCustom>
 
 
@@ -119,9 +76,62 @@ function FridgeList({ material, exp, id }) {
             </div>
 
 
-            <div className="sale px-[0.5rem]  bg-aceent rounded-[1rem] flex justify-center items-center ">
-                <p>ขาย</p>
-            </div>
+            <ModalCustom handleOpen={handleSellOpen} open={sellOpen}
+                handler={(
+                    <div className="sale px-[0.5rem] text-primary  bg-aceent rounded-[1rem] flex justify-center items-center ">
+                        <p>ขาย</p>
+                    </div>)} >
+
+                <div className="add-wrapper">
+
+                    <div className="sell-fridge">
+                        <div className="text-wrapper">
+                            <p className='sell'>ขาย</p>
+                            <p className='fridge'>ใส่ตู้เย็น</p>
+                        </div>
+                        <div className="slide-bar" ></div>
+                    </div>
+
+                    <div className="details">
+                        <div className="food-details">
+                            <div className="add-detail">
+                                <input
+                                    type="text"
+                                    placeholder="ใส่ชื่ออาหาร..."
+                                    className="foodname-input"
+                                />
+                            </div>
+                            <div className="add-detail">
+                                <input
+                                    type="text"
+                                    placeholder="วันหมดอายุ"
+                                    className="exp-input"
+                                />
+                            </div>
+                            <div className="add-detail">
+                                <input
+                                    type="text"
+                                    placeholder="ประเภท"
+                                    className="category-input"
+                                />
+                            </div>
+                        </div>
+                        <div className="price-banner">
+                            <input
+                                type="text"
+                                placeholder="ราคา (ใส่ 0 บาทได้)"
+                                className="price-input"
+                            />
+                        </div>
+                        <div className="post">
+                            <p className='add-post'>ลงประกาศ</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </ModalCustom>
 
 
 

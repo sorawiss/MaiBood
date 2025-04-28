@@ -58,7 +58,7 @@ function Fridge() {
 
       {/* Content */}
       <div className="content-section flex flex-col items-center w-full gap-[1rem] ">
-        <h2>ตู้เย็นของ บอล</h2>
+        <h2>ตู้เย็นของ {user.fname}</h2>
 
         {listItem && listItem.length > 0 ? (
           listItem.map((items) => (
