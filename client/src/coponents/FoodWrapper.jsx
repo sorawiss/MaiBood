@@ -1,15 +1,21 @@
 import React from 'react'
 
+import thaiDate from '../lib/thaiDate'
+
 import '../section/style/Home.css'
 
-function FoodWrapper( { exp, price, name, location } ) {
+function FoodWrapper( { exp, price, name, location, image } ) {
+    const time = new Date(exp)
+    console.log(image)
+
+    
     return (
         <div className="food-container">
             <div className="food-pic">
-                <img src='#' loading='lazy' ></img>
+                <img src={image} loading='lazy' ></img>
                 <div className="detail">
                     <div className="exp-date">
-                        <p className='exp'> {exp} </p>
+                        <p className='exp'> {thaiDate(time)} </p>
                     </div>
                     <div className="space-for-price">
                         <div className="price">

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import '../section/style/Home.css'
+import { useQuery } from '@tanstack/react-query'
 
 import meat from '../assets/meat.svg'
 import carrot from '../assets/carrot.svg'
@@ -12,13 +13,30 @@ import FoodWrapper from '../coponents/FoodWrapper'
 import {AuthContext} from '../AuthContext'
 
 
+// Fetch Data Function
+const baseURL = import.meta.env.VITE_BASE_URL
 async function fetchData() {
-  
+  try {
+    const response = await fetch(`${baseURL}/get-food`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
+    if (!response.ok) { 
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Network response was not ok (${response.status})`);
+    }
+
+    return await response.json();
+
+  }
+  catch(error) {
+    console.log("error while fetch food", error)
+  }
 }
-
-
-
 
 
 
@@ -28,7 +46,25 @@ function Home() {
 
   const { user } = useContext(AuthContext);
 
-  const List = [...Array(4)]
+
+  // Fetch Data Query
+  const { data, isLoading, isError, error } = useQuery({
+      queryKey: ['get-food'],
+      queryFn: fetchData,
+    });
+
+    if (isLoading) {
+      return (
+        <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
+          <p>Loading fridge...</p>
+        </div>
+      );
+    }
+    if (isError) {
+      console.log(error)
+    }
+
+    const list = data;
 
 
   return (
@@ -83,25 +119,10 @@ function Home() {
       <div className='third-container'>
         <SectionTitle title={'อาหารจากร้านค้า'} />
         <div className="allfood-container">
-          {List.map((items, index) => <FoodWrapper key={index} exp={'11-05-2568'} price={'78'} name={'เนื้อหมูบด'} location={'Tops daily สาขาธรรมศาสตร'} />)}
+          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image}  name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>
       </div> {/*third-container*/}
 
-      {/* Free Food */}
-      <div className='third-container'>
-        <SectionTitle title={'อาหารฟรี'} />
-        <div className="allfood-container">
-          {List.map((items, index) => <FoodWrapper key={index} exp={'11-05-2568'} price={'78'} name={'เนื้อหมูบด'} location={'Tops daily สาขาธรรมศาสตร'} />)}
-        </div>
-      </div> {/*third-container*/}
-
-      {/* Food From Community */}
-      <div className='third-container'>
-        <SectionTitle title={'อาหารจากชุมชน'} />
-        <div className="allfood-container">
-          {List.map((items, index) => <FoodWrapper key={index} exp={'11-05-2568'} price={'78'} name={'เนื้อหมูบด'} location={'Tops daily สาขาธรรมศาสตร'} />)}
-        </div>
-      </div> {/*third-container*/}
 
       
 
