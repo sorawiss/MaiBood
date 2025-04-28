@@ -16,7 +16,6 @@ dotenv.config()
 var app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(imageUpload)
 
 
 const allowedOrigins = process.env.ORIGIN || "http://localhost:5173"
@@ -32,6 +31,7 @@ app.use(cors(corsOptions));
 // Use Routes
 app.use(auth)
 app.use(fridge)
+app.use(imageUpload)
 
 
 
