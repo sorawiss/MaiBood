@@ -6,7 +6,7 @@ function FoodWrapper( { exp, price, name, location } ) {
     return (
         <div className="food-container">
             <div className="food-pic">
-                <img src='#'></img>
+                <img src='#' loading='lazy' ></img>
                 <div className="detail">
                     <div className="exp-date">
                         <p className='exp'> {exp} </p>

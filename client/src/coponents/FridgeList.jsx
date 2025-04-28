@@ -36,6 +36,22 @@ function thaiDate(date) {
 }
 
 
+// EXP Check
+function isExpiringSoon(expirationDate) {
+    const now = new Date();
+    const expDate = new Date(expirationDate);
+
+    // Difference in milliseconds
+    const diffTime = expDate - now;
+
+    // Convert to days
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    return diffDays <= 3 && diffDays >= 0; // Between 0 and 3 days
+}
+
+
+
 
 
 function FridgeList({ material, exp, id }) {
@@ -67,7 +83,8 @@ function FridgeList({ material, exp, id }) {
 
 
     return (
-        <div className='fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between items-center rounded-[16px] '>
+        <div className={`fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between items-center rounded-[16px]
+            ${isExpiringSoon(exp) ? 'border-2 border-red-500' : ''}`}>
             {/* Bin SVG */}
             <ModalCustom handleOpen={handleOpen} open={open}
                 handler={(
@@ -76,16 +93,20 @@ function FridgeList({ material, exp, id }) {
                     </svg>)} >
 
                 <div className="modal flex flex-col items-center justify-center 
-                w-full h-full bg-transparent backdrop-blur-sm gap-[1rem] ">
-                    <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
-                    <div className="button-wrapper flex gap-[1rem] ">
-                        <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
-                            onClick={handleOpen}
-                        >ไม่ใช่</div>
-                        <div className="ok bg-aceent rounded-[16px] px-[1rem] py-[0.3rem] "
-                            onClick={handleConfirmDelete}
-                        >ยืนยัน</div>
+                w-full h-screen bg-transparent backdrop-blur-sm ">
+                    <div className="modal-container flex flex-col items-center justify-center gap-[1rem]
+                         ">
+                        <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
+                        <div className="button-wrapper flex gap-[1rem] ">
+                            <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
+                                onClick={handleOpen}
+                            >ไม่ใช่</div>
+                            <div className="ok bg-aceent rounded-[16px] px-[1rem] py-[0.3rem] "
+                                onClick={handleConfirmDelete}
+                            >ยืนยัน</div>
+                        </div>
                     </div>
+
                 </div>
 
 
