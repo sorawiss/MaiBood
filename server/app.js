@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser"
 // Routes Import
 import auth from './routes/auth.js'
 import fridge from './routes/fridge.js'
+import imageUpload from './routes/imageUpload.js'
+
 
 
 dotenv.config()
@@ -14,6 +16,7 @@ dotenv.config()
 var app = express()
 app.use(express.json())
 app.use(cookieParser())
+app.use(imageUpload)
 
 
 const allowedOrigins = process.env.ORIGIN || "http://localhost:5173"

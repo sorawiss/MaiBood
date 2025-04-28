@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import '../section/style/Home.css'
 
 import meat from '../assets/meat.svg'
@@ -9,19 +9,22 @@ import cancel from '../assets/X.svg'
 
 import SectionTitle from '../coponents/SectionTitle'
 import FoodWrapper from '../coponents/FoodWrapper'
+import {AuthContext} from '../AuthContext'
 
 
 function Home() {
   const [searchText, setSearchText] = useState('');
 
+  const { user } = useContext(AuthContext);
+
   const List = [...Array(4)]
 
 
   return (
-    <div className="overall">
+    <div className="overall pb-[3rem] ">
 
       <div className='top-container'>
-        <h2 className='hello'>สวัสดี name</h2>
+        <h2 className='hello'>สวัสดี {user.fname}</h2>
         <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
           <span className="highlight">โลกของเรา</span>
         </h2>

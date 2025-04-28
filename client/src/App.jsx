@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
+import { Navigate } from 'react-router-dom';
 
 // Pages Import
 import Home from './pages/Home';
@@ -24,6 +25,8 @@ function App() {
       <Router>
         <Routes>
 
+          <Route path='/' element={<Navigate to='/home' replace />} />
+
           <Route element={<Layout />}>
             <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/fridge" element={<ProtectedRoute><Fridge /></ProtectedRoute>} />
@@ -31,7 +34,6 @@ function App() {
             <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
             <Route path="/fridge/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
             <Route path="/inpost" element={<ProtectedRoute><Inpost /></ProtectedRoute>} />
-            <Route path="*" element={<Home />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
