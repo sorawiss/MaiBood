@@ -3,6 +3,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import upload from '../util/multer.js';
 import s3Client from '../util/s3.js';
+import pool from '../util/db.js';
 
 
 const router = express.Router();
@@ -36,11 +37,13 @@ async function uploadToS3(file) {
 }
 
 
-
-router.post('/image', upload.single('image'), async (req, res) => {
+// API Endpoint
+router.post('/image/:metarialID', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
     }
+
+    const materialID = req.params.materialID;
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
@@ -48,10 +51,12 @@ router.post('/image', upload.single('image'), async (req, res) => {
         const s3Response = await uploadToS3(req.file);
         const imageUrl = s3Response;
 
-
-
-        console.log(`Simulating DB save for URL: ${imageUrl}`);
-
+        let connection;
+        connection = await pool.getConnection();
+        const [result] = await connection.execute(
+            'INSERT INTO fridge (image) WHERE id = ? VALUES (?)',
+            [materialID, imageUrl]
+        )
 
         res.status(200).json({
             message: 'Image uploaded successfully!',
