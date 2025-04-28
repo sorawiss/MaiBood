@@ -22,7 +22,7 @@ async function testConnection() {
     }
 }
 
-testConnection();
+// testConnection();
 
 
 export default pool;
