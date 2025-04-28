@@ -38,12 +38,12 @@ async function uploadToS3(file) {
 
 
 // API Endpoint
-router.post('/image/:metarialID', upload.single('image'), async (req, res) => {
+router.post('/image/', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
     }
 
-    const materialID = req.params.materialID;
+    const { owner, material, exp } = req.body;
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
@@ -54,8 +54,8 @@ router.post('/image/:metarialID', upload.single('image'), async (req, res) => {
         let connection;
         connection = await pool.getConnection();
         const [result] = await connection.execute(
-            'INSERT INTO fridge (image) WHERE id = ? VALUES (?)',
-            [materialID, imageUrl]
+            'INSERT INTO fridge (owner, material, exp, is_store, image) VALUES (?, ?, ?, ?, ?)',
+            [owner, material, exp, true, imageUrl]
         )
 
         res.status(200).json({
@@ -63,13 +63,13 @@ router.post('/image/:metarialID', upload.single('image'), async (req, res) => {
             imageUrl: imageUrl
         });
 
-    } 
+    }
     catch (error) {
         console.error('Error during upload process:', error);
         if (error.code) {
-             res.status(500).json({ message: 'Failed to upload image to storage.', error: error.message });
+            res.status(500).json({ message: 'Failed to upload image to storage.', error: error.message });
         } else {
-             res.status(500).json({ message: 'Server error during image upload.', error: error.message });
+            res.status(500).json({ message: 'Server error during image upload.', error: error.message });
         }
     }
 });
