@@ -12,6 +12,17 @@ import FoodWrapper from '../coponents/FoodWrapper'
 import {AuthContext} from '../AuthContext'
 
 
+async function fetchData() {
+  
+
+}
+
+
+
+
+
+
+// Main Render
 function Home() {
   const [searchText, setSearchText] = useState('');
 
