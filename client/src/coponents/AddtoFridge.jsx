@@ -31,17 +31,18 @@ async function fetchAddFridge(data) {
 
 function AddtoFridge() {
   const [form, setForm] = useState({
-      material : '',
-      exp : ''
+    material: '',
+    exp: ''
   })
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
+  const [successEffect, setSuccessEffect] = useState(false);
 
 
   function handleChange(e) {
     setForm({
       ...form,
-      [e.target.name] : e.target.value
+      [e.target.name]: e.target.value
     })
   }
 
@@ -52,9 +53,14 @@ function AddtoFridge() {
       console.log("Add fridge success")
       setError('')
       setForm({
-        material : '',
-        exp : ''
+        material: '',
+        exp: ''
       })
+
+      setSuccessEffect(true);  // Trigger success effect
+      setTimeout(() => {
+        setSuccessEffect(false);  // Clear effect after 2 seconds
+      }, 1000);
     },
     onError: (error) => {
       console.log("Add fridge error", error)
@@ -71,18 +77,18 @@ function AddtoFridge() {
     }
 
     const dataTosend = {
-      material : form.material,
-      exp : form.exp,
+      material: form.material,
+      exp: form.exp,
       owner: user.id
     }
 
     mutation.mutate(dataTosend)
-    }
-
-    
+  }
 
 
-    return (
+
+
+  return (
     <div className='overall min-h-screen bg-white-bg w-full flex '>
       <BackArrow />
 
@@ -100,7 +106,7 @@ function AddtoFridge() {
         <div className="details">
           <div className="food-details">
             <div className="add-detail">
-              <input
+              <Input
                 type="text"
                 value={form.material}
                 placeholder="ใส่ชื่ออาหาร..."
@@ -108,6 +114,7 @@ function AddtoFridge() {
                 name='material'
                 onChange={handleChange}
                 required
+                autoComplete='off'
               />
             </div>
             <div className="add-detail">
@@ -117,20 +124,28 @@ function AddtoFridge() {
                 value={form.exp}
                 onChange={handleChange}
                 required
+                autoComplete='off'
+                className="exp-input w-full text-secondary "
               />
             </div>
           </div>
 
-          <Button onClick={submitForm} className="post">
-            <p className='add-post'>บันทึก</p>
+
+          <Button
+            onClick={submitForm}
+            className={`post ${successEffect ? 'success-effect ' : ''}`}
+          >
+            <p className='add-post'>{successEffect ? 'บันทึกสำเร็จ✔️' : 'บันทึก'}</p>
           </Button>
 
-          {error && error.length > 0 && <p className='alert' >{error}</p>}
 
+
+          <p className='alert' >{error}</p>
           <div className="bottom-text-wrapper">
             <p className='end-text'>อาหารจะถูกบันทึกไว้ในตู้เย็นของคุณและ</p>
             <p className='end-text'>เราจะแจ้งเตือนเมื่อใกล้หมดอายุ</p>
           </div>
+
 
         </div>
 
