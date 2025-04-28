@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser"
 import auth from './routes/auth.js'
 import fridge from './routes/fridge.js'
 import imageUpload from './routes/imageUpload.js'
+import getFood from './routes/getFood.js'
 
 
 
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 app.use(auth)
 app.use(fridge)
 app.use(imageUpload)
+app.use(getFood)
 
 
 
