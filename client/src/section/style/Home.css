@@ -149,7 +149,7 @@
 }
 
 .price {
-    width: 2rem;
+    width: fit-content;
     height: 1.3rem;
     border-radius: 16px;
     background-color: var(--color-aceent);
