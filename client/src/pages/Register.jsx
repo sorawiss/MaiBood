@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../AuthContext';
 
@@ -155,7 +156,8 @@ function Register() {
 
                     <Button className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
                         max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary " 
-                        disabled={errorMessage.length > 0}
+                        isLoading={mutation.isPending}
+                        disabled={errorMessage.length > 0 || mutation.isPending }
                         onClick={handleSubmit}
                         >
                             ลงทะเบียน
@@ -163,7 +165,7 @@ function Register() {
                 </form>
 
 
-                <p className='mt-[1rem] ' >หากมีบัญชีอยู่แล้ว<a href=""> เข้าสู่ระบบ</a></p>
+                <Link to={'/login'} className='mt-[1rem] ' >หากมีบัญชีอยู่แล้ว เข้าสู่ะระบบ</Link>
 
 
             </section>
