@@ -46,7 +46,7 @@ function AddtoFridge() {
   const initialMaterial = query.get('material') || '';
   const initialExp = query.get('exp') || '';
 
-  let dateExp = null
+  let dateExp = ''
   if (initialExp) {
     dateExp = new Date(initialExp).toISOString().split('T')[0];
   }
@@ -86,10 +86,12 @@ function AddtoFridge() {
     onSuccess: (data) => {
       console.log("Add data success", data)
       setError('')
+      setPostType('')
       setForm({
         material: '',
         exp: '',
-        price: ''
+        price: '',
+        selectedFile: null,
       })
 
       setSuccessEffect(true);

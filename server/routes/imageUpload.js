@@ -58,8 +58,8 @@ router.post('/image/', upload.single('image'), async (req, res) => {
 
         if (id) {
             await connection.execute(
-                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ? is_store = true WHERE id = ?',
-                [imageUrl, price, type, material, id]
+                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
+                [imageUrl, price, type, material, true, id]
             )
 
             return res.status(200).json({
