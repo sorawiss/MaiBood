@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import '../section/style/Add.css'
-import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 import { Input, Button } from "rizzui";
 import BackArrow from './BackArrow';
@@ -110,19 +110,23 @@ function AddtoFridge() {
 
 
   return (
-    <div className='overall min-h-screen bg-white-bg w-full flex '>
+    <div className='overall min-h-screen bg-white-bg w-full flex px-[2rem] '>
       <BackArrow />
 
       <div className="add-wrapper">
+        <div className="header-title flex flex-col items-center gap-[0.5rem] ">
+          <h2 className='text-primary ' >เพิ่มอาหารไปที่ร้านค้า</h2>
+          <p className='p2 text-secondary ' >อาหารจะถูกวางขายที่ร้านค้า</p>
+        </div>
 
-        <div className="sell-fridge">
+        {/* <div className="sell-fridge">
           <div className="text-wrapper">
             <p className='sell'>
               <Link to={'/add'}>ขาย</Link></p>
             <p className='fridge'>ใส่ตู้เย็น</p>
           </div>
           <div className="slide-bar" ></div>
-        </div>
+        </div> */}
 
         <div className="details">
           <div className="food-details">
@@ -157,31 +161,31 @@ function AddtoFridge() {
             />
           </div>
 
-          <div className="add-detail">
+          <div className="add-detail ">
             <Input
               type="text"
               value={postType}
               placeholder="เลือกประเภทโพสต์"
               readOnly
               onClick={() => setIsTypeModalOpen(true)}
-              className="cursor-pointer"
+              className="cursor-pointer w-full "
             />
           </div>
 
 
           <div className="price-banner">
-          <div className="price-input ">
-            <Input
-              type="number"
-              value={form.price}
-              placeholder="ราคา (ใส่ 0 บาทได้)"
-              className="price-input "
-              name='price'
-              onChange={handleChange}
-              required
-              autoComplete='off'
-            />
-          </div>
+            <div className="price-input ">
+              <Input
+                type="number"
+                value={form.price}
+                placeholder="ราคา (ใส่ 0 บาทได้)"
+                className="price-input "
+                name='price'
+                onChange={handleChange}
+                required
+                autoComplete='off'
+              />
+            </div>
           </div>
 
           <Button
@@ -195,6 +199,7 @@ function AddtoFridge() {
 
 
           <p className='alert' >{error}</p>
+          <Link to={'/fridge/add-to-fridge'} className='text-secondary' >ต้องการเพิ่มอาหารเข้าตู้เย็นส่วนตัวกดที่นี่</Link>
 
 
           <ModalCustom

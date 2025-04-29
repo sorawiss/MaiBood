@@ -192,7 +192,7 @@ function Inpost() {
                         <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
                             p-[1rem] rounded-[16px]
                          ">
-                            <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
+                            <h2>อาหารจะถูกลบออกจากตู้เย็นและร้านค้า</h2>
                             <div className="button-wrapper flex gap-[1rem] ">
                                 <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
                                     onClick={handleOpen}
@@ -202,8 +202,6 @@ function Inpost() {
                                 >ยืนยัน</div>
                             </div>
                         </div>
-
-                   
                 </Modal>
 
             )}
