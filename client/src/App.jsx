@@ -12,10 +12,10 @@ import Add from './coponents/Add'
 import AddtoFridge from './coponents/AddtoFridge'
 import Inpost from './coponents/Inpost'
 
-import Login from './pages/Login';
-import Layout from './coponents/layout';
-import Register from './pages/Register';
-import ProtectedRoute from './ProtectedRoute';
+import Login from './pages/Login.jsx';
+import Layout from './coponents/Layout.jsx';
+import Register from './pages/Register.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
 
 
 function App() {
