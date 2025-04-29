@@ -14,7 +14,7 @@
 
 .add-wrapper {
     width: 22.5rem;
-    height: 22.5rem;
+    height: fit-content;
     background-color: var(--color-white-bg);
     display: flex;
     flex-direction: column;
@@ -53,7 +53,7 @@
 }
 
 .details {
-    margin-top: 1.5rem;
+    margin-top: 5rem;
     height: 19.5rem;
     width: 100%;
     display: flex;
@@ -112,7 +112,9 @@
     height: 3rem;
     background-color: var(--color-primary);
     border-radius: 16px;
+    padding-left: 4.5rem;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 }

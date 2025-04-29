@@ -169,8 +169,8 @@ function AddtoFridge() {
           </div>
 
 
-          <div className="price-input bg-primary text-secondary text-center rounded-[16px]  pl-[1rem] w-full py-[0.5rem]
-          ">
+          <div className="price-banner">
+          <div className="price-input ">
             <Input
               type="number"
               value={form.price}
@@ -181,6 +181,7 @@ function AddtoFridge() {
               required
               autoComplete='off'
             />
+          </div>
           </div>
 
           <Button
