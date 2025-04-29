@@ -44,6 +44,8 @@ router.post('/image/', upload.single('image'), async (req, res) => {
     }
 
     const { owner, material, exp } = req.body;
+    const price = parseInt(req.body.price);
+    console.log(typeof(price))
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
@@ -54,8 +56,8 @@ router.post('/image/', upload.single('image'), async (req, res) => {
         let connection;
         connection = await pool.getConnection();
         const [result] = await connection.execute(
-            'INSERT INTO fridge (owner, material, exp, is_store, image) VALUES (?, ?, ?, ?, ?)',
-            [owner, material, exp, true, imageUrl]
+            'INSERT INTO fridge (owner, material, exp, is_store, image, price) VALUES (?, ?, ?, ?, ?, ?)',
+            [owner, material, exp, true, imageUrl, price]
         )
 
         res.status(200).json({

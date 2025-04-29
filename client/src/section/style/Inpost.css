@@ -74,8 +74,6 @@
 }
 
 .exp-detail {
-    width: 12rem;
-    height: 2rem;
     background-color: var(--color-background);
     border-radius: 16px;
     display: flex;

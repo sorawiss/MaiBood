@@ -30,7 +30,8 @@ async function fetchAddFridge(formData) {
 function AddtoFridge() {
   const [form, setForm] = useState({
     material: '',
-    exp: ''
+    exp: '',
+    price: ''
   })
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
@@ -58,7 +59,8 @@ function AddtoFridge() {
       setError('')
       setForm({
         material: '',
-        exp: ''
+        exp: '',
+        price: ''
       })
 
       setSuccessEffect(true);
@@ -85,6 +87,7 @@ function AddtoFridge() {
     const formData = new FormData();
     formData.append('material', form.material);
     formData.append('exp', form.exp);
+    formData.append('price', form.price);
     formData.append('owner', user.id);
     formData.append('image', selectedFile);
 
@@ -142,6 +145,19 @@ function AddtoFridge() {
             />
           </div>
 
+          <div className="price-input bg-primary text-secondary text-center rounded-[16px]  pl-[1rem] w-full py-[0.5rem]
+          ">
+              <Input
+                type="number"
+                value={form.price}
+                placeholder="ราคา (ใส่ 0 บาทได้)"
+                className="price-input "
+                name='price'
+                onChange={handleChange}
+                required
+                autoComplete='off'
+              />
+            </div>
 
           <Button
             onClick={submitForm}

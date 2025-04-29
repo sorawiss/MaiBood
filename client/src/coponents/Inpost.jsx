@@ -13,6 +13,8 @@ import { Button } from 'rizzui/button';
 import BackArrow from './BackArrow';
 import deleteFridgeItem from '../lib/deleteFridgeItem';
 import Modal from './Modal'
+import thaiDate from '../lib/thaiDate.js';
+
 
 
 // Fetch Data
@@ -75,7 +77,7 @@ function Inpost() {
     }
 
 
-    if (isLoading) {
+    if (isLoading || isPending) {
         return (
             <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
                 <p>Loading post details...</p>
@@ -107,11 +109,12 @@ function Inpost() {
     }
 
     console.log(postData)
+    const date = new Date(postData.exp)
 
 
     return (
         <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
-            py-[2.5rem] px-[2rem] gap-[1rem] mb-[4rem]
+            py-[2.5rem] px-[2rem] gap-[1rem] mb-[4rem] w-full
             ">
 
             <BackArrow />
@@ -127,7 +130,7 @@ function Inpost() {
                 <div className="text-details">
                     <div className="name-price">
                         <h2 className='nameofmaterial'>{postData.material}</h2>
-                        <p className='inpost-price'>40 บาท</p>
+                        <p className='inpost-price'>{ postData.price } บาท</p>
                     </div>
                     <div className="contact">
                         <div className="contact-detail">
@@ -168,8 +171,8 @@ function Inpost() {
                         </div>
                     </div>
                 </div>
-                <div className="exp-detail">
-                    <p className='exp-detail-text'>หมดอายุ : 29 เมษายน 2568</p>
+                <div className="exp-detail px-[1rem] ">
+                    <p className='exp-detail-text'>หมดอายุ : { thaiDate(date) }</p>
                 </div>
             </div>
 
