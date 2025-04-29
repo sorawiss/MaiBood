@@ -45,8 +45,8 @@ router.post('/image/', upload.single('image'), async (req, res) => {
 
     const { owner, material, exp, type } = req.body;
     const price = parseInt(req.body.price);
-    console.log(typeof(price))
 
+    
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {

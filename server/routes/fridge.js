@@ -2,13 +2,14 @@ import express from 'express'
 
 import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
+import deleteFromS3 from '../util/deleteS3.js';
 
 
 const router = express.Router();
 
 
 // Add to fridge
-router.post('/add-to-fridge', AuthMiddleware ,async (req, res) => {
+router.post('/add-to-fridge', AuthMiddleware, async (req, res) => {
     const { owner, material, exp } = req.body;
     if (!owner || !material || !exp) {
         return res.status(400).json({ message: 'Missing required fields: id, material, or exp' });
@@ -58,16 +59,31 @@ router.delete('/delete-from-fridge/:id', AuthMiddleware, async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.execute(
+
+        const [rows] = await connection.execute(
+            'SELECT image FROM fridge WHERE id = ?',
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        const imageUrl = rows[0].image;
+
+        if (imageUrl) {
+            await deleteFromS3(imageUrl);
+        }
+
+
+        await connection.execute(
             'DELETE FROM fridge WHERE id = ?',
             [id]
-        )
-
+        );
 
         res.status(200).json({
-            message: 'Item deleted from fridge'
-        })
-
+            message: 'Item deleted from fridge successfully.'
+        });
     }
     catch (error) {
         console.error('Error deleting item from fridge', error);
@@ -77,7 +93,7 @@ router.delete('/delete-from-fridge/:id', AuthMiddleware, async (req, res) => {
         if (connection) {
             try {
                 await connection.release();
-                console.log(`Database connection released for fetching fridge items for owner: ${ownerId}`);
+                console.log(`Database connection released for fetching fridge items `);
             } catch (releaseError) {
                 console.error('Error releasing database connection:', releaseError);
             }
