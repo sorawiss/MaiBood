@@ -9,7 +9,7 @@ import deleteFridgeItem from '../lib/deleteFridgeItem.js';
 import ModalCustom from './Modal'
 
 
-function FridgeList({ material, exp, id }) {
+function FridgeList({ material, exp, id, isStore }) {
     const [open, setOpen] = useState(false);
     const [sellOpen, setSellOpen] = useState(false);
     const queryClient = useQueryClient();
@@ -37,6 +37,8 @@ function FridgeList({ material, exp, id }) {
     const handleConfirmDelete = () => {
         mutation.mutate(id);
     };
+
+
 
 
     return (
@@ -74,13 +76,12 @@ function FridgeList({ material, exp, id }) {
                 <p className='p2 ' >{thaiDate(date)}</p>
             </div>
 
+            <div className={`sale px-[0.5rem] text-primary  bg-aceent ${isStore && 'w-[6rem] bg-secondary ' }   
+            rounded-[1rem] flex justify-center items-center `}>
+                        <p>{ isStore ? 'ขายแล้ว' : 'ขาย' }</p>
+                    </div>
 
-            <ModalCustom handleOpen={handleSellOpen} open={sellOpen}
-                handler={(
-                    <div className="sale px-[0.5rem] text-primary  bg-aceent rounded-[1rem] flex justify-center items-center ">
-                        <p>ขาย</p>
-                    </div>)} >
-
+            <ModalCustom handleOpen={handleSellOpen} open={sellOpen} >
                 <div className="add-wrapper">
 
                     <div className="sell-fridge">

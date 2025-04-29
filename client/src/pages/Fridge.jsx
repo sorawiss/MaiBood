@@ -32,7 +32,7 @@ function Fridge() {
   const { user } = useContext(AuthContext)
 
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data: listItem, isLoading, isError, error } = useQuery({
     queryKey: ['fridge'],
     queryFn: () => fetchFridge(user.id),
   });
@@ -40,7 +40,6 @@ function Fridge() {
   if (isError) {
     console.log(error)
   }
-  const listItem = data;
 
 
   if (isLoading) {
@@ -50,6 +49,9 @@ function Fridge() {
       </div>
     );
   }
+
+
+  console.log(listItem)
 
 
   return (
@@ -62,7 +64,7 @@ function Fridge() {
 
         {listItem && listItem.length > 0 ? (
           listItem.map((items) => (
-            <FridgeList key={items.id} id={items.id} material={items.material} exp={items.exp} />
+            <FridgeList key={items.id} id={items.id} material={items.material} exp={items.exp} isStore={items.is_store}  />
           ))
         ) : (
           <p className='text-secondary text-center my-[5rem] p-[3rem] ' >ยังไม่มีอาหารในตู้เย็น กดเพิ่ม ➕ ได้ด้านล่างเลยครับ</p>
