@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 async function uploadToS3(file) {
-    const bucketName = process.env.S3_BUCKET_NAME; // Make sure this is in your .env
+    const bucketName = process.env.S3_BUCKET_NAME;
     if (!bucketName) {
         console.log("AWS_BUCKET_NAME environment variable is not set.");
         throw new Error("AWS_BUCKET_NAME environment variable is not set.");
@@ -43,27 +43,39 @@ router.post('/image/', upload.single('image'), async (req, res) => {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
     }
 
-    const { owner, material, exp, type } = req.body;
+    const { owner, material, exp, type, id } = req.body;
     const price = parseInt(req.body.price);
 
-    
+
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        const s3Response = await uploadToS3(req.file);
-        const imageUrl = s3Response;
+        // const s3Response = await uploadToS3(req.file);
+        const imageUrl = req.file.originalname;
 
         let connection;
         connection = await pool.getConnection();
-        const [result] = await connection.execute(
-            'INSERT INTO fridge (owner, material, exp, is_store, image, price, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [owner, material, exp, true, imageUrl, price, type]
-        )
 
-        res.status(200).json({
-            message: 'Image uploaded successfully!',
-            imageUrl: imageUrl
-        });
+        if (id) {
+            await connection.execute(
+                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ? is_store = true WHERE id = ?',
+                [imageUrl, price, type, material, id]
+            )
+
+            return res.status(200).json({
+                message: 'Data Update Successfully'
+            });
+        }
+        else {
+            await connection.execute(
+                'INSERT INTO fridge (owner, material, exp, is_store, image, price, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [owner, material, exp, true, imageUrl, price, type]
+            )
+
+            return res.status(200).json({
+                message: 'Data Upload Successfully'
+            });
+        }
 
     }
     catch (error) {

@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import '../section/style/Add.css'
 import { useMutation } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { Input, Button } from "rizzui";
 import BackArrow from './BackArrow';
@@ -28,18 +29,35 @@ async function fetchAddFridge(formData) {
 }
 
 
+// ==== Main Function ====
 function AddtoFridge() {
-  const [form, setForm] = useState({
-    material: '',
-    exp: '',
-    price: '',
-    selectedFile: null,
-  })
+  // Variables
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
   const [successEffect, setSuccessEffect] = useState(false);
   const [postType, setPostType] = useState('');
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+  const { search } = useLocation();
+
+
+  // Get data from URL
+  const query = new URLSearchParams(search);
+  const id = query.get('id')
+  const initialMaterial = query.get('material') || '';
+  const initialExp = query.get('exp') || '';
+
+  let dateExp = null
+  if (initialExp) {
+    dateExp = new Date(initialExp).toISOString().split('T')[0];
+  }
+
+
+  const [form, setForm] = useState({
+    material: initialMaterial,
+    exp: dateExp,
+    price: '',
+    selectedFile: null,
+  })
 
 
   function handleTypeSelect(type) {
@@ -66,7 +84,7 @@ function AddtoFridge() {
   const mutation = useMutation({
     mutationFn: fetchAddFridge,
     onSuccess: (data) => {
-      console.log("Add fridge success", data)
+      console.log("Add data success", data)
       setError('')
       setForm({
         material: '',
@@ -93,9 +111,14 @@ function AddtoFridge() {
     if (!form.material || !form.exp || !form.selectedFile) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
-    }
+    }  
 
     const formData = new FormData();
+
+    if (id) {
+      formData.append('id', id);
+    }
+
     formData.append('material', form.material);
     formData.append('exp', form.exp);
     formData.append('price', form.price);
@@ -151,55 +174,59 @@ function AddtoFridge() {
                 required
                 autoComplete='off'
                 className="exp-input w-full text-secondary "
+                disabled={initialExp}
               />
             </div>
 
-            <Input
-              type='file'
-              accept='image/*'
-              onChange={handleFileChange}
-            />
-          </div>
-
-          <div className="add-detail ">
-            <Input
-              type="text"
-              value={postType}
-              placeholder="เลือกประเภทโพสต์"
-              readOnly
-              onClick={() => setIsTypeModalOpen(true)}
-              className="cursor-pointer w-full "
-            />
-          </div>
-
-
-          <div className="price-banner">
-            <div className="price-input ">
+            <div className="add-detail ">
               <Input
-                type="number"
-                value={form.price}
-                placeholder="ราคา (ใส่ 0 บาทได้)"
-                className="price-input "
-                name='price'
-                onChange={handleChange}
-                required
-                autoComplete='off'
+                type="text"
+                value={postType}
+                placeholder="เลือกประเภทโพสต์"
+                readOnly
+                onClick={() => setIsTypeModalOpen(true)}
+                className="cursor-pointer w-full "
               />
             </div>
+
+            <div className="add-detail">
+              <Input
+                type='file'
+                accept='image/*'
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="price-banner">
+              <div className="price-input ">
+                <Input
+                  type="number"
+                  value={form.price}
+                  placeholder="ราคา (ใส่ 0 บาทได้)"
+                  className="price-input "
+                  name='price'
+                  onChange={handleChange}
+                  required
+                  autoComplete='off'
+                />
+              </div>
+            </div>
+
+            <Button
+              onClick={submitForm}
+              className={`post ${successEffect ? 'success-effect ' : ''}`}
+              isLoading={isPending}
+            >
+              <p className='add-post'>{successEffect ? 'บันทึกสำเร็จ✔️' : 'บันทึก'}</p>
+            </Button>
+
           </div>
 
-          <Button
-            onClick={submitForm}
-            className={`post ${successEffect ? 'success-effect ' : ''}`}
-            isLoading={isPending}
-          >
-            <p className='add-post'>{successEffect ? 'บันทึกสำเร็จ✔️' : 'บันทึก'}</p>
-          </Button>
+
 
 
 
           <p className='alert' >{error}</p>
-          <Link to={'/fridge/add-to-fridge'} className='text-secondary' >ต้องการเพิ่มอาหารเข้าตู้เย็นส่วนตัวกดที่นี่</Link>
+          <Link to={'/fridge/add-to-fridge'} className='p2 text-secondary' >ต้องการเพิ่มอาหารเข้าตู้เย็นส่วนตัวกดที่นี่</Link>
 
 
           <ModalCustom

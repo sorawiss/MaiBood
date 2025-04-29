@@ -1,6 +1,7 @@
 import React, { use } from 'react'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {useNavigate} from 'react-router-dom'
 
 import thaiDate from '../lib/thaiDate.js';
 import isExpiringSoon from '../lib/expCheck.js';
@@ -10,16 +11,16 @@ import ModalCustom from './Modal'
 
 
 function FridgeList({ material, exp, id, isStore }) {
+    // Variables
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [sellOpen, setSellOpen] = useState(false);
     const queryClient = useQueryClient();
-
     const handleOpen = () => setOpen(!open);
-    const handleSellOpen = () => setSellOpen(!sellOpen);
-
     const date = new Date(exp);
+    const query = `?id=${id}&material=${material}&exp=${exp}`
 
 
+    // Mutation Delete
     const mutation = useMutation({
         mutationFn: deleteFridgeItem,
         onSuccess: () => {
@@ -34,9 +35,16 @@ function FridgeList({ material, exp, id, isStore }) {
     })
 
 
+    // Handdle Delete
     const handleConfirmDelete = () => {
         mutation.mutate(id);
     };
+
+
+    // Haddle Sell
+    function handdleSell() {
+        navigate(`/add/${query}`)
+    }
 
 
 
@@ -76,67 +84,12 @@ function FridgeList({ material, exp, id, isStore }) {
                 <p className='p2 ' >{thaiDate(date)}</p>
             </div>
 
-            <div className={`sale px-[0.5rem] text-primary  bg-aceent ${isStore && 'w-[6rem] bg-secondary ' }   
-            rounded-[1rem] flex justify-center items-center `}>
-                        <p>{ isStore ? 'ขายแล้ว' : 'ขาย' }</p>
-                    </div>
-
-            <ModalCustom handleOpen={handleSellOpen} open={sellOpen} >
-                <div className="add-wrapper">
-
-                    <div className="sell-fridge">
-                        <div className="text-wrapper">
-                            <p className='sell'>ขาย</p>
-                            <p className='fridge'>ใส่ตู้เย็น</p>
-                        </div>
-                        <div className="slide-bar" ></div>
-                    </div>
-
-                    <div className="details">
-                        <div className="food-details">
-                            <div className="add-detail">
-                                <input
-                                    type="text"
-                                    placeholder="ใส่ชื่ออาหาร..."
-                                    className="foodname-input"
-                                />
-                            </div>
-                            <div className="add-detail">
-                                <input
-                                    type="text"
-                                    placeholder="วันหมดอายุ"
-                                    className="exp-input"
-                                />
-                            </div>
-                            <div className="add-detail">
-                                <input
-                                    type="text"
-                                    placeholder="ประเภท"
-                                    className="category-input"
-                                />
-                            </div>
-                        </div>
-                        <div className="price-banner">
-                            <input
-                                type="text"
-                                placeholder="ราคา (ใส่ 0 บาทได้)"
-                                className="price-input"
-                            />
-                        </div>
-                        <div className="post">
-                            <p className='add-post'>ลงประกาศ</p>
-                        </div>
-                    </div>
-
-                </div>
-
-
-            </ModalCustom>
-
-
-
-
-
+            <div className={`sale px-[0.5rem] text-primary  bg-aceent ${isStore && 'w-[6rem] bg-secondary '}   
+            rounded-[1rem] flex justify-center items-center `}
+                onClick={isStore ? null : handdleSell }
+            >
+                <p>{isStore ? 'ขายแล้ว' : 'ขาย'}</p>
+            </div>
 
         </div>
     )
