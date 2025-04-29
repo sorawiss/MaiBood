@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { Input, Button } from "rizzui";
 import BackArrow from './BackArrow';
+import ModalCustom from './Modal';
 
 import { AuthContext } from '../AuthContext';
 
@@ -14,7 +15,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 async function fetchAddFridge(formData) {
   const response = await fetch(`${baseUrl}/image`, {
     method: 'POST',
-    body: formData, 
+    body: formData,
     credentials: 'include',
   });
 
@@ -31,16 +32,26 @@ function AddtoFridge() {
   const [form, setForm] = useState({
     material: '',
     exp: '',
-    price: ''
+    price: '',
+    selectedFile: null,
   })
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
   const [successEffect, setSuccessEffect] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [postType, setPostType] = useState('');
+  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+
+
+  function handleTypeSelect(type) {
+    setPostType(type);
+    setIsTypeModalOpen(false);
+  }
+
+
 
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    form.selectedFile = event.target.files[0];
   };
 
 
@@ -65,7 +76,7 @@ function AddtoFridge() {
 
       setSuccessEffect(true);
       setTimeout(() => {
-        setSuccessEffect(false); 
+        setSuccessEffect(false);
       }, 1000);
     },
     onError: (error) => {
@@ -73,13 +84,13 @@ function AddtoFridge() {
     }
   })
 
-  const {isPending} = mutation;
+  const { isPending } = mutation;
 
 
   function submitForm(e) {
     e.preventDefault();
 
-    if (!form.material || !form.exp || !selectedFile) {
+    if (!form.material || !form.exp || !form.selectedFile) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
@@ -89,7 +100,8 @@ function AddtoFridge() {
     formData.append('exp', form.exp);
     formData.append('price', form.price);
     formData.append('owner', user.id);
-    formData.append('image', selectedFile);
+    formData.append('image', form.selectedFile);
+    formData.append('type', postType);
 
     mutation.mutate(formData);
   }
@@ -145,19 +157,31 @@ function AddtoFridge() {
             />
           </div>
 
+          <div className="add-detail">
+            <Input
+              type="text"
+              value={postType}
+              placeholder="เลือกประเภทโพสต์"
+              readOnly
+              onClick={() => setIsTypeModalOpen(true)}
+              className="cursor-pointer"
+            />
+          </div>
+
+
           <div className="price-input bg-primary text-secondary text-center rounded-[16px]  pl-[1rem] w-full py-[0.5rem]
           ">
-              <Input
-                type="number"
-                value={form.price}
-                placeholder="ราคา (ใส่ 0 บาทได้)"
-                className="price-input "
-                name='price'
-                onChange={handleChange}
-                required
-                autoComplete='off'
-              />
-            </div>
+            <Input
+              type="number"
+              value={form.price}
+              placeholder="ราคา (ใส่ 0 บาทได้)"
+              className="price-input "
+              name='price'
+              onChange={handleChange}
+              required
+              autoComplete='off'
+            />
+          </div>
 
           <Button
             onClick={submitForm}
@@ -170,6 +194,28 @@ function AddtoFridge() {
 
 
           <p className='alert' >{error}</p>
+
+
+          <ModalCustom
+            open={isTypeModalOpen}
+            handleOpen={() => setIsTypeModalOpen(!isTypeModalOpen)}
+            handler={<></>}
+          >
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">เลือกประเภท</h2>
+              <ul className="space-y-3 text-center ">
+                {['เนื้อ', 'ผัก, ผลไม้', 'ขนมปัง', 'อื่น ๆ'].map((type) => (
+                  <li
+                    key={type}
+                    onClick={() => handleTypeSelect(type)}
+                    className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
+                  >
+                    {type}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ModalCustom>
 
 
         </div>
