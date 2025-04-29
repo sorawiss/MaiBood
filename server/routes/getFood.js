@@ -10,12 +10,12 @@ router.get('/get-food', async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.query('SELECT * FROM fridge WHERE is_store = true');
+        const [result] = await connection.query('SELECT * FROM fridge WHERE is_store = true ORDER BY exp DESC ');
         res.json(result);
 
     }
     catch (error) {
-        res.status(500).json({message: 'Internal server error', error: error.message });
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
     finally {
         if (connection) {
@@ -36,12 +36,19 @@ router.get('/get-inpost/:id', async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.query('SELECT * FROM fridge WHERE is_store = true AND id = ?', [id] );
+        const [result] = await connection.query(
+            'SELECT f.id, f.owner, f.material, f.exp, f.is_store, f.image, f.price, f.type, m.fname, m.lname FROM fridge f INNER JOIN members m ON f.owner = m.id WHERE f.is_store = true AND f.id = ?', [id]);
+
+        if (result.length === 0) {
+            console.log(`No item found with ID ${id} or it's not marked as 'is_store=true'.`);
+            return res.status(404).json({ message: 'Food item not found or not available in store' });
+        }
+
         res.json(result[0]);
 
     }
     catch (error) {
-        res.status(500).json({message: 'Internal server error', error: error.message });
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
     finally {
         if (connection) {

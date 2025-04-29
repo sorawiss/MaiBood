@@ -122,7 +122,7 @@ function Inpost() {
 
             <div className="user-wrapper">
                 <div className="profile"></div>
-                <h2 className='inpost-text'>สรวิศ บุญนี</h2>
+                <h2 className='inpost-text'>{ postData.fname } { postData.lname }</h2>
             </div>
             <div className="show-pic">
                 <img src={postData.image} alt="" className='inpost-img rounded-[16px] ' />
