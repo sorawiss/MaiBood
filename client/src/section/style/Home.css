@@ -152,6 +152,8 @@
     width: fit-content;
     height: 1.3rem;
     border-radius: 16px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     background-color: var(--color-aceent);
     display: flex;
     align-items: center;
