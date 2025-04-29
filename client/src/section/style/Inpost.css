@@ -26,8 +26,6 @@
 
 .show-pic {
     width: 22.5rem;
-    height: 30rem;
-    background-color: var(--color-background);
     border-radius: 16px;
 }
 
@@ -76,8 +74,6 @@
 }
 
 .exp-detail {
-    width: 12rem;
-    height: 2rem;
     background-color: var(--color-background);
     border-radius: 16px;
     display: flex;
@@ -92,7 +88,6 @@
 .remove-after-sell {
     width: 22.5rem;
     height: 3rem;
-    background-color: var(--color-aceent);
     border-radius: 16px;
     display: flex;
     flex-direction: row;

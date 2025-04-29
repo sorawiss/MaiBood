@@ -29,6 +29,7 @@ p {
     --color-primary: #34332F;
     --color-secondary: #9A9A9A;
     --color-aceent: #FCDB29;
+    --color-accent-active: #fde672;
     --color-white-bg: #FFFFFF;
   }
 
@@ -38,6 +39,7 @@ p {
   --color-primary: #34332F;
   --color-secondary: #9A9A9A;
   --color-aceent: #FCDB29;
+  --color-accent-active: #fde672;
   --color-white-bg: #FFFFFF;
 }
 

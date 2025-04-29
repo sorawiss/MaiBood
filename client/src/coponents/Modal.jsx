@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    Button,
     Dialog,
 } from "@material-tailwind/react";
 
@@ -8,13 +7,13 @@ import {
 export default function ModalCustom({ children, handler, handleOpen, open }) {
     
     
-
     return (
         <>
-            <Button onClick={handleOpen} variant="gradient">
+            <div onClick={handleOpen} variant="gradient">
                 {handler}
-            </Button>
-            <Dialog open={open} handler={handleOpen} className="bg-transparent " >
+            </div>
+            <Dialog onClick={handleOpen} open={open} handler={handleOpen} className="dialog-wrapper h-screen bg-transparent 
+                flex flex-col justify-center items-center " >
                 {children}
             </Dialog>
         </>
