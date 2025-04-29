@@ -79,8 +79,8 @@ function Inpost() {
 
     if (isLoading || isPending) {
         return (
-            <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
-                <p>Loading post details...</p>
+            <div className="min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
+                <p>Loading...</p>
             </div>
         );
     }
