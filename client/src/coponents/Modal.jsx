@@ -12,8 +12,8 @@ export default function ModalCustom({ children, handler, handleOpen, open }) {
             <div onClick={handleOpen} variant="gradient">
                 {handler}
             </div>
-            <Dialog onClick={handleOpen} open={open} handler={handleOpen} className="dialog-wrapper h-screen bg-transparent 
-                flex flex-col justify-center items-center " >
+            <Dialog onClick={handleOpen} open={open} handler={handleOpen} className="dialog-wrapper w-screen h-screen bg-transparent
+                flex flex-col justify-center items-center backdrop-blur-sm " >
                 {children}
             </Dialog>
         </>
