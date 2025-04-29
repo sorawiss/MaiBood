@@ -90,7 +90,6 @@
 .remove-after-sell {
     width: 22.5rem;
     height: 3rem;
-    background-color: var(--color-aceent);
     border-radius: 16px;
     display: flex;
     flex-direction: row;

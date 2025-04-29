@@ -2,56 +2,87 @@ import React, { useState } from 'react'
 import '../section/style/Inpost.css'
 import { useParams, Link } from 'react-router-dom'; // Import useParams and Link
 import { useQuery } from '@tanstack/react-query'; // Import useQuery
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '../AuthContext'
 import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 import line from '../assets/line 1.svg'
+import { Button } from 'rizzui/button';
 
 import BackArrow from './BackArrow';
+import deleteFridgeItem from '../lib/deleteFridgeItem';
+import Modal from './Modal'
 
 
+// Fetch Data
 const baseURL = import.meta.env.VITE_BASE_URL;
 async function fetchInpostData(postId) {
-    // Construct the correct API endpoint to get data for a specific post ID
-    const response = await fetch(`${baseURL}/get-inpost/${postId}`, { // Example endpoint
+    const response = await fetch(`${baseURL}/get-inpost/${postId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        },
-        credentials: 'include' // Include if authentication is needed
+        }
     });
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
         throw new Error(errorData.message || `Network response was not ok (${response.status})`);
     }
-    return await response.json(); // Should return the data for the specific post
+    return await response.json();
 }
 
 
 function Inpost() {
     const { user } = useContext(AuthContext)
     const { id: postId } = useParams()
+    const navigation = useNavigate()
+    const [open, setOpen] = useState(false);
 
-    // --- Fetch data using useQuery ---
+
+    // Modal Handler Function
+    const handleOpen = () => {
+        setOpen(!open);
+    };
+
+
+    // Use useQuery to fetch data
     const { data: postData, isLoading, isError, error } = useQuery({
-        // Use the postId in the queryKey to make it unique per post
         queryKey: ['inpost', postId],
         queryFn: () => fetchInpostData(postId),
-        enabled: !!postId, // Only run the query if postId exists
+        enabled: !!postId,
     });
 
-    // --- Handle Loading State ---
+
+    // Delter API
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteFridgeItem,
+        onSuccess: () => {
+            console.log('Delete successful');
+            queryClient.invalidateQueries({ queryKey: ['get-post'] });
+            navigation('/home')
+        },
+        onError: (error) => {
+            console.error('Delete failed:', error);
+        }
+    });
+
+    const { isPending } = mutation
+
+    function handleDelete() {
+        mutation.mutate(postData.id)
+    }
+
+
     if (isLoading) {
         return (
             <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
                 <p>Loading post details...</p>
-                {/* Add a spinner maybe */}
             </div>
         );
     }
 
-    // --- Handle Error State ---
     if (isError) {
         console.error("Error fetching inpost data:", error);
         return (
@@ -66,7 +97,6 @@ function Inpost() {
         );
     }
 
-    // Ensure postData exists before trying to access its properties
     if (!postData) {
         return (
             <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
@@ -76,9 +106,7 @@ function Inpost() {
         );
     }
 
-
     console.log(postData)
-
 
 
     return (
@@ -146,9 +174,34 @@ function Inpost() {
             </div>
 
             {user.id == postData.owner && (
-                <div className="remove-after-sell">
-                    <h2 className='inpost-text'>ขายแล้ว</h2>
-                </div>
+                <Modal
+                    handler={<Button className="!w-[23.5rem] rounded-[16px] bg-aceent active:bg-accent-active "
+                        onClick={handleOpen}
+                    >
+                        <h2 className='inpost-text'>ขายแล้ว</h2>
+                    </Button>}
+
+                    handleOpen={handleOpen}
+                    open={open}
+                >
+                    
+                        <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
+                            p-[1rem] rounded-[16px] ml-[2.5rem]
+                         ">
+                            <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
+                            <div className="button-wrapper flex gap-[1rem] ">
+                                <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
+                                    onClick={handleOpen}
+                                >ไม่ใช่</div>
+                                <div className="ok bg-aceent rounded-[16px] px-[1rem] py-[0.3rem] "
+                                    onClick={handleDelete}
+                                >ยืนยัน</div>
+                            </div>
+                        </div>
+
+                   
+                </Modal>
+
             )}
 
         </div>

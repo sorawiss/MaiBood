@@ -7,9 +7,8 @@ import '../section/style/Home.css'
 
 function FoodWrapper({ id, exp, price, name, location, image }) {
     const time = new Date(exp)
-    console.log(image)
 
-
+    
     return (
         <Link to={'/inpost/' + id} >
             <div className="food-container">
