@@ -190,7 +190,7 @@ function Inpost() {
                 >
                     
                         <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
-                            p-[1rem] rounded-[16px] ml-[2.5rem]
+                            p-[1rem] rounded-[16px]
                          ">
                             <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
                             <div className="button-wrapper flex gap-[1rem] ">
