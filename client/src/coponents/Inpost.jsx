@@ -113,8 +113,9 @@ function Inpost() {
 
 
     return (
-        <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
-            py-[2.5rem] px-[2rem] gap-[1rem] mb-[4rem]
+        <div className="inpost-overall">
+            <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
+            py-[2.5rem] gap-[1rem] mb-[4rem]
             ">
 
             <BackArrow />
@@ -207,6 +208,7 @@ function Inpost() {
 
             )}
 
+        </div>
         </div>
     )
 }
