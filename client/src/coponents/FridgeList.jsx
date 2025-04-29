@@ -79,7 +79,7 @@ function FridgeList({ material, exp, id, isStore }) {
             </ModalCustom>
 
 
-            <div className="info-wrapper flex flex-col justify-between items-center w-full max-w-[14.37rem] ">
+            <div className="info-wrapper flex flex-col justify-between items-center w-full max-w-[12rem] text-center ">
                 <h2>{material}</h2>
                 <p className='p2 ' >{thaiDate(date)}</p>
             </div>
