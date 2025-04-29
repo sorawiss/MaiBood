@@ -123,16 +123,15 @@
 }
 
 .exp-date {
-    width: 5rem;
+    width: 6rem;
     height: 1.25rem;
     border-radius: 16px;
     margin-top: 1.5rem;
     margin-left: 0.5rem;
-    background-color: var(--color-secondary);
+    background-color: rgba(154, 154, 154, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 70%;
 }
 
 .exp {

@@ -3,6 +3,7 @@
 
 html {
   font-family: "Noto Sans Thai", sans-serif;
+  font-size: clamp(12px, 4vw, 18px);
 }
 
 h2 {
@@ -18,12 +19,17 @@ p {
   font-weight: 300;
 }
 
+.alert {
+  color: red
+}
+
 :root {
     --color-background: #F4F3EF;
     --color-alert: #FB4B27;
     --color-primary: #34332F;
     --color-secondary: #9A9A9A;
     --color-aceent: #FCDB29;
+    --color-accent-active: #fde672;
     --color-white-bg: #FFFFFF;
   }
 
@@ -33,10 +39,16 @@ p {
   --color-primary: #34332F;
   --color-secondary: #9A9A9A;
   --color-aceent: #FCDB29;
+  --color-accent-active: #fde672;
   --color-white-bg: #FFFFFF;
 }
 
 
 
 
+
+.rizzui-input-field {
+  outline: none!important;
+  
+}
 

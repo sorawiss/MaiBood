@@ -1,12 +1,22 @@
 import express from "express"
 import "dotenv/config"
 import cors from "cors"
+import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 
-import router from "./routes/router.js"
+// Routes Import
+import auth from './routes/auth.js'
+import fridge from './routes/fridge.js'
+import imageUpload from './routes/imageUpload.js'
+import getFood from './routes/getFood.js'
 
+
+
+dotenv.config()
 
 var app = express()
 app.use(express.json())
+app.use(cookieParser())
 
 
 const allowedOrigins = process.env.ORIGIN || "http://localhost:5173"
@@ -19,9 +29,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+// Use Routes
+app.use(auth)
+app.use(fridge)
+app.use(imageUpload)
+app.use(getFood)
 
 
-app.use(router)
 
 
 const port = process.env.PORT || 8080;

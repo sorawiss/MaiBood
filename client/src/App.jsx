@@ -1,31 +1,47 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
+import { Navigate } from 'react-router-dom';
 
 // Pages Import
 import Home from './pages/Home';
-import Nav from './coponents/Nav';
 import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
+
 import Add from './coponents/Add'
+import AddtoFridge from './coponents/AddtoFridge'
+import Inpost from './coponents/Inpost'
+
+import Login from './pages/Login';
+import Layout from './coponents/layout';
+import Register from './pages/Register';
+import ProtectedRoute from './ProtectedRoute';
 
 
 function App() {
   return (
-    <Router>
 
-      <div className="App flex flex-col items-center w-[23.5rem] mx-auto min-h-screen relative pb-[5rem]">
+    <AuthProvider>
+      <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/fridge" element={<Fridge />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='*' element={<Home />} />
-          <Route path='/add' element={<Add />} />
+
+          <Route path='/' element={<Navigate to='/home' replace />} />
+
+          <Route element={<Layout />}>
+            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/fridge" element={<ProtectedRoute><Fridge /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
+            <Route path="/fridge/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
+            <Route path="/inpost/:id" element={<ProtectedRoute><Inpost /></ProtectedRoute>} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
         </Routes>
-      </div>
-      <Nav />
+      </Router>
+    </AuthProvider>
 
-    </Router>
   );
 }
 

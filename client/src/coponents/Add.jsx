@@ -1,60 +1,229 @@
-import React, { useState }  from 'react'
+import React, { useState, useContext } from 'react'
 import '../section/style/Add.css'
+import { Link } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query';
 
-function Add() {
-    return (
-      <div className='overall min-h-screen bg-white-bg w-full flex '>
+import { Input, Button } from "rizzui";
+import BackArrow from './BackArrow';
+import ModalCustom from './Modal';
 
-        <div className="add-wrapper">
+import { AuthContext } from '../AuthContext';
 
-          <div className="sell-fridge">
-            <div className="text-wrapper">
-              <p className='sell'>ขาย</p>
-              <p className='fridge'>ใส่ตู้เย็น</p>
-            </div>
-            <div className="slide-bar" ></div>
+
+// Fetch API function 
+const baseUrl = import.meta.env.VITE_BASE_URL;
+async function fetchAddFridge(formData) {
+  const response = await fetch(`${baseUrl}/image`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Fetch add, sell response was not ok');
+  }
+
+  const dataFromServer = await response.json();
+  return dataFromServer;
+}
+
+
+function AddtoFridge() {
+  const [form, setForm] = useState({
+    material: '',
+    exp: '',
+    price: '',
+    selectedFile: null,
+  })
+  const [error, setError] = useState('')
+  const { user } = useContext(AuthContext);
+  const [successEffect, setSuccessEffect] = useState(false);
+  const [postType, setPostType] = useState('');
+  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+
+
+  function handleTypeSelect(type) {
+    setPostType(type);
+    setIsTypeModalOpen(false);
+  }
+
+
+
+
+  const handleFileChange = (event) => {
+    form.selectedFile = event.target.files[0];
+  };
+
+
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+  }
+
+
+  const mutation = useMutation({
+    mutationFn: fetchAddFridge,
+    onSuccess: (data) => {
+      console.log("Add fridge success", data)
+      setError('')
+      setForm({
+        material: '',
+        exp: '',
+        price: ''
+      })
+
+      setSuccessEffect(true);
+      setTimeout(() => {
+        setSuccessEffect(false);
+      }, 1000);
+    },
+    onError: (error) => {
+      console.log("Add fridge error", error)
+    }
+  })
+
+  const { isPending } = mutation;
+
+
+  function submitForm(e) {
+    e.preventDefault();
+
+    if (!form.material || !form.exp || !form.selectedFile) {
+      setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('material', form.material);
+    formData.append('exp', form.exp);
+    formData.append('price', form.price);
+    formData.append('owner', user.id);
+    formData.append('image', form.selectedFile);
+    formData.append('type', postType);
+
+    mutation.mutate(formData);
+  }
+
+
+
+
+  return (
+    <div className='overall min-h-screen bg-white-bg w-full flex '>
+      <BackArrow />
+
+      <div className="add-wrapper">
+
+        <div className="sell-fridge">
+          <div className="text-wrapper">
+            <p className='sell'>
+              <Link to={'/add'}>ขาย</Link></p>
+            <p className='fridge'>ใส่ตู้เย็น</p>
           </div>
+          <div className="slide-bar" ></div>
+        </div>
 
-          <div className="details">
-            <div className="food-details">
-              <div className="add-detail">
-                <input
-                  type="text"
-                  placeholder="ใส่ชื่ออาหาร..."
-                  className="foodname-input"
-                />
-              </div>
-              <div className="add-detail">
-                <input
-                  type="text"
-                  placeholder="วันหมดอายุ"
-                  className="exp-input"
-                />
-              </div>
-              <div className="add-detail">
-                <input
-                  type="text"
-                  placeholder="ประเภท"
-                  className="category-input"
-                />
-              </div>
-            </div>
-            <div className="price">
-              <input
+        <div className="details">
+          <div className="food-details">
+            <div className="add-detail">
+              <Input
                 type="text"
-                placeholder="ราคา (ใส่ 0 บาทได้)"
-                className="price-input"
+                value={form.material}
+                placeholder="ใส่ชื่ออาหาร..."
+                className="foodname-input"
+                name='material'
+                onChange={handleChange}
+                required
+                autoComplete='off'
               />
             </div>
-            <div className="post">
-              <p className='add-post'>ลงประกาศ</p>
+            <div className="add-detail">
+              <Input
+                type="date"
+                name='exp'
+                value={form.exp}
+                onChange={handleChange}
+                required
+                autoComplete='off'
+                className="exp-input w-full text-secondary "
+              />
             </div>
+
+            <Input
+              type='file'
+              accept='image/*'
+              onChange={handleFileChange}
+            />
           </div>
+
+          <div className="add-detail">
+            <Input
+              type="text"
+              value={postType}
+              placeholder="เลือกประเภทโพสต์"
+              readOnly
+              onClick={() => setIsTypeModalOpen(true)}
+              className="cursor-pointer"
+            />
+          </div>
+
+
+          <div className="price-input bg-primary text-secondary text-center rounded-[16px]  pl-[1rem] w-full py-[0.5rem]
+          ">
+            <Input
+              type="number"
+              value={form.price}
+              placeholder="ราคา (ใส่ 0 บาทได้)"
+              className="price-input "
+              name='price'
+              onChange={handleChange}
+              required
+              autoComplete='off'
+            />
+          </div>
+
+          <Button
+            onClick={submitForm}
+            className={`post ${successEffect ? 'success-effect ' : ''}`}
+            isLoading={isPending}
+          >
+            <p className='add-post'>{successEffect ? 'บันทึกสำเร็จ✔️' : 'บันทึก'}</p>
+          </Button>
+
+
+
+          <p className='alert' >{error}</p>
+
+
+          <ModalCustom
+            open={isTypeModalOpen}
+            handleOpen={() => setIsTypeModalOpen(!isTypeModalOpen)}
+            handler={<></>}
+          >
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">เลือกประเภท</h2>
+              <ul className="space-y-3 text-center ">
+                {['เนื้อ', 'ผัก, ผลไม้', 'ขนมปัง', 'อื่น ๆ'].map((type) => (
+                  <li
+                    key={type}
+                    onClick={() => handleTypeSelect(type)}
+                    className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
+                  >
+                    {type}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ModalCustom>
+
 
         </div>
 
       </div>
-    )
-  }
-  
-  export default Add
+
+    </div>
+  )
+}
+
+export default AddtoFridge
