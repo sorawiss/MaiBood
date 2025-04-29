@@ -28,13 +28,18 @@ function App() {
           <Route path='/' element={<Navigate to='/home' replace />} />
 
           <Route element={<Layout />}>
-            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path="/fridge" element={<ProtectedRoute><Fridge /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/add" element={<ProtectedRoute><Add /></ProtectedRoute>} />
-            <Route path="/fridge/add-to-fridge" element={<ProtectedRoute><AddtoFridge /></ProtectedRoute>} />
-            <Route path="/inpost/:id" element={<ProtectedRoute><Inpost /></ProtectedRoute>} />
+            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+              <Route path="/fridge" element={<Fridge />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/add" element={<Add />} />
+              <Route path="/fridge/add-to-fridge" element={<AddtoFridge />} />
+            </Route>
+            
+            <Route path="/home" element={<Home />} />
+            <Route path="/inpost/:id" element={<Inpost />} />
           </Route>
+          {/* End layout */}
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

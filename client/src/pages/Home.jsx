@@ -56,7 +56,7 @@ function Home() {
     if (isLoading) {
       return (
         <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
-          <p>Loading fridge...</p>
+          <p>Loading store...</p>
         </div>
       );
     }
@@ -71,7 +71,7 @@ function Home() {
     <div className="overall pb-[3rem] ">
 
       <div className='top-container'>
-        <h2 className='hello'>สวัสดี {user.fname}</h2>
+        <h2 className='hello'>สวัสดี { user && (user.fname) }</h2>
         <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
           <span className="highlight">โลกของเรา</span>
         </h2>

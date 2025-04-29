@@ -177,7 +177,7 @@ function Inpost() {
                 </div>
             </div>
 
-            {user.id == postData.owner && (
+            { user && user.id == postData.owner && (
                 <Modal
                     handler={<Button className="!w-[23.5rem] rounded-[16px] bg-aceent active:bg-accent-active "
                         onClick={handleOpen}
