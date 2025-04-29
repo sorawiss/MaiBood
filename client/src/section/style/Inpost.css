@@ -1,3 +1,9 @@
+.inpost-overall {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .Inpost-wrapper {
     display: flex;
     flex-direction: column;
@@ -30,7 +36,7 @@
 }
 
 .inpost-detail {
-    width: 12rem;
+    width: fit-content;
     height: 10.5rem;
     display: flex;
     flex-direction: column;
@@ -79,6 +85,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: fit-content;
 }
 
 .exp-detail-text {
