@@ -40,6 +40,15 @@ function AddtoFridge() {
   const { search } = useLocation();
 
 
+  // Type of Post
+ const typeOfPost = [
+  {label : "เนื้อ", value : 1},
+  {label : "ผัก, ผลไม้", value : 2},
+  {label : "ขนมปัง", value : 3},
+  {label : "อื่น ๆ", value : 4}
+ ]
+
+
   // Get data from URL
   const query = new URLSearchParams(search);
   const id = query.get('id')
@@ -239,13 +248,13 @@ function AddtoFridge() {
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <h2 className="text-xl font-semibold mb-4">เลือกประเภท</h2>
               <ul className="space-y-3 text-center ">
-                {['เนื้อ', 'ผัก, ผลไม้', 'ขนมปัง', 'อื่น ๆ'].map((type) => (
+                {typeOfPost.map((type) => (
                   <li
-                    key={type}
-                    onClick={() => handleTypeSelect(type)}
+                    key={type.value}
+                    onClick={() => handleTypeSelect(type.value)}
                     className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
                   >
-                    {type}
+                    {type.label}
                   </li>
                 ))}
               </ul>
