@@ -50,7 +50,7 @@ router.post('/image/', upload.single('image'), async (req, res) => {
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        const s3Response = await uploadToS3(req.file);
+        // const s3Response = await uploadToS3(req.file);
         const imageUrl = req.file.originalname;
 
         let connection;
