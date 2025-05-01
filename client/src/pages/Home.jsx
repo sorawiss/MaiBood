@@ -10,7 +10,7 @@ import cancel from '../assets/X.svg'
 
 import SectionTitle from '../coponents/SectionTitle'
 import FoodWrapper from '../coponents/FoodWrapper'
-import {AuthContext} from '../AuthContext'
+import { AuthContext } from '../AuthContext'
 
 
 // Fetch Data Function
@@ -25,7 +25,7 @@ async function fetchData() {
       credentials: 'include'
     });
 
-    if (!response.ok) { 
+    if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `Network response was not ok (${response.status})`);
     }
@@ -33,7 +33,7 @@ async function fetchData() {
     return await response.json();
 
   }
-  catch(error) {
+  catch (error) {
     console.log("error while fetch food", error)
   }
 }
@@ -49,22 +49,26 @@ function Home() {
 
   // Fetch Data Query
   const { data, isLoading, isError, error } = useQuery({
-      queryKey: ['get-food'],
-      queryFn: fetchData,
-    });
+    queryKey: ['get-food'],
+    queryFn: fetchData,
+  });
 
-    if (isLoading) {
-      return (
-        <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
-          <p>Loading fridge...</p>
-        </div>
-      );
-    }
-    if (isError) {
-      console.log(error)
-    }
+  if (isLoading) {
+    return (
+      <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
+        <p>Loading fridge...</p>
+      </div>
+    );
+  }
+  if (isError) {
+    console.log(error)
+  }
 
-    const list = data;
+  // Filter Function
+  const list = data.filter((item) => {
+    const list = item.material.toLowerCase();
+    return list.includes(searchText.toLowerCase());
+  })
 
 
   return (
@@ -119,12 +123,12 @@ function Home() {
       <div className='third-container'>
         <SectionTitle title={'อาหารจากร้านค้า'} />
         <div className="allfood-container">
-          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image}  name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
+          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>
       </div> {/*third-container*/}
 
 
-      
+
 
     </div>
   )
