@@ -43,6 +43,7 @@ async function fetchData() {
 // Main Render
 function Home() {
   const [searchText, setSearchText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { user } = useContext(AuthContext);
 
@@ -64,11 +65,26 @@ function Home() {
     console.log(error)
   }
 
-  // Filter Function
-  const list = data.filter((item) => {
-    const list = item.material.toLowerCase();
-    return list.includes(searchText.toLowerCase());
-  })
+
+  // --- Filtering Logic ---
+  const list = data?.filter((item) => {
+    const material = item?.material || '';
+    const itemType = item?.type || '';
+    const searchLower = searchText.toLowerCase();
+    const materialLower = material.toLowerCase();
+
+    const matchesSearch = materialLower.includes(searchLower);
+
+    const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  }) || [];
+
+
+  // --- Category Click Handler ---
+  const handleCategoryClick = (category) => {
+    setSelectedCategory((prevCategory) => prevCategory === category ? null : category);
+  };
 
 
   return (
@@ -99,20 +115,28 @@ function Home() {
 
         <div className="category-button">
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 1 ? 'active-category' : ''}`} // Example active class
+            onClick={() => handleCategoryClick(1)} >
             <img src={meat} alt='meat category button'></img>
           </button>
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 2 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(2)} >
             <img src={carrot} alt='vegetable category button'></img>
           </button>
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 3 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(3)} >
             <img src={bread} alt='bread category button'></img>
           </button>
 
-          <button className='circle-button'>
-            <img src={dot} alt='other category button'></img>
+          <button
+            className={`circle-button ${selectedCategory === 4 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(4)} >
+            <img src={dot} alt='all categories button'></img>
           </button>
 
         </div>
@@ -126,9 +150,6 @@ function Home() {
           {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>
       </div> {/*third-container*/}
-
-
-
 
     </div>
   )

@@ -219,3 +219,9 @@
     color: var(--color-primary);
 }
 
+
+
+/* ball */
+.active-category {
+    background-color: var(--color-aceent);
+}
