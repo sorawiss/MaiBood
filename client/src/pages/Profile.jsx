@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { use } from 'react'
 import BackArrow from '../coponents/BackArrow'
 import Noodle from '../assets/Group.svg'
 import line from '../assets/line 1.svg'
 import '../section/style/Profile.css'
+import { useContext } from 'react'
+
+import { AuthContext } from '../AuthContext'
+
 
 function Profile() {
+
+  const { user, logout } = useContext(AuthContext)
+
   return (
     <div className="profile-page-wrapper">
       <div className='profile-page min-h-screen bg-white-bg w-[23.5rem] mx-auto flex flex-col items-center py-[2.5rem] px-[2rem] gap-[4.5rem] '>
@@ -15,7 +22,7 @@ function Profile() {
           <div className="profile-pic-name gap-[1rem] ">
             <div className="picture-profile" />
             <div className="name-rank flex flex-col items-center ">
-              <h2 className='prim-text'>Kim Kim</h2>
+              <h2 className='prim-text'>{user.fname} {user.lname}</h2>
               <div className="rank-banner flex flex-col items-center ">
                 <p className='sec-text'>👑 พระราชา</p>
               </div>
@@ -25,7 +32,7 @@ function Profile() {
           <div className="success-feedback">
             <div className="success-text">
               <h2 className='prim-text'>👑 พระราชา</h2>
-              <p className='prim-text'>สรวิศ ได้ช่วยให้อาหารกว่า 40 มื้อ
+              <p className='prim-text'>{user.fname} ได้ช่วยให้อาหารกว่า 40 มื้อ
                 ไม่เน่าเสียอย่างไร้คุณค่า</p>
             </div>
             <img src={Noodle} />
@@ -92,7 +99,7 @@ function Profile() {
 
       <div className="edit-logout flex flex-col items-center gap-[1rem] ">
             <p className='edit'>แก้ไขข้อมูล</p>
-            <p className='logout'>ออกจากระบบ</p>
+            <p onClick={logout} className='logout'>ออกจากระบบ</p>
       </div>
     </div>
   )
