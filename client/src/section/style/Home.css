@@ -46,6 +46,7 @@
 
 .search-input {
     color: var(--color-secondary);
+    width: 100%;
 }
 
 .category-button {
@@ -220,3 +221,9 @@
     color: var(--color-primary);
 }
 
+
+
+/* ball */
+.active-category {
+    background-color: var(--color-aceent);
+}
