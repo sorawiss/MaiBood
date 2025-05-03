@@ -38,7 +38,6 @@ function AddtoFridge() {
   const [postType, setPostType] = useState('');
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const { search } = useLocation();
-  console.log(successEffect)
 
 
   // Type of Post

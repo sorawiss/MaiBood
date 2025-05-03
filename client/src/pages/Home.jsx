@@ -8,7 +8,6 @@ import bread from '../assets/bread.svg'
 import dot from '../assets/dot.svg'
 import cancel from '../assets/X.svg'
 
-import SectionTitle from '../coponents/SectionTitle'
 import FoodWrapper from '../coponents/FoodWrapper'
 import { AuthContext } from '../AuthContext'
 
@@ -46,6 +45,18 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { user } = useContext(AuthContext);
+
+
+   // --- Determine Header Text ---
+   const getHeaderText = () => {
+    switch (selectedCategory) {
+      case 1: return 'เนื้อ'; // Meat from shop
+      case 2: return 'ผัก, ผลไม้'; // Vegetables, Fruits from shop
+      case 3: return 'ขนมปัง'; // Bread from shop
+      case 4: return 'อื่น ๆ'; // Others from shop
+      default: return 'อาหารทั้งหมด'; // All food from shop
+    }
+  };
 
 
   // Fetch Data Query
@@ -145,7 +156,7 @@ function Home() {
 
       {/* Food From Shop */}
       <div className='third-container'>
-        <SectionTitle title={'อาหารจากร้านค้า'} />
+        <h2> { getHeaderText() } </h2>
         <div className="allfood-container">
           {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>

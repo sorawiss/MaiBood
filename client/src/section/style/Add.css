@@ -91,13 +91,8 @@
     color: var(--color-secondary);
 }
 
-.exp-input {
-    width: 20.5rem;
-}
 
-.exp-input::placeholder {
-    color: var(--color-secondary);
-}
+
 
 .category-input {
     width: 20.5rem;

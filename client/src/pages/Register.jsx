@@ -91,7 +91,7 @@ function Register() {
             <section className="w-full bg-white box-border px-[26px] py-[58px] rounded-[48px_48px_0_0]">
                 <form className="w-full">
                     <h1 className="font-bold text-[40px] text-[#34332F] text-center mb-6 max-md:text-4xl max-sm:text-[32px]">
-                        เข้าสู่ะระบบ
+                        สมัครสมาชิก
                     </h1>
 
                     <div className="flex flex-col gap-4 mb-6">
