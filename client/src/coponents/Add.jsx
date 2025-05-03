@@ -82,7 +82,7 @@ function AddtoFridge() {
 
     // Option of compression-image
     const options = {
-      maxSizeMB: 0.5, // target maximum size in MB
+      maxSizeMB: 0.1, // target maximum size in MB
       maxWidthOrHeight: 1024, // maintain aspect ratio
       useWebWorker: true,
     };
