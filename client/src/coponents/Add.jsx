@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { Input, Button } from "rizzui";
 import BackArrow from './BackArrow';
 import ModalCustom from './Modal';
+import imageCompression from 'browser-image-compression';
 
 import { AuthContext } from '../AuthContext';
 
@@ -41,15 +42,15 @@ function AddtoFridge() {
 
 
   // Type of Post
- const typeOfPost = [
-  {label : "เนื้อ", value : 1},
-  {label : "ผัก, ผลไม้", value : 2},
-  {label : "ขนมปัง", value : 3},
-  {label : "อื่น ๆ", value : 4}
- ]
+  const typeOfPost = [
+    { label: "เนื้อ", value: 1 },
+    { label: "ผัก, ผลไม้", value: 2 },
+    { label: "ขนมปัง", value: 3 },
+    { label: "อื่น ๆ", value: 4 }
+  ]
 
 
-  // Get data from URL
+  // Get Information from URL (for sell from fridge)
   const query = new URLSearchParams(search);
   const id = query.get('id')
   const initialMaterial = query.get('material') || '';
@@ -69,19 +70,42 @@ function AddtoFridge() {
   })
 
 
+  // Type Handler
   function handleTypeSelect(type) {
     setPostType(type);
     setIsTypeModalOpen(false);
   }
 
 
+  // File Handler
+  const handleFileChange = async (event) => {
 
+    // Option of compression-image
+    const options = {
+      maxSizeMB: 0.5, // target maximum size in MB
+      maxWidthOrHeight: 1024, // maintain aspect ratio
+      useWebWorker: true,
+    };
 
-  const handleFileChange = (event) => {
-    form.selectedFile = event.target.files[0];
+    // Compression Function
+    try {
+      const compressedFile = await imageCompression(event.target.files[0], options);
+      setForm({
+        ...form,
+        selectedFile: compressedFile,
+      });
+
+    } catch {
+      console.error('Image compression error:', error);
+      setForm({
+        ...form,
+        selectedFile: null,
+      });
+    }
   };
 
 
+  // Form Handler
   function handleChange(e) {
     setForm({
       ...form,
@@ -122,7 +146,7 @@ function AddtoFridge() {
     if (!form.material || !form.exp || !form.selectedFile) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
-    }  
+    }
 
     const formData = new FormData();
 
@@ -220,6 +244,10 @@ function AddtoFridge() {
                   autoComplete='off'
                 />
               </div>
+            </div>
+
+            <div className="image-uploaded-display w-full ">
+              <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt=""/>
             </div>
 
             <Button
