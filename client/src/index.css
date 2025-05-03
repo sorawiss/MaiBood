@@ -47,8 +47,9 @@ p {
 
 
 
-.rizzui-input-field {
+.rizzui-input-field, .rizzui-input-container {
   outline: none!important;
-  
+  border: none!important;
+  @apply !ring-0
 }
 
