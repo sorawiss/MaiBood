@@ -1,7 +1,7 @@
 import React, { use } from 'react'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import thaiDate from '../lib/thaiDate.js';
 import isExpiringSoon from '../lib/expCheck.js';
@@ -47,11 +47,24 @@ function FridgeList({ material, exp, id, isStore }) {
     }
 
 
+    // Style
+    const expireStyle = () => {
+        const expDate = isExpiringSoon(exp);
+
+        switch (expDate) { 
+            case 1 : return "border border-3 border-red-500"
+            case 2 : return "bg-secondary "
+            default : return ""
+
+        }
+    }
+
+
 
 
     return (
-        <div className={`fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between items-center rounded-[16px]
-            ${isExpiringSoon(exp) ? 'border-2 border-red-500' : ''}`}>
+        <div className={`fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between 
+            items-center rounded-[16px] ${expireStyle()}`}>
             {/* Bin SVG */}
             <ModalCustom handleOpen={handleOpen} open={open}
                 handler={(
@@ -86,9 +99,10 @@ function FridgeList({ material, exp, id, isStore }) {
 
             <div className={`sale px-[0.5rem] text-primary  bg-aceent ${isStore && 'w-[6rem] bg-secondary '}   
             rounded-[1rem] flex justify-center items-center `}
-                onClick={isStore ? null : handdleSell }
+                onClick={isStore ? null : handdleSell}
             >
-                <p>{isStore ? 'ขายแล้ว' : 'ขาย'}</p>
+                { isExpiringSoon(exp) != 2 && <p>{isStore ? 'ขายอยู่' : 'ขาย'}</p> }
+                
             </div>
 
         </div>
