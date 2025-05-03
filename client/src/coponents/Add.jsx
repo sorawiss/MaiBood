@@ -225,9 +225,9 @@ function AddtoFridge() {
             <Button
               onClick={submitForm}
               className={`post ${successEffect ? 'success-effect ' : ''}`}
-              isLoading={true}
+              isLoading={isPending}
             >
-              โพสต์
+              {successEffect ? "ลงขาย" : "ลงขายสำเร็จ ✔️"}
             </Button>
 
           </div>
