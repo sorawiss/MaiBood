@@ -38,6 +38,7 @@ function AddtoFridge() {
   const [postType, setPostType] = useState('');
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const { search } = useLocation();
+  console.log(successEffect)
 
 
   // Type of Post
@@ -106,7 +107,7 @@ function AddtoFridge() {
       setSuccessEffect(true);
       setTimeout(() => {
         setSuccessEffect(false);
-      }, 1000);
+      }, 2000);
     },
     onError: (error) => {
       console.log("Add fridge error", error)
@@ -227,7 +228,7 @@ function AddtoFridge() {
               className={`post ${successEffect ? 'success-effect ' : ''}`}
               isLoading={isPending}
             >
-              {successEffect ? "ลงขาย" : "ลงขายสำเร็จ ✔️"}
+              {successEffect ? "ลงขายสำเร็จ ✔️" : "ลงขาย"}
             </Button>
 
           </div>
