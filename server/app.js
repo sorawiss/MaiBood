@@ -31,10 +31,10 @@ app.use(cors(corsOptions));
 
 
 // Use Routes
-app.use(auth)
-app.use(fridge)
-app.use(imageUpload)
-app.use(getFood)
+// app.use(auth)
+// app.use(fridge)
+// app.use(imageUpload)
+// app.use(getFood)
 app.use(spoonacular)
 
 
