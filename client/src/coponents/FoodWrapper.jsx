@@ -10,7 +10,7 @@ function FoodWrapper({ id, exp, price, name, location, image }) {
 
     
     return (
-        <Link to={'/inpost/' + id} >
+        <Link to={'/home/inpost/' + id} >
             <div className="food-container">
                 <div className="food-pic">
                     <img src={image} loading='lazy' ></img>

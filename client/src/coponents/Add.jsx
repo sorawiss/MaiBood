@@ -200,7 +200,7 @@ function AddtoFridge() {
                 autoComplete='off'
               />
             </div>
-            <div className="add-detail">
+            <div className="bg-background w-full rounded-[16px] px-[1rem] ">
               <Input
                 type="date"
                 name='exp'
@@ -208,7 +208,7 @@ function AddtoFridge() {
                 onChange={handleChange}
                 required
                 autoComplete='off'
-                className="exp-input w-full text-secondary "
+                className="w-full text-secondary "
                 disabled={initialExp}
               />
             </div>
@@ -279,7 +279,7 @@ function AddtoFridge() {
                 {typeOfPost.map((type) => (
                   <li
                     key={type.value}
-                    onClick={() => handleTypeSelect(type.value)}
+                    onClick={() => handleTypeSelect(type.label)}
                     className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
                   >
                     {type.label}

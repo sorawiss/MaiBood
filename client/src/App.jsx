@@ -36,7 +36,7 @@ function App() {
             </Route>
             
             <Route path="/home" element={<Home />} />
-            <Route path="/inpost/:id" element={<Inpost />} />
+            <Route path="/home/inpost/:id" element={<Inpost />} />
           </Route>
           {/* End layout */}
 
