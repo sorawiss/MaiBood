@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react'
 import '../section/style/Add.css'
-import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { Input, Button } from "rizzui";
 import BackArrow from './BackArrow';
 import ModalCustom from './Modal';
+import imageCompression from 'browser-image-compression';
 
 import { AuthContext } from '../AuthContext';
 
@@ -28,33 +30,82 @@ async function fetchAddFridge(formData) {
 }
 
 
+// ==== Main Function ====
 function AddtoFridge() {
-  const [form, setForm] = useState({
-    material: '',
-    exp: '',
-    price: '',
-    selectedFile: null,
-  })
+  // Variables
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
   const [successEffect, setSuccessEffect] = useState(false);
   const [postType, setPostType] = useState('');
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+  const { search } = useLocation();
 
 
+  // Type of Post
+  const typeOfPost = [
+    { label: "เนื้อ", value: 1 },
+    { label: "ผัก, ผลไม้", value: 2 },
+    { label: "ขนมปัง", value: 3 },
+    { label: "อื่น ๆ", value: 4 }
+  ]
+
+
+  // Get Information from URL (for sell from fridge)
+  const query = new URLSearchParams(search);
+  const id = query.get('id')
+  const initialMaterial = query.get('material') || '';
+  const initialExp = query.get('exp') || '';
+
+  let dateExp = ''
+  if (initialExp) {
+    dateExp = new Date(initialExp).toISOString().split('T')[0];
+  }
+
+
+  const [form, setForm] = useState({
+    material: initialMaterial,
+    exp: dateExp,
+    price: '',
+    selectedFile: null,
+  })
+
+
+  // Type Handler
   function handleTypeSelect(type) {
     setPostType(type);
     setIsTypeModalOpen(false);
   }
 
 
+  // File Handler
+  const handleFileChange = async (event) => {
 
+    // Option of compression-image
+    const options = {
+      maxSizeMB: 0.1, // target maximum size in MB
+      maxWidthOrHeight: 1024, // maintain aspect ratio
+      useWebWorker: true,
+    };
 
-  const handleFileChange = (event) => {
-    form.selectedFile = event.target.files[0];
+    // Compression Function
+    try {
+      const compressedFile = await imageCompression(event.target.files[0], options);
+      setForm({
+        ...form,
+        selectedFile: compressedFile,
+      });
+
+    } catch {
+      console.error('Image compression error:', error);
+      setForm({
+        ...form,
+        selectedFile: null,
+      });
+    }
   };
 
 
+  // Form Handler
   function handleChange(e) {
     setForm({
       ...form,
@@ -66,18 +117,20 @@ function AddtoFridge() {
   const mutation = useMutation({
     mutationFn: fetchAddFridge,
     onSuccess: (data) => {
-      console.log("Add fridge success", data)
+      console.log("Add data success", data)
       setError('')
+      setPostType('')
       setForm({
         material: '',
         exp: '',
-        price: ''
+        price: '',
+        selectedFile: null,
       })
 
       setSuccessEffect(true);
       setTimeout(() => {
         setSuccessEffect(false);
-      }, 1000);
+      }, 2000);
     },
     onError: (error) => {
       console.log("Add fridge error", error)
@@ -96,6 +149,11 @@ function AddtoFridge() {
     }
 
     const formData = new FormData();
+
+    if (id) {
+      formData.append('id', id);
+    }
+
     formData.append('material', form.material);
     formData.append('exp', form.exp);
     formData.append('price', form.price);
@@ -110,19 +168,23 @@ function AddtoFridge() {
 
 
   return (
-    <div className='overall min-h-screen bg-white-bg w-full flex '>
+    <div className='overall min-h-screen bg-white-bg w-full flex px-[2rem] '>
       <BackArrow />
 
       <div className="add-wrapper">
+        <div className="header-title flex flex-col items-center gap-[0.5rem] ">
+          <h2 className='text-primary ' >เพิ่มอาหารไปที่ร้านค้า</h2>
+          <p className='p2 text-secondary ' >อาหารจะถูกวางขายที่ร้านค้า</p>
+        </div>
 
-        <div className="sell-fridge">
+        {/* <div className="sell-fridge">
           <div className="text-wrapper">
             <p className='sell'>
               <Link to={'/add'}>ขาย</Link></p>
             <p className='fridge'>ใส่ตู้เย็น</p>
           </div>
           <div className="slide-bar" ></div>
-        </div>
+        </div> */}
 
         <div className="details">
           <div className="food-details">
@@ -138,7 +200,7 @@ function AddtoFridge() {
                 autoComplete='off'
               />
             </div>
-            <div className="add-detail">
+            <div className="bg-background w-full rounded-[16px] px-[1rem] ">
               <Input
                 type="date"
                 name='exp'
@@ -146,54 +208,64 @@ function AddtoFridge() {
                 onChange={handleChange}
                 required
                 autoComplete='off'
-                className="exp-input w-full text-secondary "
+                className="w-full text-secondary "
+                disabled={initialExp}
               />
             </div>
 
-            <Input
-              type='file'
-              accept='image/*'
-              onChange={handleFileChange}
-            />
+            <div className="add-detail ">
+              <Input
+                type="text"
+                value={postType}
+                placeholder="เลือกประเภทโพสต์"
+                readOnly
+                onClick={() => setIsTypeModalOpen(true)}
+                className="cursor-pointer w-full "
+              />
+            </div>
+
+            <div className="add-detail">
+              <Input
+                type='file'
+                accept='image/*'
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="price-banner">
+              <div className="price-input ">
+                <Input
+                  type="number"
+                  value={form.price}
+                  placeholder="ราคา (ใส่ 0 บาทได้)"
+                  className="price-input "
+                  name='price'
+                  onChange={handleChange}
+                  required
+                  autoComplete='off'
+                />
+              </div>
+            </div>
+
+            <div className="image-uploaded-display w-full ">
+              <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt=""/>
+            </div>
+
+            <Button
+              onClick={submitForm}
+              className={`post ${successEffect ? 'success-effect ' : ''}`}
+              isLoading={isPending}
+            >
+              {successEffect ? "ลงขายสำเร็จ ✔️" : "ลงขาย"}
+            </Button>
+
           </div>
 
-          <div className="add-detail">
-            <Input
-              type="text"
-              value={postType}
-              placeholder="เลือกประเภทโพสต์"
-              readOnly
-              onClick={() => setIsTypeModalOpen(true)}
-              className="cursor-pointer"
-            />
-          </div>
 
-
-          <div className="price-input bg-primary text-secondary text-center rounded-[16px]  pl-[1rem] w-full py-[0.5rem]
-          ">
-            <Input
-              type="number"
-              value={form.price}
-              placeholder="ราคา (ใส่ 0 บาทได้)"
-              className="price-input "
-              name='price'
-              onChange={handleChange}
-              required
-              autoComplete='off'
-            />
-          </div>
-
-          <Button
-            onClick={submitForm}
-            className={`post ${successEffect ? 'success-effect ' : ''}`}
-            isLoading={isPending}
-          >
-            <p className='add-post'>{successEffect ? 'บันทึกสำเร็จ✔️' : 'บันทึก'}</p>
-          </Button>
 
 
 
           <p className='alert' >{error}</p>
+          <Link to={'/fridge/add-to-fridge'} className='p2 text-secondary' >ต้องการเพิ่มอาหารเข้าตู้เย็นส่วนตัวกดที่นี่</Link>
 
 
           <ModalCustom
@@ -204,13 +276,13 @@ function AddtoFridge() {
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <h2 className="text-xl font-semibold mb-4">เลือกประเภท</h2>
               <ul className="space-y-3 text-center ">
-                {['เนื้อ', 'ผัก, ผลไม้', 'ขนมปัง', 'อื่น ๆ'].map((type) => (
+                {typeOfPost.map((type) => (
                   <li
-                    key={type}
-                    onClick={() => handleTypeSelect(type)}
+                    key={type.value}
+                    onClick={() => handleTypeSelect(type.label)}
                     className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
                   >
-                    {type}
+                    {type.label}
                   </li>
                 ))}
               </ul>

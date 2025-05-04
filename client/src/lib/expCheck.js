@@ -8,7 +8,13 @@ function isExpiringSoon(expirationDate) {
     // Convert to days
     const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
-    return diffDays <= 3 && diffDays >= 0; // Between 0 and 3 days
+    
+    if (diffDays > 3)
+        return 0;
+    else if (diffDays <= 3 && diffDays >= 0)
+        return 1;
+    else if (diffDays < 0)
+        return 2;
 }
 
 

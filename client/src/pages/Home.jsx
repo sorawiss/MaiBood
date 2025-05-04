@@ -8,9 +8,8 @@ import bread from '../assets/bread.svg'
 import dot from '../assets/dot.svg'
 import cancel from '../assets/X.svg'
 
-import SectionTitle from '../coponents/SectionTitle'
 import FoodWrapper from '../coponents/FoodWrapper'
-import {AuthContext} from '../AuthContext'
+import { AuthContext } from '../AuthContext'
 
 
 // Fetch Data Function
@@ -25,7 +24,7 @@ async function fetchData() {
       credentials: 'include'
     });
 
-    if (!response.ok) { 
+    if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `Network response was not ok (${response.status})`);
     }
@@ -33,7 +32,7 @@ async function fetchData() {
     return await response.json();
 
   }
-  catch(error) {
+  catch (error) {
     console.log("error while fetch food", error)
   }
 }
@@ -43,35 +42,67 @@ async function fetchData() {
 // Main Render
 function Home() {
   const [searchText, setSearchText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { user } = useContext(AuthContext);
 
 
+   // --- Determine Header Text ---
+   const getHeaderText = () => {
+    switch (selectedCategory) {
+      case 1: return 'เนื้อ'; // Meat from shop
+      case 2: return 'ผัก, ผลไม้'; // Vegetables, Fruits from shop
+      case 3: return 'ขนมปัง'; // Bread from shop
+      case 4: return 'อื่น ๆ'; // Others from shop
+      default: return 'อาหารทั้งหมด'; // All food from shop
+    }
+  };
+
+
   // Fetch Data Query
   const { data, isLoading, isError, error } = useQuery({
-      queryKey: ['get-food'],
-      queryFn: fetchData,
-    });
+    queryKey: ['get-food'],
+    queryFn: fetchData,
+  });
 
-    if (isLoading) {
-      return (
-        <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
-          <p>Loading fridge...</p>
-        </div>
-      );
-    }
-    if (isError) {
-      console.log(error)
-    }
+  if (isLoading) {
+    return (
+      <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
+        <p>Loading fridge...</p>
+      </div>
+    );
+  }
+  if (isError) {
+    console.log(error)
+  }
 
-    const list = data;
+
+  // --- Filtering Logic ---
+  const list = data?.filter((item) => {
+    const material = item?.material || '';
+    const itemType = item?.type || '';
+    const searchLower = searchText.toLowerCase();
+    const materialLower = material.toLowerCase();
+
+    const matchesSearch = materialLower.includes(searchLower);
+
+    const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  }) || [];
+
+
+  // --- Category Click Handler ---
+  const handleCategoryClick = (category) => {
+    setSelectedCategory((prevCategory) => prevCategory === category ? null : category);
+  };
 
 
   return (
     <div className="overall pb-[3rem] ">
 
       <div className='top-container'>
-        <h2 className='hello'>สวัสดี {user.fname}</h2>
+        <h2 className='hello'>สวัสดี { user && (user.fname) }</h2>
         <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
           <span className="highlight">โลกของเรา</span>
         </h2>
@@ -95,20 +126,28 @@ function Home() {
 
         <div className="category-button">
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 1 ? 'active-category' : ''}`} // Example active class
+            onClick={() => handleCategoryClick(1)} >
             <img src={meat} alt='meat category button'></img>
           </button>
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 2 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(2)} >
             <img src={carrot} alt='vegetable category button'></img>
           </button>
 
-          <button className='circle-button'>
+          <button
+            className={`circle-button ${selectedCategory === 3 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(3)} >
             <img src={bread} alt='bread category button'></img>
           </button>
 
-          <button className='circle-button'>
-            <img src={dot} alt='other category button'></img>
+          <button
+            className={`circle-button ${selectedCategory === 4 ? 'active-category' : ''}`}
+            onClick={() => handleCategoryClick(4)} >
+            <img src={dot} alt='all categories button'></img>
           </button>
 
         </div>
@@ -117,14 +156,11 @@ function Home() {
 
       {/* Food From Shop */}
       <div className='third-container'>
-        <SectionTitle title={'อาหารจากร้านค้า'} />
+        <h2> { getHeaderText() } </h2>
         <div className="allfood-container">
-          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image}  name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
+          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>
       </div> {/*third-container*/}
-
-
-      
 
     </div>
   )

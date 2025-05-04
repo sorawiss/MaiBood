@@ -60,7 +60,7 @@ function AddtoFridge() {
       setSuccessEffect(true);  // Trigger success effect
       setTimeout(() => {
         setSuccessEffect(false);  // Clear effect after 2 seconds
-      }, 1000);
+      }, 2000);
     },
     onError: (error) => {
       console.log("Add fridge error", error)
@@ -94,13 +94,17 @@ function AddtoFridge() {
 
       <div className="add-wrapper">
 
-        <div className="sell-fridge">
+        {/* <div className="sell-fridge">
           <div className="text-wrapper">
             <p className='sell'>
               <Link to={'/add'}>ขาย</Link></p>
             <p className='fridge'>ใส่ตู้เย็น</p>
           </div>
           <div className="slide-bar" ></div>
+        </div> */}
+        <div className="header-title flex flex-col items-center gap-[0.5rem] ">
+          <h2 className='text-primary ' >เพิ่มอาหารเข้าตู้เย็น</h2>
+          <p className='p2 text-secondary ' >อาหารจะอยู่ในตู้เย็นส่วนตัวและแจ้งเตือนเมื่อใกล้หมดอายุ (3 วัน)</p>
         </div>
 
         <div className="details">
@@ -125,7 +129,7 @@ function AddtoFridge() {
                 onChange={handleChange}
                 required
                 autoComplete='off'
-                className="exp-input w-full text-secondary "
+                className="w-full text-secondary "
               />
             </div>
           </div>
@@ -141,10 +145,10 @@ function AddtoFridge() {
 
 
           <p className='alert' >{error}</p>
-          <div className="bottom-text-wrapper">
-            <p className='end-text'>อาหารจะถูกบันทึกไว้ในตู้เย็นของคุณและ</p>
-            <p className='end-text'>เราจะแจ้งเตือนเมื่อใกล้หมดอายุ</p>
-          </div>
+          <Link to={'/add'} className="bottom-text-wrapper">
+            <p className='end-text'>หากต้องการเพิ่มอาหารไปยังร้านค้าเพื่อขาย</p>
+            <p className='end-text'>กดที่นี่</p>
+          </Link>
 
 
         </div>

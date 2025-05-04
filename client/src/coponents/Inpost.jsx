@@ -79,8 +79,8 @@ function Inpost() {
 
     if (isLoading || isPending) {
         return (
-            <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
-                <p>Loading post details...</p>
+            <div className="min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
+                <p>Loading...</p>
             </div>
         );
     }
@@ -113,15 +113,16 @@ function Inpost() {
 
 
     return (
-        <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
-            py-[2.5rem] px-[2rem] gap-[1rem] mb-[4rem]
+        <div className="inpost-overall">
+            <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
+            py-[2.5rem] gap-[1rem] mb-[4rem]
             ">
 
             <BackArrow />
 
             <div className="user-wrapper">
                 <div className="profile"></div>
-                <h2 className='inpost-text'>สรวิศ บุญนี</h2>
+                <h2 className='inpost-text'>{ postData.fname } { postData.lname }</h2>
             </div>
             <div className="show-pic">
                 <img src={postData.image} alt="" className='inpost-img rounded-[16px] ' />
@@ -176,7 +177,7 @@ function Inpost() {
                 </div>
             </div>
 
-            {user.id == postData.owner && (
+            { user && user.id == postData.owner && (
                 <Modal
                     handler={<Button className="!w-[23.5rem] rounded-[16px] bg-aceent active:bg-accent-active "
                         onClick={handleOpen}
@@ -189,9 +190,9 @@ function Inpost() {
                 >
                     
                         <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
-                            p-[1rem] rounded-[16px] ml-[2.5rem]
+                            p-[1rem] rounded-[16px]
                          ">
-                            <h2>ต้องการลบอาหารออกจากตู้เย็นใช่หรือไม่</h2>
+                            <h2>อาหารจะถูกลบออกจากตู้เย็นและร้านค้า</h2>
                             <div className="button-wrapper flex gap-[1rem] ">
                                 <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
                                     onClick={handleOpen}
@@ -201,12 +202,11 @@ function Inpost() {
                                 >ยืนยัน</div>
                             </div>
                         </div>
-
-                   
                 </Modal>
 
             )}
 
+        </div>
         </div>
     )
 }

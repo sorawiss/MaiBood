@@ -3,6 +3,9 @@ import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
+import { Link } from 'react-router-dom';
+
+import { Button } from 'rizzui/button';
 
 
 
@@ -81,18 +84,19 @@ function Login() {
                         </div>
                     </div>
 
-                    <button
+                    <Button
                         type="submit"
-                        className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 
-                        rounded-2xl max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors"
+                        className="font-bold text-xl text-[#34332F] w-full bg-aceent active:bg-accent-active px-0 py-2 
+                        rounded-2xl max-md:text-lg max-sm:text-base  transition-colors"
                         onClick={handleSubmit}
+                        isLoading={mutation.isPending}
                     >
                         เข้าสู่ระบบ
-                    </button>
+                    </Button>
                 </form>
 
 
-                <p className='mt-[1rem] ' >หากมีบัญชีอยู่แล้ว<a href=""> เข้าสู่ระบบ</a></p>
+                <Link to={'/register'} className='mt-[1rem] ' >ยังไม่มีบัญชี สมัคร</Link>
 
 
             </section>

@@ -15,7 +15,7 @@ p {
   font-weight: 500;
 }
 .p2 {
-  font-size: 0.625rem;
+  font-size: 0.8rem;
   font-weight: 300;
 }
 
@@ -47,8 +47,9 @@ p {
 
 
 
-.rizzui-input-field {
+.rizzui-input-field, .rizzui-input-container {
   outline: none!important;
-  
+  border: none!important;
+  @apply !ring-0
 }
 
