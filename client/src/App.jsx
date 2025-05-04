@@ -7,15 +7,14 @@ import { Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Fridge from './pages/Fridge';
 import Profile from './pages/Profile';
-
 import Add from './coponents/Add'
 import AddtoFridge from './coponents/AddtoFridge'
 import Inpost from './coponents/Inpost'
-
 import Login from './pages/Login.jsx';
 import Layout from './coponents/Layout.jsx';
 import Register from './pages/Register.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import EditProfile from './pages/EditProfile.jsx';
 
 
 function App() {
@@ -33,6 +32,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/add" element={<Add />} />
               <Route path="/fridge/add-to-fridge" element={<AddtoFridge />} />
+              <Route path="/profile/edit-profile" element={<EditProfile />} />
             </Route>
             
             <Route path="/home" element={<Home />} />
