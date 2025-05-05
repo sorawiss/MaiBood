@@ -4,9 +4,14 @@ import styles from '../section/style/EditProfile.module.css';
 function EditProfile() {
   return (
     <div className={styles.editProfile}>
+      {/* ปุ่มกลับ */}
+      <button className={styles.backArrow}>
+        &#8592;
+      </button>
+  
       {/* avatar */}
       <div className={styles.avatar} />
-
+  
       {/* ฟอร์ม */}
       <div className={styles.formContainer}>
         <input
@@ -34,7 +39,7 @@ function EditProfile() {
           type="text"
           placeholder="Line"
         />
-
+  
         <div className={styles.buttons}>
           <button
             className={`${styles.button} ${styles.cancelBtn}`}
