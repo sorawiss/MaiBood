@@ -1,64 +1,72 @@
 .editProfile {
     position: relative;
-    width: 361px;
-    height: 446px;
-    left: 25px;         
+    width: 22.5rem;  
+    height: 27.8rem;    
+    left: 1.5rem;     
     background: #fff;
     box-sizing: border-box;
+    font-family: sans-serif;
   }
   
   .avatar {
     position: absolute;
-    top: 128px;
+    top: 8rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 172px;
-    height: 172px;
-    border: 2px dashed gold;
+    width: 10.75rem;
+    height: 10.75rem;
+    border: 0.1rem dashed gold;
     border-radius: 50%;
   }
   
   .formContainer {
     position: absolute;
-    top: 369px;
+    top: 23.0rem;
     width: 100%;
-    padding: 0 20px;
+    padding: 0 1.2rem;
     box-sizing: border-box;
   }
-  
+
+  .inputField::placeholder {
+    color: #9A9A9A;
+  }
+
   .inputField {
     width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1em;
+    height: 2.6rem;
+    padding: 0 0.7rem;
+    margin: 0.5rem 0;
+    border-radius: 16px;
+    border: 0.06rem solid #ccc;
+    background-color: #F6F6F6;
+    font-size: 1rem;
+    color: #000;
     box-sizing: border-box;
   }
   
   .buttons {
     display: flex;
     flex-direction: column;
-    gap: 24px;    
-    margin-top: 20px;
+    gap: 1.5rem; 
+    margin-top: 1.2rem; 
   }
   
   .button {
     width: 100%;
-    padding: 12px;
-    font-size: 1em;
+    height: 3.8rem;
+    font-size: 1rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 16px;
     cursor: pointer;
   }
   
   .cancelBtn {
-    background: #aaa;
-    color: #fff;
+    background: #9A9A9A;
+    color: #000;
   }
   
   .saveBtn {
-    background: #ffe600;
+    background: #FCDB29;
     color: #000;
-    margin-bottom: 102px;
+    margin-bottom: 6.3rem;
   }
