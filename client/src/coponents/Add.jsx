@@ -159,7 +159,7 @@ function AddtoFridge() {
     formData.append('price', form.price);
     formData.append('owner', user.id);
     formData.append('image', form.selectedFile);
-    formData.append('type', postType);
+    formData.append('type', postType.value);
 
     mutation.mutate(formData);
   }
@@ -216,7 +216,7 @@ function AddtoFridge() {
             <div className="add-detail ">
               <Input
                 type="text"
-                value={postType}
+                value={postType.label}
                 placeholder="เลือกประเภทโพสต์"
                 readOnly
                 onClick={() => setIsTypeModalOpen(true)}
@@ -279,7 +279,7 @@ function AddtoFridge() {
                 {typeOfPost.map((type) => (
                   <li
                     key={type.value}
-                    onClick={() => handleTypeSelect(type.label)}
+                    onClick={() => handleTypeSelect(type)}
                     className="cursor-pointer px-4 py-2 hover:bg-primary hover:text-white rounded-md"
                   >
                     {type.label}

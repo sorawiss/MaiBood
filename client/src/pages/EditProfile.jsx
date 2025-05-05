@@ -7,6 +7,7 @@ function EditProfile() {
       {/* avatar */}
       <div className={styles.avatar} />
 
+
       {/* ฟอร์ม */}
       <div className={styles.formContainer}>
         <input
@@ -35,12 +36,14 @@ function EditProfile() {
           placeholder="Line"
         />
 
+
         <div className={styles.buttons}>
           <button
             className={`${styles.button} ${styles.cancelBtn}`}
           >
             ยกเลิก
           </button>
+          
           <button
             className={`${styles.button} ${styles.saveBtn}`}
           >
