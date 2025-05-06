@@ -10,7 +10,7 @@ router.get('/get-food', async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.query('SELECT * FROM fridge WHERE is_store = true ORDER BY exp DESC ');
+        const [result] = await connection.query('SELECT * FROM fridge WHERE is_store = true ORDER BY exp ASC ');
         res.json(result);
 
     }
