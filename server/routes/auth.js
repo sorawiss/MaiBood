@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-// Constrant
+// Constraint
 const SALTROUNDS = 10;
 const SECRET_KEY = process.env.TOKEN;
 if (!SECRET_KEY) {
@@ -22,7 +22,7 @@ const generateToken = (userId) => {
 
 // Register
 router.post('/api/register', async (req, res) => {
-    const { fname, lname, phone_number, password } = req.body;
+    const { fname, lname, phone_number, password, zip_code } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
@@ -47,8 +47,8 @@ router.post('/api/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
         const [result] = await connection.execute(
-            'INSERT INTO members (fname, lname, phone_number, password) VALUES (?, ?, ?, ?)',
-            [fname, lname, phone_number, hashedPassword]
+            'INSERT INTO members (fname, lname, phone_number, zip_code, password) VALUES (?, ?, ?, ?, ?)',
+            [fname, lname, phone_number, zip_code, hashedPassword]
         );
 
         const newUserId = result.insertId; // Get the ID of the newly created user

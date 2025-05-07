@@ -5,8 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../AuthContext';
+import ModalCustom from '../coponents/Modal';
 
 import { Button } from "rizzui";
+import {
+    ThailandAddressTypeahead,
+    ThailandAddressValue,
+} from 'react-thailand-address-typeahead';
 
 
 const baseURL = import.meta.env.VITE_BASE_URL;
@@ -40,11 +45,14 @@ function Register() {
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
     const { setUser, refreshUser } = useContext(AuthContext);
+    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+    const [address, setAddress] = useState(ThailandAddressValue.empty());
+
 
 
     // Handle Change
     function handleChange(e) {
-        const { name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prev) => {
             return {
                 ...prev,
@@ -62,6 +70,7 @@ function Register() {
             fname: formData.fname,
             lname: formData.lname,
             phone_number: String(formData.phone_number),
+            zip_code: address.postalCode,
             password: formData.password
         };
 
@@ -82,6 +91,7 @@ function Register() {
             console.log("Register Error", error)
         }
     })
+
 
     return (
         <main className="max-w-none flex flex-col items-center justify-end w-full h-screen bg-[#FCDB29] box-border mx-auto pt-[270px] max-md:max-w-[991px] max-sm:max-w-screen-sm">
@@ -126,6 +136,13 @@ function Register() {
                             />
                         </div>
 
+                        <div className="address-input font-bold text-xl text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 
+                            rounded-2xl max-md:text-lg max-sm:text-base outline-none "
+                            onClick={() => setIsTypeModalOpen(!isTypeModalOpen)}
+                        >
+                            ใส่ที่อยู๋
+                        </div>
+
                         <div className="relative">
                             <input
                                 name="password"
@@ -139,7 +156,7 @@ function Register() {
                         <div className="relative">
                             <input
                                 onChange={(e) => {
-                                    if(e.target.value != formData.password ) {
+                                    if (e.target.value != formData.password) {
                                         setErrorMessage('*รหัสผ่านไม่ตรงกัน')
                                     } else {
                                         setErrorMessage('')
@@ -155,13 +172,13 @@ function Register() {
                     <p className='alert ' >{errorMessage}</p>
 
                     <Button className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
-                        max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary " 
+                        max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary "
                         isLoading={mutation.isPending}
-                        disabled={errorMessage.length > 0 || mutation.isPending }
+                        disabled={errorMessage.length > 0 || mutation.isPending}
                         onClick={handleSubmit}
-                        >
-                            ลงทะเบียน
-                        </Button>
+                    >
+                        ลงทะเบียน
+                    </Button>
                 </form>
 
 
@@ -169,6 +186,27 @@ function Register() {
 
 
             </section>
+
+            <ModalCustom
+                open={isTypeModalOpen}
+                handleOpen={() => setIsTypeModalOpen(!isTypeModalOpen)}
+                handler={<></>}
+            >
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <div>
+                        <ThailandAddressTypeahead
+                            value={address}
+                            onValueChange={(val) => setAddress(val)}
+                        >
+                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง" />
+                            <ThailandAddressTypeahead.DistrictInput placeholder="" />
+                            <ThailandAddressTypeahead.ProvinceInput placeholder="" />
+                            <ThailandAddressTypeahead.PostalCodeInput placeholder="" />
+                            <ThailandAddressTypeahead.Suggestion />
+                        </ThailandAddressTypeahead>
+                    </div>
+                </div>
+            </ModalCustom>
         </main>
 
     )
