@@ -69,7 +69,8 @@ router.post('/api/register', async (req, res) => {
             id: newUserId,
             fname: fname,
             lname: lname,
-            phone_number: phone_number
+            phone_number: phone_number,
+            zip_code: zip_code
         };
 
         return res.status(201).json(userDataToSend);
