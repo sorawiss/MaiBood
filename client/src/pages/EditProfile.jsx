@@ -14,7 +14,6 @@ function EditProfile() {
         </svg>
       </button>
 
-  
       {/* avatar */}
       <div className={styles.avatar} />
   
@@ -45,13 +44,14 @@ function EditProfile() {
           type="text"
           placeholder="Line"
         />
-  
+
         <div className={styles.buttons}>
           <button
             className={`${styles.button} ${styles.cancelBtn}`}
           >
             ยกเลิก
           </button>
+          
           <button
             className={`${styles.button} ${styles.saveBtn}`}
           >
