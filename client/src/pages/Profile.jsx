@@ -4,6 +4,7 @@ import Noodle from '../assets/Group.svg'
 import line from '../assets/line 1.svg'
 import '../section/style/Profile.css'
 import { useContext } from 'react'
+import { Link } from 'react-router-dom'
 
 import { AuthContext } from '../AuthContext'
 
@@ -92,14 +93,16 @@ function Profile() {
 
           </div>
 
-          
+
 
         </div>
       </div>
 
       <div className="edit-logout flex flex-col items-center gap-[1rem] ">
-            <p className='edit'>แก้ไขข้อมูล</p>
-            <p onClick={logout} className='logout'>ออกจากระบบ</p>
+        <Link to={'/profile/edit-profile'} >
+          <p className='edit'>แก้ไขข้อมูล</p>
+        </Link>
+        <p onClick={logout} className='logout'>ออกจากระบบ</p>
       </div>
     </div>
   )
