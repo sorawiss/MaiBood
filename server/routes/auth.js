@@ -205,7 +205,7 @@ router.get('/api/authentication', async (req, res) => {
 
 
 // Logout
-router.post('/logout', (req, res) => {
+router.post('/api/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Logged out' });
 });
