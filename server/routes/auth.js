@@ -21,7 +21,7 @@ const generateToken = (userId) => {
 
 
 // Register
-router.post('/register', async (req, res) => {
+router.post('/api/register', async (req, res) => {
     const { fname, lname, phone_number, password } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
@@ -93,7 +93,7 @@ router.post('/register', async (req, res) => {
 
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
     const { phone_number, password } = req.body;
     if (!phone_number || !password) {
         return res.status(400).json({ message: 'Please provide phone_number and password' });
@@ -153,7 +153,7 @@ router.post('/login', async (req, res) => {
 
 
 // auth
-router.get('/authentication', async (req, res) => {
+router.get('/api/authentication', async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.sendStatus(401);
 

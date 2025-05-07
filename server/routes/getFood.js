@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 // Get All Foods
-router.get('/get-food', async (req, res) => {
+router.get('/api/get-food', async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
@@ -30,7 +30,7 @@ router.get('/get-food', async (req, res) => {
 
 
 // Get Inpost Food
-router.get('/get-inpost/:id', async (req, res) => {
+router.get('/api/get-inpost/:id', async (req, res) => {
     const { id } = req.params;
 
     let connection;

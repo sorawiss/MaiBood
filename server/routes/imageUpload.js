@@ -38,7 +38,7 @@ async function uploadToS3(file) {
 
 
 // API Endpoint
-router.post('/image/', upload.single('image'), async (req, res) => {
+router.post('/api/image/', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
     }
