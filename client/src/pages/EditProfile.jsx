@@ -5,9 +5,15 @@ function EditProfile() {
   return (
     <div className={styles.editProfile}>
       {/* ปุ่มกลับ */}
-      <button className={styles.backArrow}>
-        &#8592;
+      <button className={styles.arrowButton}>
+        <svg className={styles.arrowIcon}
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.707 17.293a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L9.414 11H19a1 1 0 110 2H9.414l3.293 3.293a1 1 0 010 1.414z"
+          />
+        </svg>
       </button>
+
   
       {/* avatar */}
       <div className={styles.avatar} />

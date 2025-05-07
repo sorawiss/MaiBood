@@ -1,13 +1,19 @@
-.backArrow {
-    position: absolute;
-    top: 2.5rem;
-    left: 2rem;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-  }
+.arrowButton {
+  position: absolute;
+  top: 1.14rem;
+  left: 1.46rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.arrowIcon {
+  width: 1.46rem;
+  height: 1.14rem;
+  fill: #FCDB29;
+  transition: transform 0.2s ease;
+}
 
 .editProfile {
     position: relative;
@@ -18,7 +24,7 @@
     box-sizing: border-box;
     font-family: sans-serif;
   }
-  
+
   .avatar {
     position: absolute;
     top: 8rem;
@@ -29,7 +35,7 @@
     border: 0.1rem dashed gold;
     border-radius: 50%;
   }
-  
+
   .formContainer {
     position: absolute;
     top: 23.0rem;
