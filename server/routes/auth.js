@@ -22,7 +22,7 @@ const generateToken = (userId) => {
 
 // Register
 router.post('/api/register', async (req, res) => {
-    const { fname, lname, phone_number, password, zip_code } = req.body;
+    const { fname, lname, phone_number, password, zip_code, address } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
@@ -47,8 +47,8 @@ router.post('/api/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
         const [result] = await connection.execute(
-            'INSERT INTO members (fname, lname, phone_number, zip_code, password) VALUES (?, ?, ?, ?, ?)',
-            [fname, lname, phone_number, zip_code, hashedPassword]
+            'INSERT INTO members (fname, lname, phone_number, zip_code, address, password) VALUES (?, ?, ?, ?, ?, ?)',
+            [fname, lname, phone_number, zip_code, address, hashedPassword]
         );
 
         const newUserId = result.insertId; // Get the ID of the newly created user
@@ -70,6 +70,7 @@ router.post('/api/register', async (req, res) => {
             fname: fname,
             lname: lname,
             phone_number: phone_number,
+            address: address,
             zip_code: zip_code
         };
 

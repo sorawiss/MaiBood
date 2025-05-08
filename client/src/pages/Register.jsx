@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import ModalCustom from '../coponents/Modal';
 
-import { Button } from "rizzui";
+import { Button, Input } from "rizzui";
 import {
     ThailandAddressTypeahead,
     ThailandAddressValue,
@@ -40,7 +40,8 @@ function Register() {
         fname: '',
         lname: '',
         phone_number: '',
-        password: ''
+        password: '',
+        name_address: ''
     })
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ function Register() {
             lname: formData.lname,
             phone_number: String(formData.phone_number),
             zip_code: address.postalCode,
+            address : formData.name_address,
             password: formData.password
         };
 
@@ -140,7 +142,7 @@ function Register() {
                             rounded-2xl max-md:text-lg max-sm:text-base outline-none "
                             onClick={() => setIsTypeModalOpen(!isTypeModalOpen)}
                         >
-                            ใส่ที่อยู๋
+                            { formData.name_address ? formData.name_address : 'ที่อยู่' }
                         </div>
 
                         <div className="relative">
@@ -192,19 +194,31 @@ function Register() {
                 handleOpen={() => setIsTypeModalOpen(!isTypeModalOpen)}
                 handler={<></>}
             >
-                <div className="bg-white rounded-xl p-6 shadow-lg">
-                    <div>
+                <div className="bg-white rounded-xl p-6 shadow-lg w-3/4 h-3/4 flex flex-col justify-between py-[4rem] "
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className='form-wrapper w-full flex flex-col items-center gap-[2rem] ' >
+                        <Input 
+                            placeholder='ชื่อที่อยู่'
+                            name='name_address'
+                            value={formData.name_address}
+                            onChange={handleChange}
+                            className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl max-md:text-lg max-sm:text-base outline-none'
+                        />
+
                         <ThailandAddressTypeahead
                             value={address}
                             onValueChange={(val) => setAddress(val)}
                         >
-                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง" />
+                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง" 
+                                className='w-full ' />
                             <ThailandAddressTypeahead.DistrictInput placeholder="" />
                             <ThailandAddressTypeahead.ProvinceInput placeholder="" />
                             <ThailandAddressTypeahead.PostalCodeInput placeholder="" />
                             <ThailandAddressTypeahead.Suggestion />
                         </ThailandAddressTypeahead>
                     </div>
+                    <Button className='w-full bg-aceent border-0 ' onClick={() => setIsTypeModalOpen(!isTypeModalOpen)} >ยืนยัน</Button>
                 </div>
             </ModalCustom>
         </main>
