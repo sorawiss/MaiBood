@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../AuthContext';
-import Button from '../coponents/Modal';
 import ModalCustom from '../coponents/Modal';
 
-import CustomButton from '../coponents/CustomButton';
+import Button from '../coponents/CustomButton';
 import {
     ThailandAddressTypeahead,
     ThailandAddressValue,
@@ -47,7 +46,7 @@ function Register() {
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
     const { setUser, refreshUser } = useContext(AuthContext);
-    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [address, setAddress] = useState(ThailandAddressValue.empty());
 
 
@@ -73,7 +72,7 @@ function Register() {
             lname: formData.lname,
             phone_number: String(formData.phone_number),
             zip_code: address.postalCode,
-            address : formData.name_address,
+            address: formData.name_address,
             password: formData.password
         };
 
@@ -141,9 +140,9 @@ function Register() {
 
                         <div className="address-input font-bold text-xl text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 
                             rounded-2xl max-md:text-lg max-sm:text-base outline-none "
-                            onClick={() => setIsTypeModalOpen(!isTypeModalOpen)}
+                            onClick={() => setIsModalOpen(!isModalOpen)}
                         >
-                            { formData.name_address ? formData.name_address : 'ที่อยู่' }
+                            {formData.name_address ? formData.name_address : 'ที่อยู่'}
                         </div>
 
                         <div className="relative">
@@ -174,13 +173,13 @@ function Register() {
 
                     <p className='alert ' >{errorMessage}</p>
 
-                    <CustomButton className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
+                    <Button className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
                         max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary "
                         isLoading={mutation.isPending}
                         onClick={handleSubmit}
                     >
                         ลงทะเบียน
-                    </CustomButton>
+                    </Button>
                 </form>
 
 
@@ -190,15 +189,15 @@ function Register() {
             </section>
 
             <ModalCustom
-                open={isTypeModalOpen}
-                handleOpen={() => setIsTypeModalOpen(!isTypeModalOpen)}
+                open={isModalOpen}
+                handleOpen={() => setIsModalOpen(!isModalOpen)}
                 handler={<></>}
             >
                 <div className="bg-white rounded-xl p-6 shadow-lg w-3/4 h-3/4 flex flex-col justify-between py-[4rem] "
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className='form-wrapper w-full flex flex-col items-center gap-[2rem] ' >
-                        <input 
+                        <input
                             placeholder='ชื่อที่อยู่'
                             name='name_address'
                             value={formData.name_address}
@@ -210,11 +209,16 @@ function Register() {
                             value={address}
                             onValueChange={(val) => setAddress(val)}
                         >
-                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง" 
-                                className='w-full ' />
-                            <ThailandAddressTypeahead.DistrictInput placeholder="" />
-                            <ThailandAddressTypeahead.ProvinceInput placeholder="" />
-                            <ThailandAddressTypeahead.PostalCodeInput placeholder="" />
+                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง"
+                                className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '
+                            />
+                            <ThailandAddressTypeahead.DistrictInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '   />
+                            <ThailandAddressTypeahead.ProvinceInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '  />
+                            <ThailandAddressTypeahead.PostalCodeInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '  />
                             <ThailandAddressTypeahead.Suggestion />
                         </ThailandAddressTypeahead>
                     </div>

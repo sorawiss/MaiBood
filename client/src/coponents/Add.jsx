@@ -191,7 +191,7 @@ function AddtoFridge() {
                 autoComplete='off'
               />
             </div>
-            <div className="bg-background w-full rounded-[16px] px-[1rem] ">
+            <div className="add-detail ">
               <input
                 type="date"
                 name='exp'
