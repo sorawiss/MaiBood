@@ -14,9 +14,11 @@ import { AuthContext } from '../AuthContext'
 
 // Fetch Data Function
 const baseURL = import.meta.env.VITE_BASE_URL
-async function fetchData() {
+
+async function fetchCommunityFood(user) {
   try {
-    const response = await fetch(`${baseURL}/get-food`, {
+    const url = `${baseURL}/get-food${user ? `?zip_code=${user.zip_code}` : ''}&limit=4`;
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -30,14 +32,36 @@ async function fetchData() {
     }
 
     return await response.json();
-
   }
   catch (error) {
-    console.log("error while fetch food", error)
+    console.error("Error in fetchCommunityFood:", error);
+    return [];
   }
 }
 
+async function fetchAllFood() {
+  try {
+    const url = `${baseURL}/get-food?limit=4`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Network response was not ok (${response.status})`);
+    }
+
+    return await response.json();
+  }
+  catch (error) {
+    console.error("Error in fetchAllFood:", error);
+    return [];
+  }
+}
 
 // Main Render
 function Home() {
@@ -47,50 +71,42 @@ function Home() {
   const { user } = useContext(AuthContext);
 
 
-   // --- Determine Header Text ---
-   const getHeaderText = () => {
-    switch (selectedCategory) {
-      case 1: return 'เนื้อ'; // Meat from shop
-      case 2: return 'ผัก, ผลไม้'; // Vegetables, Fruits from shop
-      case 3: return 'ขนมปัง'; // Bread from shop
-      case 4: return 'อื่น ๆ'; // Others from shop
-      default: return 'อาหารทั้งหมด'; // All food from shop
-    }
-  };
-
-
-  // Fetch Data Query
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['get-food'],
-    queryFn: fetchData,
+  // Fetch Data Queries
+  const { data: communityData, isLoading: isLoadingCommunity } = useQuery({
+    queryKey: ['get-community-food', user?.zip_code],
+    queryFn: () => fetchCommunityFood(user),
   });
 
-  if (isLoading) {
+  const { data: allData, isLoading: isLoadingAll } = useQuery({
+    queryKey: ['get-all-food'],
+    queryFn: fetchAllFood,
+  });
+
+  if (isLoadingCommunity || isLoadingAll) {
     return (
       <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
         <p>Loading fridge...</p>
       </div>
     );
   }
-  if (isError) {
-    console.log(error)
-  }
-
 
   // --- Filtering Logic ---
-  const list = data?.filter((item) => {
-    const material = item?.material || '';
-    const itemType = item?.type || '';
-    const searchLower = searchText.toLowerCase();
-    const materialLower = material.toLowerCase();
+  const filterItems = (items) => {
+    return items?.filter((item) => {
+      const material = item?.material || '';
+      const itemType = item?.type || '';
+      const searchLower = searchText.toLowerCase();
+      const materialLower = material.toLowerCase();
 
-    const matchesSearch = materialLower.includes(searchLower);
+      const matchesSearch = materialLower.includes(searchLower);
+      const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
 
-    const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
+      return matchesSearch && matchesCategory;
+    }) || [];
+  };
 
-    return matchesSearch && matchesCategory;
-  }) || [];
-
+  const communityList = filterItems(communityData);
+  const allList = filterItems(allData);
 
   // --- Category Click Handler ---
   const handleCategoryClick = (category) => {
@@ -102,7 +118,7 @@ function Home() {
     <div className="overall pb-[3rem] ">
 
       <div className='top-container'>
-        <h2 className='hello'>สวัสดี { user && (user.fname) }</h2>
+        <h2 className='hello'>สวัสดี {user && (user.fname)}</h2>
         <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
           <span className="highlight">โลกของเรา</span>
         </h2>
@@ -154,11 +170,19 @@ function Home() {
       </div> {/*second-container*/}
 
 
-      {/* Food From Shop */}
-      <div className='third-container'>
-        <h2> { getHeaderText() } </h2>
+      {/* Food From Community */}
+      {user && <div className='third-container'>
+        <h2> อาหารในชุมชน </h2>
         <div className="allfood-container">
-          {list.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
+          {communityList.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
+        </div>
+      </div>}
+
+      {/* Food From All */}
+      <div className='third-container'>
+        <h2> อาหารทั้งหมด </h2>
+        <div className="allfood-container">
+          {allList.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} price={items.price} image={items.image} name={items.material} location={'Tops daily สาขาธรรมศาสตร'} />)}
         </div>
       </div> {/*third-container*/}
 
