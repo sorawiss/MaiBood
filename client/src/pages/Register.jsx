@@ -222,7 +222,7 @@ function Register() {
                             <ThailandAddressTypeahead.Suggestion />
                         </ThailandAddressTypeahead>
                     </div>
-                    <Button className='w-full bg-aceent border-0 ' onClick={() => setIsTypeModalOpen(!isTypeModalOpen)} >ยืนยัน</Button>
+                    <Button className='w-full bg-aceent border-0 ' onClick={() => setIsModalOpen(!isModalOpen)} >ยืนยัน</Button>
                 </div>
             </ModalCustom>
         </main>
