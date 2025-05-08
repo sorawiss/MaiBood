@@ -36,7 +36,7 @@ function AddtoFridge() {
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
   const [successEffect, setSuccessEffect] = useState(false);
-  const [postType, setPostType] = useState('');
+  const [postType, setPostType] = useState(null);
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const { search } = useLocation();
 
@@ -119,7 +119,7 @@ function AddtoFridge() {
     onSuccess: (data) => {
       console.log("Add data success", data)
       setError('')
-      setPostType('')
+      setPostType(null)
       setForm({
         material: '',
         exp: '',
@@ -207,7 +207,7 @@ function AddtoFridge() {
             <div className="add-detail ">
               <input
                 type="text"
-                value={postType.label}
+                value={postType ? postType.label : ''}
                 placeholder="เลือกประเภทโพสต์"
                 readOnly
                 onClick={() => setIsTypeModalOpen(true)}
