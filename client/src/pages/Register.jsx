@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../AuthContext';
+import Button from '../coponents/Modal';
 import ModalCustom from '../coponents/Modal';
 
-import { Button, Input } from "rizzui";
+import CustomButton from '../coponents/CustomButton';
 import {
     ThailandAddressTypeahead,
     ThailandAddressValue,
@@ -173,14 +174,13 @@ function Register() {
 
                     <p className='alert ' >{errorMessage}</p>
 
-                    <Button className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
+                    <CustomButton className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
                         max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary "
                         isLoading={mutation.isPending}
-                        disabled={errorMessage.length > 0 || mutation.isPending}
                         onClick={handleSubmit}
                     >
                         ลงทะเบียน
-                    </Button>
+                    </CustomButton>
                 </form>
 
 
@@ -198,7 +198,7 @@ function Register() {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className='form-wrapper w-full flex flex-col items-center gap-[2rem] ' >
-                        <Input 
+                        <input 
                             placeholder='ชื่อที่อยู่'
                             name='name_address'
                             value={formData.name_address}

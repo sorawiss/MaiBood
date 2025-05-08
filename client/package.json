@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.27.4",
-    "@headlessui/react": "^2.2.0",
     "@material-tailwind/html": "^3.0.0-beta.7",
     "@material-tailwind/react": "^2.1.10",
     "@tailwindcss/vite": "^4.0.6",
@@ -20,8 +18,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.2.0",
-    "react-thailand-address-typeahead": "^2.0.1",
-    "rizzui": "^1.0.1"
+    "react-thailand-address-typeahead": "^2.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

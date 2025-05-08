@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { Link } from 'react-router-dom';
 
-import { Button } from 'rizzui/button';
+import Button from '../coponents/CustomButton';
 
 
 

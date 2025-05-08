@@ -3,7 +3,7 @@ import '../section/style/Add.css'
 import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
 
-import { Input, Button } from "rizzui";
+import Button from '../coponents/CustomButton';
 import BackArrow from './BackArrow';
 
 import { AuthContext } from '../AuthContext';
