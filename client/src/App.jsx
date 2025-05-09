@@ -16,6 +16,8 @@ import Register from './pages/Register.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import EditProfile from './pages/EditProfile.jsx';
 
+import AddressInput from './coponents/AddressInput.jsx';
+
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          <Route path="/input" element={<AddressInput />} />
 
         </Routes>
       </Router>

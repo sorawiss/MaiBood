@@ -20,9 +20,17 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-const allowedOrigins = process.env.ORIGIN || "http://localhost:5173"
+// CORS
+const defaultOrigin = "http://localhost:5173";
+const envOrigin = process.env.ORIGIN;
+const originsToAllow = [defaultOrigin];
+
+if (envOrigin && envOrigin !== defaultOrigin) {
+  originsToAllow.push(envOrigin);
+}
+
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: originsToAllow,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],

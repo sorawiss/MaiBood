@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-import { Input, Button } from "rizzui";
+import Button from '../coponents/CustomButton';
 import BackArrow from './BackArrow';
 import ModalCustom from './Modal';
 import imageCompression from 'browser-image-compression';
@@ -36,7 +36,7 @@ function AddtoFridge() {
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
   const [successEffect, setSuccessEffect] = useState(false);
-  const [postType, setPostType] = useState('');
+  const [postType, setPostType] = useState(null);
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const { search } = useLocation();
 
@@ -119,7 +119,7 @@ function AddtoFridge() {
     onSuccess: (data) => {
       console.log("Add data success", data)
       setError('')
-      setPostType('')
+      setPostType(null)
       setForm({
         material: '',
         exp: '',
@@ -177,19 +177,10 @@ function AddtoFridge() {
           <p className='p2 text-secondary ' >อาหารจะถูกวางขายที่ร้านค้า</p>
         </div>
 
-        {/* <div className="sell-fridge">
-          <div className="text-wrapper">
-            <p className='sell'>
-              <Link to={'/add'}>ขาย</Link></p>
-            <p className='fridge'>ใส่ตู้เย็น</p>
-          </div>
-          <div className="slide-bar" ></div>
-        </div> */}
-
         <div className="details">
           <div className="food-details">
             <div className="add-detail">
-              <Input
+              <input
                 type="text"
                 value={form.material}
                 placeholder="ใส่ชื่ออาหาร..."
@@ -200,8 +191,8 @@ function AddtoFridge() {
                 autoComplete='off'
               />
             </div>
-            <div className="bg-background w-full rounded-[16px] px-[1rem] ">
-              <Input
+            <div className="add-detail ">
+              <input
                 type="date"
                 name='exp'
                 value={form.exp}
@@ -214,9 +205,9 @@ function AddtoFridge() {
             </div>
 
             <div className="add-detail ">
-              <Input
+              <input
                 type="text"
-                value={postType.label}
+                value={postType ? postType.label : ''}
                 placeholder="เลือกประเภทโพสต์"
                 readOnly
                 onClick={() => setIsTypeModalOpen(true)}
@@ -225,7 +216,7 @@ function AddtoFridge() {
             </div>
 
             <div className="add-detail">
-              <Input
+              <input
                 type='file'
                 accept='image/*'
                 onChange={handleFileChange}
@@ -233,7 +224,7 @@ function AddtoFridge() {
             </div>
             <div className="price-banner">
               <div className="price-input ">
-                <Input
+                <input
                   type="number"
                   value={form.price}
                   placeholder="ราคา (ใส่ 0 บาทได้)"

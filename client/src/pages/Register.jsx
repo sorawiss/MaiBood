@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { useState, useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../AuthContext';
+import ModalCustom from '../coponents/Modal';
 
-import { Button } from "rizzui";
+import Button from '../coponents/CustomButton';
+import {
+    ThailandAddressTypeahead,
+    ThailandAddressValue,
+} from 'react-thailand-address-typeahead';
 
 
 const baseURL = import.meta.env.VITE_BASE_URL;
@@ -35,16 +40,20 @@ function Register() {
         fname: '',
         lname: '',
         phone_number: '',
-        password: ''
+        password: '',
+        name_address: ''
     })
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
     const { setUser, refreshUser } = useContext(AuthContext);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [address, setAddress] = useState(ThailandAddressValue.empty());
+
 
 
     // Handle Change
     function handleChange(e) {
-        const { name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prev) => {
             return {
                 ...prev,
@@ -62,6 +71,8 @@ function Register() {
             fname: formData.fname,
             lname: formData.lname,
             phone_number: String(formData.phone_number),
+            zip_code: address.postalCode,
+            address: formData.name_address,
             password: formData.password
         };
 
@@ -82,6 +93,7 @@ function Register() {
             console.log("Register Error", error)
         }
     })
+
 
     return (
         <main className="max-w-none flex flex-col items-center justify-end w-full h-screen bg-[#FCDB29] box-border mx-auto pt-[270px] max-md:max-w-[991px] max-sm:max-w-screen-sm">
@@ -126,6 +138,13 @@ function Register() {
                             />
                         </div>
 
+                        <div className="address-input font-bold text-xl text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 
+                            rounded-2xl max-md:text-lg max-sm:text-base outline-none "
+                            onClick={() => setIsModalOpen(!isModalOpen)}
+                        >
+                            {formData.name_address ? formData.name_address : 'ที่อยู่'}
+                        </div>
+
                         <div className="relative">
                             <input
                                 name="password"
@@ -139,7 +158,7 @@ function Register() {
                         <div className="relative">
                             <input
                                 onChange={(e) => {
-                                    if(e.target.value != formData.password ) {
+                                    if (e.target.value != formData.password) {
                                         setErrorMessage('*รหัสผ่านไม่ตรงกัน')
                                     } else {
                                         setErrorMessage('')
@@ -155,13 +174,12 @@ function Register() {
                     <p className='alert ' >{errorMessage}</p>
 
                     <Button className="font-bold text-xl text-[#34332F] w-full bg-[#FCDB29] px-0 py-2 rounded-2xl 
-                        max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary " 
+                        max-md:text-lg max-sm:text-base hover:bg-[#e6c725] transition-colors disabled:bg-secondary "
                         isLoading={mutation.isPending}
-                        disabled={errorMessage.length > 0 || mutation.isPending }
                         onClick={handleSubmit}
-                        >
-                            ลงทะเบียน
-                        </Button>
+                    >
+                        ลงทะเบียน
+                    </Button>
                 </form>
 
 
@@ -169,6 +187,44 @@ function Register() {
 
 
             </section>
+
+            <ModalCustom
+                open={isModalOpen}
+                handleOpen={() => setIsModalOpen(!isModalOpen)}
+                handler={<></>}
+            >
+                <div className="bg-white rounded-xl p-6 shadow-lg w-3/4 h-3/4 flex flex-col justify-between py-[4rem] "
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className='form-wrapper w-full flex flex-col items-center gap-[2rem] ' >
+                        <input
+                            placeholder='ชื่อที่อยู่'
+                            name='name_address'
+                            value={formData.name_address}
+                            onChange={handleChange}
+                            className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl max-md:text-lg max-sm:text-base outline-none'
+                        />
+
+                        <ThailandAddressTypeahead
+                            value={address}
+                            onValueChange={(val) => setAddress(val)}
+                        >
+                            <ThailandAddressTypeahead.SubdistrictInput placeholder="ตำบล / แขวง"
+                                className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '
+                            />
+                            <ThailandAddressTypeahead.DistrictInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '   />
+                            <ThailandAddressTypeahead.ProvinceInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '  />
+                            <ThailandAddressTypeahead.PostalCodeInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
+                                max-md:text-lg max-sm:text-base outline-none  '  />
+                            <ThailandAddressTypeahead.Suggestion />
+                        </ThailandAddressTypeahead>
+                    </div>
+                    <Button className='w-full bg-aceent border-0 ' onClick={() => setIsModalOpen(!isModalOpen)} >ยืนยัน</Button>
+                </div>
+            </ModalCustom>
         </main>
 
     )

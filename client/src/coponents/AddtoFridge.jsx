@@ -3,7 +3,7 @@ import '../section/style/Add.css'
 import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
 
-import { Input, Button } from "rizzui";
+import Button from '../coponents/CustomButton';
 import BackArrow from './BackArrow';
 
 import { AuthContext } from '../AuthContext';
@@ -93,15 +93,6 @@ function AddtoFridge() {
       <BackArrow />
 
       <div className="add-wrapper">
-
-        {/* <div className="sell-fridge">
-          <div className="text-wrapper">
-            <p className='sell'>
-              <Link to={'/add'}>ขาย</Link></p>
-            <p className='fridge'>ใส่ตู้เย็น</p>
-          </div>
-          <div className="slide-bar" ></div>
-        </div> */}
         <div className="header-title flex flex-col items-center gap-[0.5rem] ">
           <h2 className='text-primary ' >เพิ่มอาหารเข้าตู้เย็น</h2>
           <p className='p2 text-secondary ' >อาหารจะอยู่ในตู้เย็นส่วนตัวและแจ้งเตือนเมื่อใกล้หมดอายุ (3 วัน)</p>
@@ -110,7 +101,7 @@ function AddtoFridge() {
         <div className="details">
           <div className="food-details">
             <div className="add-detail">
-              <Input
+              <input
                 type="text"
                 value={form.material}
                 placeholder="ใส่ชื่ออาหาร..."
@@ -122,7 +113,7 @@ function AddtoFridge() {
               />
             </div>
             <div className="add-detail">
-              <Input
+              <input
                 type="date"
                 name='exp'
                 value={form.exp}

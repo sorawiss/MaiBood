@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-// Constrant
+// Constraint
 const SALTROUNDS = 10;
 const SECRET_KEY = process.env.TOKEN;
 if (!SECRET_KEY) {
@@ -21,8 +21,8 @@ const generateToken = (userId) => {
 
 
 // Register
-router.post('/register', async (req, res) => {
-    const { fname, lname, phone_number, password } = req.body;
+router.post('/api/register', async (req, res) => {
+    const { fname, lname, phone_number, password, zip_code, address } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
@@ -47,8 +47,8 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
         const [result] = await connection.execute(
-            'INSERT INTO members (fname, lname, phone_number, password) VALUES (?, ?, ?, ?)',
-            [fname, lname, phone_number, hashedPassword]
+            'INSERT INTO members (fname, lname, phone_number, zip_code, address, password) VALUES (?, ?, ?, ?, ?, ?)',
+            [fname, lname, phone_number, zip_code, address, hashedPassword]
         );
 
         const newUserId = result.insertId; // Get the ID of the newly created user
@@ -69,7 +69,9 @@ router.post('/register', async (req, res) => {
             id: newUserId,
             fname: fname,
             lname: lname,
-            phone_number: phone_number
+            phone_number: phone_number,
+            address: address,
+            zip_code: zip_code
         };
 
         return res.status(201).json(userDataToSend);
@@ -93,7 +95,7 @@ router.post('/register', async (req, res) => {
 
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
     const { phone_number, password } = req.body;
     if (!phone_number || !password) {
         return res.status(400).json({ message: 'Please provide phone_number and password' });
@@ -153,7 +155,7 @@ router.post('/login', async (req, res) => {
 
 
 // auth
-router.get('/authentication', async (req, res) => {
+router.get('/api/authentication', async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.sendStatus(401);
 
@@ -171,7 +173,7 @@ router.get('/authentication', async (req, res) => {
 
         connection = await pool.getConnection();
         const [rows] = await connection.execute(
-            'SELECT id, fname, lname, phone_number FROM members WHERE id = ? LIMIT 1',
+            'SELECT id, fname, lname, zip_code, phone_number FROM members WHERE id = ? LIMIT 1',
             [userId]
         );
 
@@ -205,7 +207,7 @@ router.get('/authentication', async (req, res) => {
 
 
 // Logout
-router.post('/logout', (req, res) => {
+router.post('/api/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Logged out' });
 });

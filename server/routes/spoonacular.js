@@ -4,7 +4,7 @@ import express from 'express'
 const router = express.Router();
 
 
-router.get('/helloWorld', (req, res) => {
+router.get('/api/helloWorld', (req, res) => {
     res.send('Hello World')
 })
 

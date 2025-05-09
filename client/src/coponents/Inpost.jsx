@@ -8,7 +8,7 @@ import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import line from '../assets/line 1.svg'
-import { Button } from 'rizzui/button';
+import Button from './CustomButton.jsx';
 
 import BackArrow from './BackArrow';
 import deleteFridgeItem from '../lib/deleteFridgeItem';
