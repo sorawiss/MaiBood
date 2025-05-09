@@ -5,7 +5,7 @@ export default function CustomButton({ isLoading, onClick, children }) {
     <button
       onClick={onClick}
       disabled={isLoading}
-      className={`relative flex items-center justify-center px-4 py-2 rounded-lg text-primary font-medium 
+      className={`custom-button relative flex items-center justify-center px-4 py-2 rounded-lg text-primary font-medium 
                  transition duration-300 bg-aceent w-full h-[3rem]
                  ${isLoading && 'cursor-not-allowed'}
                  disabled:opacity-75`}
