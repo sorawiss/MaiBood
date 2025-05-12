@@ -89,10 +89,10 @@ function AddtoFridge() {
 
 
   return (
-    <div className='overall min-h-screen bg-white-bg w-full flex '>
+    <div className='overall min-h-screen bg-white-bg w-full flex px-[2rem] '>
       <BackArrow />
 
-      <div className="add-wrapper">
+      <div className="add-wrapper ">
         <div className="header-title flex flex-col items-center gap-[0.5rem] ">
           <h2 className='text-primary ' >เพิ่มอาหารเข้าตู้เย็น</h2>
           <p className='p2 text-secondary ' >อาหารจะอยู่ในตู้เย็นส่วนตัวและแจ้งเตือนเมื่อใกล้หมดอายุ (3 วัน)</p>
@@ -120,6 +120,7 @@ function AddtoFridge() {
                 onChange={handleChange}
                 required
                 autoComplete='off'
+                placeholder='วันที่หมดอายุ'
                 className="w-full text-secondary "
               />
             </div>
