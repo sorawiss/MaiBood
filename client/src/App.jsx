@@ -15,6 +15,8 @@ import Layout from './coponents/Layout.jsx';
 import Register from './pages/Register.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import EditProfile from './pages/EditProfile.jsx';
+import AllFood from './pages/AllFood.jsx'
+import CommunityFood from './pages/CommunityFood.jsx'
 
 import AddressInput from './coponents/AddressInput.jsx';
 
@@ -39,6 +41,8 @@ function App() {
             
             <Route path="/home" element={<Home />} />
             <Route path="/home/inpost/:id" element={<Inpost />} />
+            <Route path="/all-food" element={<AllFood />} />
+            <Route path="/community-food" element={<CommunityFood />} />
           </Route>
           {/* End layout */}
 
