@@ -41,8 +41,8 @@ function App() {
             
             <Route path="/home" element={<Home />} />
             <Route path="/home/inpost/:id" element={<Inpost />} />
-            <Route path="/all-food" element={<AllFood />} />
-            <Route path="/community-food" element={<CommunityFood />} />
+            <Route path="/home/all-food" element={<AllFood />} />
+            <Route path="/home/community-food" element={<CommunityFood />} />
           </Route>
           {/* End layout */}
 
