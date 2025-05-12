@@ -100,8 +100,8 @@ function Register() {
             <div className="font-bold text-[40px] text-[#34332F] w-[360px] text-center mb-[146px] max-md:text-4xl max-sm:text-[32px]">
                 "ไม่บูด เพื่อคุณ ชุมชนและสังคม"
             </div>
-            <section className="w-full bg-white box-border px-[26px] py-[58px] rounded-[48px_48px_0_0]">
-                <form className="w-full">
+            <section className="w-full bg-white box-border px-[26px] py-[58px] h-auto rounded-[48px_48px_0_0]">
+                <form className="w-full mb-[1rem] ">
                     <h1 className="font-bold text-[40px] text-[#34332F] text-center mb-6 max-md:text-4xl max-sm:text-[32px]">
                         สมัครสมาชิก
                     </h1>
@@ -183,7 +183,7 @@ function Register() {
                 </form>
 
 
-                <Link to={'/login'} className='mt-[1rem] ' >หากมีบัญชีอยู่แล้ว เข้าสู่ะระบบ</Link>
+                <Link to={'/login'} className='text-secondary '  >หากมีบัญชีอยู่แล้ว เข้าสู่ะระบบ</Link>
 
 
             </section>

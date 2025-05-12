@@ -53,8 +53,8 @@ function Login() {
             <div className="font-bold text-[40px] text-[#34332F] w-[360px] text-center mb-[146px] max-md:text-4xl max-sm:text-[32px]">
                 "ไม่บูด เพื่อคุณ ชุมชนและสังคม"
             </div>
-            <section className="w-full bg-white box-border px-[26px] py-[58px] rounded-[48px_48px_0_0]">
-                <form className="w-full">
+            <section className="w-full bg-white box-border px-[26px] py-[58px] rounded-[48px_48px_0_0] ">
+                <form className="w-full pb-[1rem] ">
                     <h1 className="font-bold text-[40px] text-[#34332F] text-center 
                     mb-6 max-md:text-4xl max-sm:text-[32px]">
                         เข้าสู่ะระบบ
@@ -96,7 +96,7 @@ function Login() {
                 </form>
 
 
-                <Link to={'/register'} className='mt-[1rem] ' >ยังไม่มีบัญชี สมัคร</Link>
+                <Link to={'/register'} className='text-secondary ' >ยังไม่มีบัญชี สมัคร</Link>
 
 
             </section>

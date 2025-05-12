@@ -71,7 +71,7 @@ router.post('/api/register', async (req, res) => {
             lname: lname,
             phone_number: phone_number,
             address: address,
-            zip_code: zip_code
+            zip_code: zip_code,
         };
 
         return res.status(201).json(userDataToSend);
@@ -173,7 +173,7 @@ router.get('/api/authentication', async (req, res) => {
 
         connection = await pool.getConnection();
         const [rows] = await connection.execute(
-            'SELECT id, fname, lname, zip_code, phone_number FROM members WHERE id = ? LIMIT 1',
+            'SELECT id, fname, lname, zip_code, phone_number, address FROM members WHERE id = ? LIMIT 1',
             [userId]
         );
 
