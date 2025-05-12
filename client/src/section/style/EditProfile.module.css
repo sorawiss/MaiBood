@@ -15,7 +15,7 @@
     transform: translateX(-50%);
     width: 10.75rem;
     height: 10.75rem;
-    border: 0.1rem dashed gold;
+    border: 0.1rem solid var(--color-aceent);
     border-radius: 50%;
   }
   
@@ -28,7 +28,7 @@
   }
 
   .inputField::placeholder {
-    color: #9A9A9A;
+    color: var(--color-secondary);
   }
 
   .inputField {
@@ -37,7 +37,6 @@
     padding: 0 0.7rem;
     margin: 0.5rem 0;
     border-radius: 16px;
-    border: 0.06rem solid #ccc;
     background-color: #F6F6F6;
     font-size: 1rem;
     color: #000;
@@ -61,12 +60,12 @@
   }
   
   .cancelBtn {
-    background: #9A9A9A;
+    background: var(--color-secondary);
     color: #000;
   }
   
   .saveBtn {
-    background: #FCDB29;
+    background: var(--color-aceent);
     color: #000;
     margin-bottom: 6.3rem;
   }
