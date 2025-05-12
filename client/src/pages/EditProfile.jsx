@@ -1,9 +1,14 @@
 import React from 'react';
 import styles from '../section/style/EditProfile.module.css';
+import BackArrow from '../coponents/BackArrow';
 
 function EditProfile() {
   return (
     <div className={styles.editProfile}>
+      <div className="arrow py-[2.5rem] ">
+        <BackArrow />
+      </div>
+
       {/* avatar */}
       <div className={styles.avatar} />
 
