@@ -1,11 +1,14 @@
 .editProfile {
     position: relative;
     width: 22.5rem;  
-    height: 27.8rem;    
-    left: 1.5rem;     
+    height: 27.8rem;      
     background: #fff;
     box-sizing: border-box;
     font-family: sans-serif;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    margin-bottom: 4rem;
+    min-height: 100vh;
   }
   
   .avatar {

@@ -10,6 +10,7 @@ import fridge from './routes/fridge.js'
 import imageUpload from './routes/imageUpload.js'
 import getFood from './routes/getFood.js'
 import spoonacular from './routes/spoonacular.js'
+import editProfile from './routes/edit-profile.js'
 
 
 
@@ -44,6 +45,7 @@ app.use(fridge)
 app.use(imageUpload)
 app.use(getFood)
 app.use(spoonacular)
+app.use(editProfile)
 
 
 
