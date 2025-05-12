@@ -1,0 +1,23 @@
+.allfood-top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.allfood-top svg {
+    position: absolute;
+    top: 2rem;
+}
+
+.space-cup {
+    width: 17rem;
+}
+
+.allfood-toptext {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
