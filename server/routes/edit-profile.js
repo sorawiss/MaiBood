@@ -29,32 +29,33 @@ router.patch('/api/edit-profile', AuthMiddleware, async (req, res) => {
         let updateFields = [];
         let queryParams = [];
         
-        if (fname) {
+        // Modified to handle null values
+        if (fname !== undefined) {
             updateFields.push('fname = ?');
             queryParams.push(fname);
         }
         
-        if (lname) {
+        if (lname !== undefined) {
             updateFields.push('lname = ?');
             queryParams.push(lname);
         }
         
-        if (zip_code) {
+        if (zip_code !== undefined) {
             updateFields.push('zip_code = ?');
             queryParams.push(zip_code);
         }
         
-        if (address) {
+        if (address !== undefined) {
             updateFields.push('address = ?');
             queryParams.push(address);
         }
 
-        if (line) {
+        if (line !== undefined) {
             updateFields.push('line = ?');
             queryParams.push(line);
         }
 
-        if (ig) {
+        if (ig !== undefined) {
             updateFields.push('ig = ?');
             queryParams.push(ig);
         }
