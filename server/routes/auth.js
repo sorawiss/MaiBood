@@ -111,8 +111,8 @@ router.post('/api/login', async (req, res) => {
         );
 
         if (rows.length === 0) {
-            console.log('Invalid email or password')
-            return res.status(401).json({ message: 'Invalid email or password' });
+            console.log('No user found')
+            return res.status(401).json({ message: 'Invalid phone number' });
         }
 
         const user = rows[0];
@@ -120,7 +120,7 @@ router.post('/api/login', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid password' });
         }
 
         const { password: passwordHash, ...rest } = user;

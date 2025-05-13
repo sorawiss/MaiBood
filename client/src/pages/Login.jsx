@@ -15,7 +15,7 @@ function Login() {
         phone_number: '',
         password: '',
     })
-    const [errors, setErrors] = useState({})
+    const [errors, setErrors] = useState()
     const navigate = useNavigate();
     const { login } = useContext(AuthContext);
 
@@ -28,7 +28,12 @@ function Login() {
 
         },
         onError: (error) => {
-            console.log("Login error" , error)
+            console.log("Login error" , error.message)
+            if (error.message === 'Invalid phone number') {
+                setErrors('เบอร์โทรศัพท์ไม่ถูกต้อง')
+            } else if (error.message === 'Invalid password') {
+                setErrors('รหัสผ่านไม่ถูกต้อง')
+            }
         },
     })
 
@@ -43,6 +48,12 @@ function Login() {
 
     function handleSubmit(e) {
         e.preventDefault()
+
+        if (!formData.phone_number || !formData.password) {
+            setErrors('กรุณากรอกข้อมูลให้ครบ')
+            return
+        }
+
         mutation.mutate(formData)
     }
 
@@ -83,7 +94,7 @@ function Login() {
                             />
                         </div>
                     </div>
-
+                    {errors && <p className='alert'  > {errors}</p>}
                     <Button
                         type="submit"
                         className="font-bold text-xl text-[#34332F] w-full bg-aceent active:bg-accent-active px-0 py-2 
