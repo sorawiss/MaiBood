@@ -67,6 +67,11 @@ function Register() {
     function handleSubmit(e) {
         e.preventDefault()
 
+        if (!formData.fname || !formData.lname || !formData.phone_number || !formData.password || !formData.name_address) {
+            setErrorMessage('กรุณากรอกข้อมูลให้ครบ')
+            return
+        }
+
         const dataToSend = {
             fname: formData.fname,
             lname: formData.lname,

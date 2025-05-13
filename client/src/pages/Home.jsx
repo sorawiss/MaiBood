@@ -119,7 +119,7 @@ function Home() {
       <div className='top-container'>
         <h2 className='hello'>สวัสดี {user && (user.fname)}</h2>
         <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
-          <span className="highlight">โลกของเรา</span>
+          <span className="highlight">ชุมชน</span>
         </h2>
       </div> {/*top-container*/}
 
