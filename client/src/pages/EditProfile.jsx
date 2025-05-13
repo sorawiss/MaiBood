@@ -87,7 +87,7 @@ function EditProfile() {
   };
 
   return (
-    <div className={styles.editProfile}>
+    <div className={`${styles.editProfile} profile `}>
       <div className="arrow py-[2.5rem] ">
         <BackArrow />
       </div>
