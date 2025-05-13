@@ -1,5 +1,5 @@
 import React from 'react';
-import '../section/style/AllFood.css'
+import '../section/style/Allfood.css'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react';
 
