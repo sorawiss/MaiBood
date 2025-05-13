@@ -50,13 +50,13 @@ function Profile() {
             </div>
           </div>
 
-          <div className="contact-in-profile flex flex-row">
+          <div className="contact-in-profile">
 
             <div className="contact-profilepage flex flex-row">
               <svg width="14" height="21" viewBox="0 0 14 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 9.83337C6.33696 9.83337 5.70107 9.56998 5.23223 9.10114C4.76339 8.6323 4.5 7.99642 4.5 7.33337C4.5 6.67033 4.76339 6.03445 5.23223 5.56561C5.70107 5.09677 6.33696 4.83337 7 4.83337C7.66304 4.83337 8.29893 5.09677 8.76777 5.56561C9.23661 6.03445 9.5 6.67033 9.5 7.33337C9.5 7.66168 9.43534 7.98677 9.3097 8.29008C9.18406 8.5934 8.99991 8.86899 8.76777 9.10114C8.53562 9.33329 8.26002 9.51744 7.95671 9.64307C7.65339 9.76871 7.3283 9.83337 7 9.83337ZM7 0.333374C5.14348 0.333374 3.36301 1.07087 2.05025 2.38363C0.737498 3.69638 0 5.47686 0 7.33337C0 12.5834 7 20.3334 7 20.3334C7 20.3334 14 12.5834 14 7.33337C14 5.47686 13.2625 3.69638 11.9497 2.38363C10.637 1.07087 8.85652 0.333374 7 0.333374Z" fill="#FCDB29" />
               </svg>
-              <p className='con-tect p2'>{ user.address } { user.zip_code } </p>
+              <p className='con-tect p2'>{ user.address } รหัสไปรษณีย์ { user.zip_code } </p>
             </div>
 
             <div className="contact-profilepage flex flex-row">
@@ -83,12 +83,12 @@ function Profile() {
                   </clipPath>
                 </defs>
               </svg>
-              <p className='con-tect p2'>{ user.ig }</p>
+              <p className='con-tect p2'>{ user.ig ? user.ig : '-' }</p>
             </div>
 
             <div className="contact-profilepage flex flex-row">
               <img src={line} alt='line'></img>
-              <p className='con-tect p2'> { user.line } </p>
+              <p className='con-tect p2'> { user.line ? user.line : '-' } </p>
             </div>
 
           </div>
