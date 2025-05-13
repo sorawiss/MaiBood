@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { AuthContext } from '../AuthContext';
 import styles from '../section/style/EditProfile.module.css';
@@ -31,7 +31,6 @@ async function updateProfile(data) {
 function EditProfile() {
   const { user, refreshUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const location = useLocation();
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
@@ -41,13 +40,6 @@ function EditProfile() {
     line: ''
   });
   const [error, setError] = useState('');
-
-  // Check for returned image URL from crop page
-  useEffect(() => {
-    if (location.state?.uploadedImageUrl) {
-      refreshUser();
-    }
-  }, [location.state, refreshUser]);
 
   // Load user data when component mounts
   useEffect(() => {
@@ -86,6 +78,7 @@ function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+      
     mutation.mutate(formData);
   };
 
@@ -93,54 +86,14 @@ function EditProfile() {
     navigate('/profile');
   };
 
-  const handleImageSelect = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      
-      reader.onload = () => {
-        // Navigate to crop page with image data
-        navigate('/crop-image', {
-          state: {
-            imageSrc: reader.result,
-            returnUrl: '/edit-profile',
-            uploadEndpoint: '/api/profile-image'
-          }
-        });
-      };
-      
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
-    <div className={styles.editProfile}>
+    <div className={`${styles.editProfile} profile `}>
       <div className="arrow py-[2.5rem] ">
         <BackArrow />
       </div>
 
-      {/* Avatar upload */}
-      <div className={`${styles.avatar} profile relative group cursor-pointer`}>
-        {user?.pic && (
-          <img 
-            src={user.pic} 
-            alt="Profile" 
-            className="w-full h-full object-cover rounded-full"
-          />
-        )}
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center">
-          <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Change Photo
-          </span>
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageSelect}
-          className="absolute inset-0 opacity-0 cursor-pointer"
-          title="Click to upload profile picture"
-        />
-      </div>
+      {/* avatar */}
+      <div className={styles.avatar} />
 
       {/* Error message */}
       {error && (
@@ -149,7 +102,7 @@ function EditProfile() {
         </div>
       )}
 
-      {/* Form */}
+      {/* ฟอร์ม */}
       <form onSubmit={handleSubmit} className={styles.formContainer}>
         <input
           className={styles.inputField}
