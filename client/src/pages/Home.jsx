@@ -11,7 +11,7 @@ import cancel from '../assets/X.svg'
 import FoodWrapper from '../coponents/FoodWrapper'
 import { AuthContext } from '../AuthContext'
 import { Link } from 'react-router-dom'
-
+import Loading from '../coponents/Loading'
 
 // Fetch Data Function
 const baseURL = import.meta.env.VITE_BASE_URL
@@ -85,9 +85,7 @@ function Home() {
 
   if (isLoadingCommunity || isLoadingAll) {
     return (
-      <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
-        <p>Loading fridge...</p>
-      </div>
+      <Loading />
     );
   }
 

@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import BackArrow from '../coponents/BackArrow'
+import Loading from '../coponents/Loading'
 
 
 const baseURL = import.meta.env.VITE_BASE_URL
@@ -45,7 +46,7 @@ function Fridge() {
   if (isLoading) {
     return (
       <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem] '>
-        <p>Loading fridge...</p>
+        <Loading />
       </div>
     );
   }
