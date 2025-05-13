@@ -6,6 +6,8 @@ import { useState } from 'react';
 import cancel from '../assets/X.svg'
 
 import FoodWrapper from '../coponents/FoodWrapper'
+import Loading from '../coponents/Loading';
+import BackArrow from '../coponents/BackArrow';
 
 
 // Get Community Food Function
@@ -47,15 +49,7 @@ function CommunityFood() {
 
     if (isLoading) {
         return (
-            <div className='fridge min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem]'>
-                <div role="status">
-                    <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                    </svg>
-                    <span className="sr-only">Loading...</span>
-                </div>
-            </div>
+          <Loading />
         );
     }
 
@@ -76,6 +70,9 @@ function CommunityFood() {
 
     return (
         <div className="allfood-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center gap-[1rem] pt-[3rem] pb-[8rem] ">
+
+            <BackArrow />
+
             <div className="allfood-top py-[3rem]">
                 <svg width="147" height="91" viewBox="0 0 147 91" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M28.6404 109.153C27.2563 108.186 25.4034 107.032 23.1189 105.879C13.2219 100.908 3.86807 96.22 3.75645 85.0728C3.74901 85.0058 3.74902 84.9314 3.74902 84.857V43.9294C3.74902 38.6014 8.09479 35.9076 11.8155 35.2156C19.815 33.7273 25.3216 31.3089 28.4023 29.6569L28.4246 37.7233L28.4469 44.4206H24.7411C18.9964 44.4206 14.3307 49.6519 14.3307 56.0812V79.8415C14.3307 86.2709 18.9964 91.5022 24.7411 91.5022H28.5883L28.6404 109.153Z" fill="#FFF8BB" />
