@@ -91,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       setUser(null);
+      console.log('Logout successful');
 
     } catch (error) {
       console.error('Error during logout:', error);
