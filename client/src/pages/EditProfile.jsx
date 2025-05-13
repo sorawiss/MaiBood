@@ -78,16 +78,8 @@ function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Filter out empty fields to avoid unnecessary updates
-    const updateData = Object.entries(formData)
-      .filter(([_, value]) => value !== '')
-      .reduce((obj, [key, value]) => {
-        obj[key] = value;
-        return obj;
-      }, {});
       
-    mutation.mutate(updateData);
+    mutation.mutate(formData);
   };
 
   const handleCancel = () => {
@@ -178,6 +170,7 @@ function EditProfile() {
           >
             {mutation.isPending ? 'กำลังบันทึก...' : 'บันทึก'}
           </CustomButton>
+
         </div>
       </form>
     </div>
