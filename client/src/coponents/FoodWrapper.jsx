@@ -13,7 +13,7 @@ function FoodWrapper({ id, exp, price, name, location, image }) {
         <Link to={'/home/inpost/' + id} >
             <div className="food-container">
                 <div className="food-pic">
-                    <img src={image} loading='lazy' ></img>
+                    <img src={image} alt={name} loading='lazy' ></img>
                     <div className="detail">
                         <div className="exp-date">
                             <p className='exp'> {thaiDate(time)} </p>

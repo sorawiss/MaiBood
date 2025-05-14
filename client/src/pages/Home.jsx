@@ -96,8 +96,9 @@ function Home() {
       const itemType = item?.type || '';
       const searchLower = searchText.toLowerCase();
       const materialLower = material.toLowerCase();
+      const addressLower = item?.address?.toLowerCase();
 
-      const matchesSearch = materialLower.includes(searchLower);
+      const matchesSearch = materialLower.includes(searchLower) || addressLower.includes(searchLower);
       const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
 
       return matchesSearch && matchesCategory;
