@@ -65,7 +65,6 @@ function AddtoFridge() {
   const [form, setForm] = useState({
     material: initialMaterial,
     exp: dateExp,
-    price: '',
     selectedFile: null,
   })
 
@@ -123,7 +122,6 @@ function AddtoFridge() {
       setForm({
         material: '',
         exp: '',
-        price: '',
         selectedFile: null,
       })
 
@@ -156,7 +154,7 @@ function AddtoFridge() {
 
     formData.append('material', form.material);
     formData.append('exp', form.exp);
-    formData.append('price', form.price);
+    formData.append('price', 0);
     formData.append('owner', user.id);
     formData.append('image', form.selectedFile);
     formData.append('type', postType.value);
@@ -222,20 +220,7 @@ function AddtoFridge() {
                 onChange={handleFileChange}
               />
             </div>
-            <div className="price-banner">
-              <div className="price-input ">
-                <input
-                  type="number"
-                  value={form.price}
-                  placeholder="ราคา (ใส่ 0 บาทได้)"
-                  className="price-input "
-                  name='price'
-                  onChange={handleChange}
-                  required
-                  autoComplete='off'
-                />
-              </div>
-            </div>
+            
 
             <div className="image-uploaded-display w-full ">
               <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt=""/>
