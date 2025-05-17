@@ -38,7 +38,7 @@ function App() {
               <Route path="/add" element={<Add />} />
               <Route path="/fridge/add-to-fridge" element={<AddtoFridge />} />
               <Route path="/profile/edit-profile" element={<EditProfile />} />
-              <Route path="/food-suggest" element={<FoodApi />} />
+              <Route path="/fridge/food-suggest" element={<FoodApi />} />
             </Route>
             
             <Route path="/home" element={<Home />} />
