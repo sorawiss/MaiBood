@@ -41,11 +41,7 @@ function Profile() {
 
           <div className="sell-number flex flex-col items-center gap-[1rem] ">
             <div className="sellnum-banner flex flex-row ">
-              <p className='prim-text'>ขายอาหาร 0 บาท</p>
-              <h2 className='prim-text'>40 ครั้ง</h2>
-            </div>
-            <div className="sellnum-banner flex flex-row ">
-              <p className='prim-text'>ขายอาหารทั้งหมด</p>
+              <p className='prim-text'>แบ่งปันไปทั้งหมด</p>
               <h2 className='prim-text'>40 ครั้ง</h2>
             </div>
           </div>
