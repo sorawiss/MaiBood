@@ -1,0 +1,22 @@
+.suggest-api-link {
+    width: 100%;
+}
+
+.text-suggest {
+    position: relative;
+    width: 100%;
+    padding-left: 4rem;
+}
+
+.text-suggest svg {
+    position: absolute;
+    z-index: 0;
+    left: 11rem;
+    top: -0.75rem;
+}
+
+.food-suggest-text {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
