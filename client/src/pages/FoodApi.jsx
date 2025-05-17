@@ -6,8 +6,10 @@ function ThaiFoodApi() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const API_KEY = "Your API Here";
+    const API_KEY = import.meta.env.VITE_SPOONACULAR;
 
+    
+    // Fetch Spoonacular API
     const handleSearch = async () => {
         if (!ingredient) return;
 
