@@ -45,7 +45,6 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     }
 
     const { owner, material, exp, type, id } = req.body;
-    const price = parseInt(req.body.price);
 
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
@@ -69,8 +68,8 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         }
         else {
             await connection.execute(
-                'INSERT INTO fridge (owner, material, exp, is_store, image, price, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [owner, material, exp, true, imageUrl, price, type]
+                'INSERT INTO fridge (owner, material, exp, is_store, image, type) VALUES (?, ?, ?, ?, ?, ?)',
+                [owner, material, exp, true, imageUrl, type]
             )
 
             return res.status(200).json({
@@ -88,6 +87,7 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         }
     }
 });
+
 
 // Profile Avatar Upload Endpoint
 router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async (req, res) => {
