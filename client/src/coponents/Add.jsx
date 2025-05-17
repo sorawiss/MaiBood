@@ -154,6 +154,7 @@ function AddtoFridge() {
 
     formData.append('material', form.material);
     formData.append('exp', form.exp);
+    formData.append('price', 0);
     formData.append('owner', user.id);
     formData.append('image', form.selectedFile);
     formData.append('type', postType.value);
@@ -219,6 +220,7 @@ function AddtoFridge() {
                 onChange={handleFileChange}
               />
             </div>
+            
 
             <div className="image-uploaded-display w-full ">
               <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt=""/>
