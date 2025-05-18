@@ -6,6 +6,7 @@ import BackArrow from "../coponents/BackArrow";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
+
 // Thai to English ingredient translations
 const thaiToEnglishIngredients = {
     "ไก่": "chicken",
@@ -27,8 +28,8 @@ const thaiToEnglishIngredients = {
     "ขิง": "ginger",
     "ตะไคร้": "lemongrass",
     "เห็ด": "mushroom",
-    // Add more translations as needed
 };
+
 
 // Fetch fridge items function
 async function fetchFridge(id) {
@@ -47,6 +48,7 @@ async function fetchFridge(id) {
 
     return response.json();
 }
+
 
 function FoodApi() {
     const { user } = useContext(AuthContext);
@@ -122,31 +124,6 @@ function FoodApi() {
                 const needed = 5 - thaiResults.length;
                 allResults = [...thaiResults, ...nonThaiUnique.slice(0, needed)];
             }
-
-            const detailedRecipes = await Promise.all(
-                allResults.map(async (item) => {
-                    const infoRes = await fetch(
-                        `https://api.spoonacular.com/recipes/${item.id}/information?apiKey=${API_KEY}`
-                    );
-                    const infoData = await infoRes.json();
-                    
-                    if (infoData.status === "failure") {
-                        throw new Error(infoData.message || "API Error");
-                    }
-
-                    return {
-                        title: infoData.title,
-                        image: infoData.image,
-                        instructions: infoData.instructions || "ไม่มีวิธีทำ",
-                        sourceUrl: infoData.sourceUrl,
-                        ingredients: infoData.extendedIngredients?.map(ing => ing.original) || [],
-                        readyInMinutes: infoData.readyInMinutes,
-                        servings: infoData.servings
-                    };
-                })
-            );
-
-            setRecipes(detailedRecipes);
         } catch (err) {
             console.error(err);
             setError("เกิดข้อผิดพลาดในการดึงข้อมูล: " + (err.message || ""));
@@ -219,56 +196,6 @@ function FoodApi() {
                 {/* Loading and error states */}
                 {loading && <p className="text-center">กำลังค้นหาสูตรอาหาร...</p>}
                 {error && <p className="text-red-500 text-center">{error}</p>}
-
-                {/* Recipe results */}
-                <div className="grid gap-8">
-                    {recipes.map((recipe, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img
-                                src={recipe.image}
-                                alt={recipe.title}
-                                className="w-full h-48 object-cover"
-                            />
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold mb-4">{recipe.title}</h3>
-                                
-                                {/* Recipe info */}
-                                <div className="mb-4 text-gray-600">
-                                    <p>เวลาทำ: {recipe.readyInMinutes} นาที</p>
-                                    <p>สำหรับ: {recipe.servings} ที่</p>
-                                </div>
-
-                                {/* Ingredients */}
-                                <div className="mb-4">
-                                    <h4 className="font-semibold mb-2">วัตถุดิบ:</h4>
-                                    <ul className="list-disc list-inside">
-                                        {recipe.ingredients.map((ing, i) => (
-                                            <li key={i} className="text-gray-600">{ing}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Instructions */}
-                                <div className="mb-4">
-                                    <h4 className="font-semibold mb-2">วิธีทำ:</h4>
-                                    <div
-                                        className="prose max-w-none text-gray-600"
-                                        dangerouslySetInnerHTML={{ __html: recipe.instructions }}
-                                    />
-                                </div>
-
-                                <a
-                                    href={recipe.sourceUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary hover:underline"
-                                >
-                                    ดูสูตรต้นฉบับ
-                                </a>
-                            </div>
-                        </div>
-                    ))}
-                </div>
             </div>
         </div>
     );
