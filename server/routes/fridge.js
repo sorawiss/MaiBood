@@ -19,12 +19,10 @@ router.post('/api/add-to-fridge', AuthMiddleware, async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.execute(
+        await connection.execute(
             'INSERT INTO fridge (owner, material, exp, is_store) VALUES (?, ?, ?, ?)',
-            [owner, material, exp, false]
+            [owner, material, exp, 0]
         )
-
-
         res.status(201).json({
             message: 'Item added to fridge'
         })
@@ -69,6 +67,7 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
             return res.status(404).json({ message: 'Item not found' });
         }
 
+        // Delete image from S3
         const imageUrl = rows[0].image;
 
         if (imageUrl) {
@@ -76,9 +75,10 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         }
 
 
+        // Change status from db
         await connection.execute(
-            'DELETE FROM fridge WHERE id = ?',
-            [id]
+            'UPDATE fridge SET is_store = ? WHERE id = ?',
+            [2, id]
         );
 
         res.status(200).json({
@@ -99,7 +99,6 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
             }
         }
     }
-
 })
 
 

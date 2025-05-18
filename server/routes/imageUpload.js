@@ -60,8 +60,8 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
 
         if (id) {
             await connection.execute(
-                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
-                [imageUrl, price, type, material, true, id]
+                'UPDATE fridge SET image = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
+                [imageUrl, type, material, 1, id]
             )
 
             return res.status(200).json({
@@ -71,7 +71,7 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         else {
             await connection.execute(
                 'INSERT INTO fridge (owner, material, exp, is_store, image, type) VALUES (?, ?, ?, ?, ?, ?)',
-                [owner, material, exp, true, imageUrl, type]
+                [owner, material, exp, 1, imageUrl, type]
             )
 
             return res.status(200).json({
