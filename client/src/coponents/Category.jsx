@@ -5,9 +5,11 @@ import carrot from '../assets/carrot.svg'
 import bread from '../assets/bread.svg'
 import dot from '../assets/dot.svg'
 
+import '../section/style/Home.css'
+
 function Category({ selectedCategory, handleCategoryClick }) {
     return (
-        <div className="category-button">
+        <div className="category-button flex justify-between items-center w-full">
 
             <button
                 onClick={() => handleCategoryClick(1)} >

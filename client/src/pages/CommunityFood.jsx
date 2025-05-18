@@ -8,6 +8,7 @@ import cancel from '../assets/X.svg'
 import FoodWrapper from '../coponents/FoodWrapper'
 import Loading from '../coponents/Loading';
 import BackArrow from '../coponents/BackArrow';
+import Category from '../coponents/Category';
 
 
 // Get Community Food Function
@@ -41,15 +42,39 @@ async function fetchCommunityFood(user) {
 // Main Component
 function CommunityFood() {
     const [searchText, setSearchText] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+
+    const handleCategoryClick = (category) => {
+        setSelectedCategory(prev => prev === category ? null : category);
+    }
+
 
     const { data, isLoading, error, isError } = useQuery({
         queryKey: ['communityFood'],
         queryFn: () => fetchCommunityFood()
     })
 
+
+     // --- Filtering Logic ---
+     const filterItems = (items) => {
+        return items?.filter((item) => {
+            const material = item?.material || '';
+            const itemType = item?.type || '';
+            const searchLower = searchText.toLowerCase();
+            const materialLower = material.toLowerCase();
+
+            const matchesSearch = materialLower.includes(searchLower);
+            const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
+
+            return matchesSearch && matchesCategory;
+        }) || [];
+    };
+
+
     if (isLoading) {
         return (
-          <Loading />
+            <Loading />
         );
     }
 
@@ -60,13 +85,7 @@ function CommunityFood() {
             </div>
         );
     }
-
-
-    const filterData = (data) => {
-        return data.filter((item) => {
-            return item.material.toLowerCase().includes(searchText.toLowerCase());
-        });
-    }
+    
 
     return (
         <div className="allfood-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center gap-[1rem] pt-[3rem] pb-[8rem] ">
@@ -117,8 +136,10 @@ function CommunityFood() {
                 </img>
             </div>
 
+            <Category selectedCategory={selectedCategory} handleCategoryClick={handleCategoryClick} />
+
             <div className="allfood-container">
-                {filterData(data).map((items) => (
+                {filterItems(data).map((items) => (
                     <FoodWrapper
                         key={items.id}
                         id={items.id}
