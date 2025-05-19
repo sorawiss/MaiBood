@@ -59,7 +59,7 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         connection = await pool.getConnection();
 
         const [rows] = await connection.execute(
-            'SELECT image FROM fridge WHERE id = ?',
+            'SELECT image, is_store FROM fridge WHERE id = ?',
             [id]
         );
 
@@ -71,14 +71,25 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         const imageUrl = rows[0].image;
 
         if (imageUrl) {
-            await deleteFromS3(imageUrl);
+            // await deleteFromS3(imageUrl);
+            console.log('delete image from s3')
         }
 
 
         // Change status from db
+        let status;
+        switch (rows[0].is_store) {
+            case 0:
+                status = 2;
+                break;
+            case 1:
+                status = 3;
+                break;
+        }
+
         await connection.execute(
             'UPDATE fridge SET is_store = ? WHERE id = ?',
-            [2, id]
+            [status, id]
         );
 
         res.status(200).json({

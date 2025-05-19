@@ -197,10 +197,10 @@ function Inpost() {
                          ">
                         <h2>อาหารจะถูกลบออกจากตู้เย็นและร้านค้า</h2>
                         <div className="button-wrapper flex gap-[1rem] ">
-                            <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] "
+                            <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] cursor-pointer "
                                 onClick={handleOpen}
                             >ไม่ใช่</div>
-                            <div className="ok bg-aceent rounded-[16px] px-[1rem] py-[0.3rem] "
+                            <div className="ok bg-aceent rounded-[16px] px-[1rem] py-[0.3rem] cursor-pointer "
                                 onClick={handleDelete}
                             >ยืนยัน</div>
                         </div>
