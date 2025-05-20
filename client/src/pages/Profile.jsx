@@ -1,4 +1,4 @@
-import React, { use } from 'react'
+import React from 'react'
 import BackArrow from '../coponents/BackArrow'
 import Noodle from '../assets/Group.svg'
 import line from '../assets/line 1.svg'

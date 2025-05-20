@@ -10,14 +10,19 @@ function HistoryList({ material, expireDate, status }) {
     case 3:
       status = 'แบ่งปัน'
       break
-    default:
+    case 4:
       status = 'หมดอายุ'
       break
   }
 
 
   return (
-    <div className={`history-list-container w-full ${status === 'กินเอง' ? 'bg-background' : 'bg-aceent'} rounded-[16px]  flex flex-col items-center justify-center`} >
+    <div className={`history-list-container w-full ${
+      status === 'กินเอง' ? 'bg-background text-primary' : 
+      status === 'แบ่งปัน' ? 'bg-aceent text-primary' :
+      status === 'หมดอายุ' ? 'bg-alert text-background ' :
+      'bg-background'
+    } rounded-[16px] flex flex-col items-center justify-center`} >
       <h2>{material}</h2>
       <p className='p2 text-secondary' >หมดอายุเมื่อ {date.toLocaleDateString('th-TH',
         { year: 'numeric', month: 'long', day: 'numeric' })}</p>

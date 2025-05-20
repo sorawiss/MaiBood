@@ -12,7 +12,7 @@ router.get('/api/history', AuthMiddleware, async (req, res) => {
     try {
         const userID = req.userID
 
-        const [rows] = await pool.query('SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3)', [userID])
+        const [rows] = await pool.query('SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3 OR is_store = 4)', [userID])
 
         res.status(200).json(rows)
     } catch (error) {
