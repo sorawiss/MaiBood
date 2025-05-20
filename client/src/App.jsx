@@ -17,7 +17,8 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import EditProfile from './pages/EditProfile.jsx';
 import AllFood from './pages/AllFood.jsx'
 import CommunityFood from './pages/CommunityFood.jsx'
-
+import FoodApi from './pages/FoodApi.jsx'
+import History from './pages/History.jsx'
 import AddressInput from './coponents/AddressInput.jsx';
 
 
@@ -37,6 +38,8 @@ function App() {
               <Route path="/add" element={<Add />} />
               <Route path="/fridge/add-to-fridge" element={<AddtoFridge />} />
               <Route path="/profile/edit-profile" element={<EditProfile />} />
+              <Route path="/fridge/food-suggest" element={<FoodApi />} />
+              <Route path="/history" element={<History />} />
             </Route>
             
             <Route path="/home" element={<Home />} />

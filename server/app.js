@@ -11,6 +11,7 @@ import imageUpload from './routes/imageUpload.js'
 import getFood from './routes/getFood.js'
 import spoonacular from './routes/spoonacular.js'
 import editProfile from './routes/edit-profile.js'
+import history from './routes/history.js'
 
 
 
@@ -46,7 +47,7 @@ app.use(imageUpload)
 app.use(getFood)
 app.use(spoonacular)
 app.use(editProfile)
-
+app.use(history)
 
 
 

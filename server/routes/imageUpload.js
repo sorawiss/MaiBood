@@ -45,22 +45,23 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     }
 
     const { owner, material, exp, type, id } = req.body;
-    const price = parseInt(req.body.price);
 
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        const s3Response = await uploadToS3(req.file);
-        const imageUrl = s3Response;
+        // const s3Response = await uploadToS3(req.file);
+        // const imageUrl = s3Response;
+
+        const imageUrl = req.file.originalname;
 
         let connection;
         connection = await pool.getConnection();
 
         if (id) {
             await connection.execute(
-                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
-                [imageUrl, price, type, material, true, id]
+                'UPDATE fridge SET image = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
+                [imageUrl, type, material, 1, id]
             )
 
             return res.status(200).json({
@@ -69,8 +70,8 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         }
         else {
             await connection.execute(
-                'INSERT INTO fridge (owner, material, exp, is_store, image, price, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [owner, material, exp, true, imageUrl, price, type]
+                'INSERT INTO fridge (owner, material, exp, is_store, image, type) VALUES (?, ?, ?, ?, ?, ?)',
+                [owner, material, exp, 1, imageUrl, type]
             )
 
             return res.status(200).json({
@@ -88,6 +89,7 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         }
     }
 });
+
 
 // Profile Avatar Upload Endpoint
 router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async (req, res) => {

@@ -2,17 +2,14 @@ import React, { useState, useContext } from 'react'
 import '../section/style/Home.css'
 import { useQuery } from '@tanstack/react-query'
 
-import meat from '../assets/meat.svg'
-import carrot from '../assets/carrot.svg'
-import bread from '../assets/bread.svg'
-import dot from '../assets/dot.svg'
+
 import cancel from '../assets/X.svg'
 
 import FoodWrapper from '../coponents/FoodWrapper'
 import { AuthContext } from '../AuthContext'
 import { Link } from 'react-router-dom'
 import Loading from '../coponents/Loading'
-
+import Category from '../coponents/Category'
 // Fetch Data Function
 const baseURL = import.meta.env.VITE_BASE_URL
 
@@ -140,33 +137,7 @@ function Home() {
           </img>
         </div>
 
-        <div className="category-button">
-
-          <button
-            className={`circle-button ${selectedCategory === 1 ? 'active-category' : ''}`} // Example active class
-            onClick={() => handleCategoryClick(1)} >
-            <img src={meat} alt='meat category button'></img>
-          </button>
-
-          <button
-            className={`circle-button ${selectedCategory === 2 ? 'active-category' : ''}`}
-            onClick={() => handleCategoryClick(2)} >
-            <img src={carrot} alt='vegetable category button'></img>
-          </button>
-
-          <button
-            className={`circle-button ${selectedCategory === 3 ? 'active-category' : ''}`}
-            onClick={() => handleCategoryClick(3)} >
-            <img src={bread} alt='bread category button'></img>
-          </button>
-
-          <button
-            className={`circle-button ${selectedCategory === 4 ? 'active-category' : ''}`}
-            onClick={() => handleCategoryClick(4)} >
-            <img src={dot} alt='all categories button'></img>
-          </button>
-
-        </div>
+        <Category selectedCategory={selectedCategory} handleCategoryClick={handleCategoryClick} />
       </div> {/*second-container*/}
 
 

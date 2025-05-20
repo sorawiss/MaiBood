@@ -6,7 +6,7 @@ function Nav() {
 
 
     return (
-        <div className="menu-bar ">
+        <div className="menu-bar relative z-10">
             <div className="menu-list">
                 <NavLink to={'/home'} className="menu">
                     {({ isActive }) => (

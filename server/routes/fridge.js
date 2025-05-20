@@ -19,12 +19,10 @@ router.post('/api/add-to-fridge', AuthMiddleware, async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result] = await connection.execute(
+        await connection.execute(
             'INSERT INTO fridge (owner, material, exp, is_store) VALUES (?, ?, ?, ?)',
-            [owner, material, exp, false]
+            [owner, material, exp, 0]
         )
-
-
         res.status(201).json({
             message: 'Item added to fridge'
         })
@@ -61,7 +59,7 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         connection = await pool.getConnection();
 
         const [rows] = await connection.execute(
-            'SELECT image FROM fridge WHERE id = ?',
+            'SELECT image, is_store, exp FROM fridge WHERE id = ?',
             [id]
         );
 
@@ -69,16 +67,33 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
             return res.status(404).json({ message: 'Item not found' });
         }
 
+        // Delete image from S3
         const imageUrl = rows[0].image;
 
         if (imageUrl) {
-            await deleteFromS3(imageUrl);
+            // await deleteFromS3(imageUrl);
+            console.log('delete image from s3')
         }
 
 
+        // Change status from db
+        let status;
+        switch (rows[0].is_store) {
+            case 0:
+                status = 2; // Eat
+                break;
+            case 1:
+                if (rows[0].exp < new Date()) {
+                    status = 4; // Expired
+                } else {
+                    status = 3; // Give
+                }
+                break;
+        }
+
         await connection.execute(
-            'DELETE FROM fridge WHERE id = ?',
-            [id]
+            'UPDATE fridge SET is_store = ? WHERE id = ?',
+            [status, id]
         );
 
         res.status(200).json({
@@ -99,7 +114,6 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
             }
         }
     }
-
 })
 
 
@@ -115,7 +129,7 @@ router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
         console.log(`Database connection acquired for fetching fridge items for owner: ${ownerId}`);
 
         const [items] = await connection.execute(
-            'SELECT id, material, exp, is_store FROM fridge WHERE owner = ? ORDER BY exp ASC',
+            'SELECT id, material, exp, is_store FROM fridge WHERE owner = ? AND (is_store = 0 OR is_store = 1) ORDER BY exp ASC',
             [ownerId]
         );
 
