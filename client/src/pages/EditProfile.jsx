@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { AuthContext } from '../AuthContext';
 import styles from '../section/style/EditProfile.module.css';
+import imageCompression from 'browser-image-compression';
 
 import BackArrow from '../coponents/BackArrow';
 import CustomButton from '../coponents/CustomButton';
@@ -96,17 +97,38 @@ function EditProfile() {
     submitData.append('zip_code', formData.zip_code);
     submitData.append('ig', formData.ig);
     submitData.append('line', formData.line);
-    
+
     if (croppedImage) {
+      // Convert base64 cropped image to file
       fetch(croppedImage)
         .then(res => res.blob())
-        .then(blob => {
-          const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
-          submitData.append('pic', file);
-          
-          mutation.mutate(submitData);
+        .then(async (blob) => {
+          try {
+            // Compress only the final cropped image
+            const options = {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 800,
+              useWebWorker: true,
+              initialQuality: 0.8,
+            };
+
+            const compressedBlob = await imageCompression(
+              new File([blob], 'profile.jpg', { type: 'image/jpeg' }), 
+              options
+            );
+
+            // Append compressed image
+            submitData.append('pic', compressedBlob, 'profile.jpg');
+            
+            // Submit the form
+            mutation.mutate(submitData);
+          } catch (error) {
+            console.error('Error compressing image:', error);
+            setError('Failed to process image. Please try again.');
+          }
         });
     } else {
+      // Submit without image
       mutation.mutate(submitData);
     }
   };
@@ -120,6 +142,9 @@ function EditProfile() {
   //********************************//
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
+
+    // Just convert to base64 for preview/cropping
     const reader = new FileReader();
     reader.onload = () => {
       setImage(reader.result);
@@ -127,7 +152,7 @@ function EditProfile() {
     reader.readAsDataURL(file);
   };
 
-  
+
   return (
     <div className={`${styles.editProfile} profile `}>
       <div className="arrow py-[2.5rem] ">
