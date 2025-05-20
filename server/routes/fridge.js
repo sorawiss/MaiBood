@@ -71,8 +71,8 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         const imageUrl = rows[0].image;
 
         if (imageUrl) {
-            // await deleteFromS3(imageUrl);
-            console.log('delete image from s3')
+            await deleteFromS3(imageUrl);
+            // console.log('delete image from s3')
         }
 
 
