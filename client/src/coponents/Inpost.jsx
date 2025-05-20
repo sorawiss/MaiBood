@@ -131,7 +131,6 @@ function Inpost() {
                     <div className="text-details">
                         <div className="name-price">
                             <h2 className='nameofmaterial'>{postData.material}</h2>
-                            <p className='inpost-price'>{postData.price} บาท</p>
                         </div>
 
                         {/* Locaton */}
@@ -142,7 +141,9 @@ function Inpost() {
                                 </svg>
                                 <p> {postData.address} </p>
                             </div>
-                            <a className="contact-detail" href={`https://instagram.com/${postData.ig}`}
+
+                            {postData.ig && (
+                                <a className="contact-detail" href={`https://instagram.com/${postData.ig}`}
                                 target="_blank" rel="noopener noreferrer">
                                 <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_3_5756)">
@@ -168,12 +169,15 @@ function Inpost() {
                                     </defs>
                                 </svg>
                                 <p> {postData.ig} </p>
-                            </a>
-                            <a className="contact-detail" href={`https://line.me/R/ti/p/${postData.line}`}
-                                target="_blank" rel="noopener noreferrer">
-                                <img src={line} alt='line'></img>
-                                <p> {postData.line} </p>
-                            </a>
+                            </a>)}
+
+                            {postData.line && (
+                                <a className="contact-detail" href={`https://line.me/R/ti/p/${postData.line}`}
+                                    target="_blank" rel="noopener noreferrer">
+                                    <img src={line} alt='line'></img>
+                                    <p> {postData.line} </p>
+                                </a>
+                            )}
                         </div>
                     </div>
                     <div className="exp-detail px-[1rem] ">
@@ -185,7 +189,7 @@ function Inpost() {
                     <Button className="!w-[23.5rem] rounded-[16px] bg-aceent active:bg-accent-active "
                         onClick={handleOpen}
                     >
-                        <h2 className='inpost-text'>ขายแล้ว</h2>
+                        <h2 className='inpost-text'>มีคนรับแล้ว</h2>
                     </Button>
 
                 )}
