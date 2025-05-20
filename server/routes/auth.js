@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-// Constrant
+// Constraint
 const SALTROUNDS = 10;
 const SECRET_KEY = process.env.TOKEN;
 if (!SECRET_KEY) {
@@ -22,7 +22,7 @@ const generateToken = (userId) => {
 
 // Register
 router.post('/api/register', async (req, res) => {
-    const { fname, lname, phone_number, password } = req.body;
+    const { fname, lname, phone_number, password, zip_code, address } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
         return res.status(400).json({ message: 'Please provide name, email, and password' });
@@ -47,8 +47,8 @@ router.post('/api/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
         const [result] = await connection.execute(
-            'INSERT INTO members (fname, lname, phone_number, password) VALUES (?, ?, ?, ?)',
-            [fname, lname, phone_number, hashedPassword]
+            'INSERT INTO members (fname, lname, phone_number, zip_code, address, password) VALUES (?, ?, ?, ?, ?, ?)',
+            [fname, lname, phone_number, zip_code, address, hashedPassword]
         );
 
         const newUserId = result.insertId; // Get the ID of the newly created user
@@ -69,7 +69,9 @@ router.post('/api/register', async (req, res) => {
             id: newUserId,
             fname: fname,
             lname: lname,
-            phone_number: phone_number
+            phone_number: phone_number,
+            address: address,
+            zip_code: zip_code,
         };
 
         return res.status(201).json(userDataToSend);
@@ -109,8 +111,8 @@ router.post('/api/login', async (req, res) => {
         );
 
         if (rows.length === 0) {
-            console.log('Invalid email or password')
-            return res.status(401).json({ message: 'Invalid email or password' });
+            console.log('No user found')
+            return res.status(401).json({ message: 'Invalid phone number' });
         }
 
         const user = rows[0];
@@ -118,7 +120,7 @@ router.post('/api/login', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid password' });
         }
 
         const { password: passwordHash, ...rest } = user;
@@ -171,7 +173,7 @@ router.get('/api/authentication', async (req, res) => {
 
         connection = await pool.getConnection();
         const [rows] = await connection.execute(
-            'SELECT id, fname, lname, phone_number FROM members WHERE id = ? LIMIT 1',
+            'SELECT id, fname, lname, zip_code, phone_number, address, line, ig FROM members WHERE id = ? LIMIT 1',
             [userId]
         );
 

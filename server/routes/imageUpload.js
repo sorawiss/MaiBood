@@ -4,6 +4,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import upload from '../util/multer.js';
 import s3Client from '../util/s3.js';
 import pool from '../util/db.js';
+import AuthMiddleware from '../util/AuthMiddleware.js';
 
 
 const router = express.Router();
@@ -44,22 +45,23 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     }
 
     const { owner, material, exp, type, id } = req.body;
-    const price = parseInt(req.body.price);
 
 
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        const s3Response = await uploadToS3(req.file);
-        const imageUrl = s3Response;
+        // const s3Response = await uploadToS3(req.file);
+        // const imageUrl = s3Response;
+
+        const imageUrl = req.file.originalname;
 
         let connection;
         connection = await pool.getConnection();
 
         if (id) {
             await connection.execute(
-                'UPDATE fridge SET image = ?, price = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
-                [imageUrl, price, type, material, true, id]
+                'UPDATE fridge SET image = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
+                [imageUrl, type, material, 1, id]
             )
 
             return res.status(200).json({
@@ -68,8 +70,8 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         }
         else {
             await connection.execute(
-                'INSERT INTO fridge (owner, material, exp, is_store, image, price, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [owner, material, exp, true, imageUrl, price, type]
+                'INSERT INTO fridge (owner, material, exp, is_store, image, type) VALUES (?, ?, ?, ?, ?, ?)',
+                [owner, material, exp, 1, imageUrl, type]
             )
 
             return res.status(200).json({
@@ -85,6 +87,41 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
         } else {
             res.status(500).json({ message: 'Server error during image upload.', error: error.message });
         }
+    }
+});
+
+
+// Profile Avatar Upload Endpoint
+router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
+    }
+
+    try {
+        const s3Response = await uploadToS3(req.file);
+        const imageUrl = s3Response;
+
+        let connection;
+        connection = await pool.getConnection();
+
+        // Update user's avatar in the database
+        await connection.execute(
+            'UPDATE users SET pic = ? WHERE id = ?',
+            [imageUrl, req.userId]
+        );
+
+        connection.release();
+
+        return res.status(200).json({
+            message: 'Profile image updated successfully',
+            avatarUrl: imageUrl
+        });
+    } catch (error) {
+        console.error('Error during profile image upload:', error);
+        res.status(500).json({ 
+            message: 'Failed to upload profile image', 
+            error: error.message 
+        });
     }
 });
 

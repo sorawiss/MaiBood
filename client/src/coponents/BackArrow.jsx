@@ -1,11 +1,15 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function BackArrow() {
+function BackArrow( {path} ) {
     const navigate = useNavigate()
 
     const handleClick = () => {
-        navigate(-1)
+        if (path) {
+            navigate(path)
+        } else {
+            navigate(-1)
+        }
     }
 
     return (

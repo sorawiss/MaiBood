@@ -18,11 +18,6 @@ function FoodWrapper({ id, exp, price, name, location, image }) {
                         <div className="exp-date">
                             <p className='exp'> {thaiDate(time)} </p>
                         </div>
-                        <div className="space-for-price">
-                            <div className="price">
-                                <p className='price-number'> {price} </p>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div className="food-description-wrapper">

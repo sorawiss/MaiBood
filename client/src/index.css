@@ -20,7 +20,8 @@ p {
 }
 
 .alert {
-  color: red
+  color: red;
+  font-weight: 300;
 }
 
 :root {
