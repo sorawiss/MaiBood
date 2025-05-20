@@ -18,9 +18,7 @@
     border: 1px var(--color-aceent) solid;
 }
 
-.prim-text {
-    color: var(--color-primary);
-}
+
 
 .rank-banner {
     padding-left: 0.5rem;

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import Loading from '../coponents/Loading'
 import HistoryList from '../coponents/HistoryList'
+import BackArrow from '../coponents/BackArrow';
 
 import history from '/svg/history.svg'
 
@@ -35,6 +36,9 @@ function History() {
   return (
     <div className='history-page w-full' >
         <div className='flex flex-col items-center justify-center py-[5rem] gap-[2rem]'>
+            <BackArrow />
+
+            
             <img src={history} alt="history" />
 
             <div className='history-list w-full flex flex-col gap-[1rem]'>
