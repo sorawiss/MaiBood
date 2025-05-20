@@ -20,7 +20,7 @@ import CommunityFood from './pages/CommunityFood.jsx'
 import FoodApi from './pages/FoodApi.jsx'
 import History from './pages/History.jsx'
 import AddressInput from './coponents/AddressInput.jsx';
-
+import LineGuide from './pages/LineGuide.jsx';
 
 function App() {
   return (
@@ -40,6 +40,7 @@ function App() {
               <Route path="/profile/edit-profile" element={<EditProfile />} />
               <Route path="/fridge/food-suggest" element={<FoodApi />} />
               <Route path="/history" element={<History />} />
+              <Route path="/line-guide" element={<LineGuide />} />
             </Route>
             
             <Route path="/home" element={<Home />} />
