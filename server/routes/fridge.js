@@ -80,10 +80,10 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         let status;
         switch (rows[0].is_store) {
             case 0:
-                status = 2;
+                status = 2; // Eat
                 break;
             case 1:
-                status = 3;
+                status = 3; // Give
                 break;
         }
 
