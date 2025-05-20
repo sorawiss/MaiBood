@@ -7,6 +7,7 @@ import pool from '../util/db.js'
 const router = express.Router()
 
 
+// Get All History
 router.get('/api/history', AuthMiddleware, async (req, res) => {
     try {
         const userID = req.userID
@@ -18,5 +19,8 @@ router.get('/api/history', AuthMiddleware, async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 })
+
+
+
 
 export default router
