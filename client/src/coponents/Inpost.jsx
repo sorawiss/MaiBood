@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import line from '../assets/line 1.svg'
 import Button from './CustomButton.jsx';
+import Loading from './Loading.jsx';
 
 import BackArrow from './BackArrow';
 import deleteFridgeItem from '../lib/deleteFridgeItem';
@@ -79,9 +80,7 @@ function Inpost() {
 
     if (isLoading || isPending) {
         return (
-            <div className="min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
-                <p>Loading...</p>
-            </div>
+            <Loading />
         );
     }
 

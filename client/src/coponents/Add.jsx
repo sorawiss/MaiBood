@@ -141,7 +141,7 @@ function AddtoFridge() {
   function submitForm(e) {
     e.preventDefault();
 
-    if (!form.material || !form.exp || !form.selectedFile) {
+    if (!form.material || !form.exp || !form.selectedFile || !postType) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
