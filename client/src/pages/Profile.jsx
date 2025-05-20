@@ -144,9 +144,13 @@ function Profile() {
       </div>
 
       <div className="edit-logout flex flex-col items-center gap-[1rem] ">
+        <Link to={'/line-guide'} >
+          <p className='edit'>เชื่อมต่อกับไลน์</p>
+        </Link>
         <Link to={'/profile/edit-profile'} >
           <p className='edit'>แก้ไขข้อมูล</p>
         </Link>
+
         <p onClick={logout} className='logout'>ออกจากระบบ</p>
       </div>
     </div>

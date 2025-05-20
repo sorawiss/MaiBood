@@ -16,7 +16,7 @@ function LineGuide() {
 
     return (
         <div className='line-guide-page min-h-screen bg-white-bg w-[23.5rem] mx-auto flex flex-col 
-            items-center pt-[2.5rem] px-[2rem] pb-[4.5rem] gap-[4.5rem] '>
+            items-center pt-[2.5rem] px-[2rem] pb-[6rem] gap-[4.5rem] '>
             <BackArrow />
 
 
@@ -35,16 +35,19 @@ function LineGuide() {
                     </defs>
                 </svg>
 
-                <h1 className='text-center' >เชื่อมต่อเพื่อรับการแจ้งเตือนผ่านไลน์ได้ง่าย ๆ</h1>
+                <div className="text-header-wrapper flex flex-col items-center">
+                    <h1 className='text-center' >เชื่อมต่อเพื่อรับการแจ้งเตือนผ่านไลน์ได้ง่าย ๆ</h1>
+                    <p className='p2 text-center text-secondary' >เชื่อมต่อกับไลน์เพื่อรับการแจ้งเตือนเมื่ออาหารในตู้เย็นใกล้หมดอายุ</p>
+                </div>
             </div>
 
 
             {/* 1 */}
             {/****************************************************/}
-            <div className='flex flex-col items-center gap-[1rem] '>
+            <a href='https://line.me/R/ti/p/%40750oenhz' className='flex flex-col items-center gap-[1rem] '>
                 <p className='text-center text-primary' >1. เพิ่มเพื่อน @750oenhz (มี @ ด้วยนะ)</p>
                 <img src={first} alt="เพิ่มเพื่อน @750oenhz (มี @ ด้วยนะ)" />
-            </div>
+            </a>
 
             {/* 2 */}
             {/****************************************************/}
@@ -69,9 +72,10 @@ function LineGuide() {
             <div className='flex flex-col items-center gap-[1rem] '>
                 <p className='text-center text-primary' >4. กดเชื่อมต่อ</p>
                 <img src={fourth} alt="กดเชื่อมต่อ" />
-
-                <h1 className='text-center text-primary' >การแจ้งเตือนผ่านไลน์พร้อมใช้งาน 🎉🎉</h1>
             </div>
+
+            <h1 className='text-center text-primary' >การแจ้งเตือนผ่านไลน์พร้อมใช้งาน 🎉🎉</h1>
+
         </div>
     )
 }
