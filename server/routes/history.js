@@ -27,10 +27,16 @@ router.get('/api/history', AuthMiddleware, async (req, res) => {
             [userID]
         )
 
+        const [eatCount] = await pool.query(
+            'SELECT COUNT(*) as count FROM fridge WHERE owner = ? AND is_store = 2',
+            [userID]
+        )
+
         res.status(200).json({
             history: rows,
             givenCount: givenCount[0].count,
-            expiredCount: expiredCount[0].count
+            expiredCount: expiredCount[0].count,
+            eatCount: eatCount[0].count
         })
     } catch (error) {
         res.status(500).json({ message: error.message })

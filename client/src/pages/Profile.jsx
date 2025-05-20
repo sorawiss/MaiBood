@@ -15,7 +15,7 @@ import Loading from '../coponents/Loading'
 
 function Profile() {
 
-  const {data, isLoading, error} = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['history'],
     queryFn: getHistory
   })
@@ -24,6 +24,20 @@ function Profile() {
 
   if (isLoading) return <Loading />
   if (error) return <div>Error: {error.message}</div>
+
+
+  // Rank System
+  let rank;
+  if (data.givenCount > 20) {
+    rank = '👑 พระราชา'
+  } else if (data.givenCount >= 10) {
+    rank = '⚜️ ลอร์ด'
+  } else if (data.givenCount >= 5) {
+    rank = '♞ อัศวิน'
+  } else {
+    rank = '👨🏻‍🌾 ชาวบ้าน'
+  }
+
 
   return (
     <div className="profile-page-wrapper">
@@ -37,15 +51,15 @@ function Profile() {
             <div className="name-rank flex flex-col items-center ">
               <h2 className='prim-text'>{user.fname} {user.lname}</h2>
               <div className="rank-banner flex flex-col items-center ">
-                <p className='sec-text'>👑 พระราชา</p>
+                <p className='sec-text'>{rank}</p>
               </div>
             </div>
           </div>
 
           <div className="success-feedback">
             <div className="success-text">
-              <h2 className='prim-text'>👑 พระราชา</h2>
-              <p className='prim-text'>{user.fname} ได้ช่วยให้อาหารกว่า 40 มื้อ
+              <h2 className='prim-text'>{rank}</h2>
+              <p className='prim-text'>{user.fname} ได้ช่วยให้อาหารกว่า {data.givenCount + data.eatCount} มื้อ
                 ไม่เน่าเสียอย่างไร้คุณค่า</p>
             </div>
             <img src={Noodle} />
@@ -55,17 +69,24 @@ function Profile() {
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>แบ่งปันไปทั้งหมด</p>
-                <h2 className='prim-text'>{ data.givenCount } ครั้ง</h2>
+                <h2 className='prim-text'>{data.givenCount} ครั้ง</h2>
+              </div>
+            </div>
+
+            <div className="sell-number flex flex-col items-center gap-[1rem] ">
+              <div className="sellnum-banner flex flex-row ">
+                <p className='prim-text'>ทานอาหารหมดก่อนหมดอายุ</p>
+                <h2 className='prim-text'>{data.eatCount} ครั้ง</h2>
               </div>
             </div>
 
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>ทำอาหารบูดไปทั้งหมด</p>
-                <h2 className='prim-text'>{ data.expiredCount } ครั้ง</h2>
+                <h2 className='prim-text'>{data.expiredCount} ครั้ง</h2>
               </div>
             </div>
-            
+
             <Link to={'/history'} className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text text-primary '>ประวัติศาสตร์ของตู้เย็น</p>
