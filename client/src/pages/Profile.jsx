@@ -5,13 +5,25 @@ import line from '../assets/line 1.svg'
 import '../section/style/Profile.css'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 
 import { AuthContext } from '../AuthContext'
+import getHistory from '../lib/getHistory'
+
+import Loading from '../coponents/Loading'
 
 
 function Profile() {
 
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['history'],
+    queryFn: getHistory
+  })
+
   const { user, logout } = useContext(AuthContext)
+
+  if (isLoading) return <Loading />
+  if (error) return <div>Error: {error.message}</div>
 
   return (
     <div className="profile-page-wrapper">
@@ -43,10 +55,17 @@ function Profile() {
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>แบ่งปันไปทั้งหมด</p>
-                <h2 className='prim-text'>40 ครั้ง</h2>
+                <h2 className='prim-text'>{ data.givenCount } ครั้ง</h2>
               </div>
             </div>
 
+            <div className="sell-number flex flex-col items-center gap-[1rem] ">
+              <div className="sellnum-banner flex flex-row ">
+                <p className='prim-text'>ทำอาหารบูดไปทั้งหมด</p>
+                <h2 className='prim-text'>{ data.expiredCount } ครั้ง</h2>
+              </div>
+            </div>
+            
             <Link to={'/history'} className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text text-primary '>ประวัติศาสตร์ของตู้เย็น</p>

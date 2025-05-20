@@ -7,17 +7,8 @@ import BackArrow from '../coponents/BackArrow';
 
 import history from '/svg/history.svg'
 
+import getHistory from '../lib/getHistory'
 
-const baseURL = import.meta.env.VITE_BASE_URL;
-// http://localhost:8080/api/history
-async function getHistory() {
-    const response = await fetch(`${baseURL}/history`, {
-      method: 'GET',
-      credentials: 'include'
-    })
-    const data = await response.json()
-    return data
-}
 
 
 // Main Component
@@ -30,8 +21,6 @@ function History() {
     if (isLoading) return <Loading />
     if (error) return <div>Error: {error.message}</div>
 
-    console.log(data)
-
     
   return (
     <div className='history-page w-full' >
@@ -42,7 +31,7 @@ function History() {
             <img src={history} alt="history" />
 
             <div className='history-list w-full flex flex-col gap-[1rem]'>
-              {data.map((item) => (
+              {data.history.map((item) => (
                 <HistoryList key={item.id} material={item.material} expireDate={item.exp} status={item.is_store} />
               ))}
             </div>

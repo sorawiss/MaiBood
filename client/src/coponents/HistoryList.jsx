@@ -17,16 +17,19 @@ function HistoryList({ material, expireDate, status }) {
 
 
   return (
-    <div className={`history-list-container w-full ${
-      status === 'กินเอง' ? 'bg-background text-primary' : 
+    <div className={`history-list-container w-full ${status === 'กินเอง' ? 'bg-background text-primary' :
       status === 'แบ่งปัน' ? 'bg-aceent text-primary' :
-      status === 'หมดอายุ' ? 'bg-alert text-background ' :
-      'bg-background'
-    } rounded-[16px] flex flex-col items-center justify-center`} >
+        status === 'หมดอายุ' ? 'bg-alert text-background ' :
+          'bg-background'
+      } rounded-[16px] flex flex-col items-center justify-center`} >
       <h2>{material}</h2>
-      <p className='p2 text-secondary' >หมดอายุเมื่อ {date.toLocaleDateString('th-TH',
-        { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-      <p className='p2 text-secondary' >{status}</p>
+      <div className={`detail-wrapper flex flex-col items-center justify-center
+         ${status == 'หมดอายุ' ? 'text-background' : 'text-secondary '} `}>
+        <p className='p2' >หมดอายุเมื่อ {date.toLocaleDateString('th-TH',
+          { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p className='p2' >{status}</p>
+      </div>
+
 
 
     </div>
