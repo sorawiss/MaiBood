@@ -12,6 +12,8 @@ import getHistory from '../lib/getHistory'
 
 import Loading from '../coponents/Loading'
 
+import profile from '/svg/profile.svg'
+
 
 function Profile() {
 
@@ -47,7 +49,7 @@ function Profile() {
         <div className="profile-detail-wrapper gap-[2.5rem] ">
 
           <div className="profile-pic-name gap-[1rem] ">
-            <img src={user.pic} alt="profile" className='size-[10.75rem] rounded-full' />
+            <img src={user.pic || profile} alt="profile" className='size-[10.75rem] rounded-full border-2 border-aceent ' />
             <div className="name-rank flex flex-col items-center ">
               <h2 className='prim-text'>{user.fname} {user.lname}</h2>
               <div className="rank-banner flex flex-col items-center ">

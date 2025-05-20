@@ -166,7 +166,7 @@ function EditProfile() {
       )}
       {croppedImage && (
         <div className='size-[10.75rem] rounded-full overflow-hidden absolute left-1/2 -translate-x-1/2 top-[8rem] '>
-          <img src={croppedImage} alt="Cropped" className='w-full h-full object-cover' />
+          <img src={croppedImage ? croppedImage : user.pic} alt="Cropped" className='size-[10.7rem] object-cover' />
         </div>
       )}
 

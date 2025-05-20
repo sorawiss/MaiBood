@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import line from '../assets/line 1.svg'
 import Button from './CustomButton.jsx';
 import Loading from './Loading.jsx';
+import profile from '/svg/profile.svg'
 
 import BackArrow from './BackArrow';
 import deleteFridgeItem from '../lib/deleteFridgeItem';
@@ -120,7 +121,7 @@ function Inpost() {
                 <BackArrow />
 
                 <div className="user-wrapper">
-                    <img src={postData.pic} alt="profile" className='profile ' />
+                    <img src={postData.pic || profile} alt="profile" className='profile ' />
                     <h2 className='inpost-text'>{postData.fname} {postData.lname}</h2>
                 </div>
                 <div className="show-pic">
