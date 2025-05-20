@@ -231,7 +231,7 @@ function AddtoFridge() {
               className={`post ${successEffect ? 'success-effect ' : ''}`}
               isLoading={isPending}
             >
-              {successEffect ? "ลงขายสำเร็จ ✔️" : "ลงขาย"}
+              {successEffect ? "แบ่งปันสำเร็จ ✔️" : "แบ่งปัน 🎁"}
             </Button>
 
           </div>
