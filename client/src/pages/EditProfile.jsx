@@ -6,17 +6,17 @@ import styles from '../section/style/EditProfile.module.css';
 
 import BackArrow from '../coponents/BackArrow';
 import CustomButton from '../coponents/CustomButton';
+import Crop from '../coponents/Crop';
 
-// Edit Profile Function
+
+//******* Edit Profile Function *******//
+//**********************************//
 const baseURL = import.meta.env.VITE_BASE_URL;
 
 async function updateProfile(data) {
   const response = await fetch(`${baseURL}/edit-profile`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data),
+    body: data,
     credentials: 'include'
   });
 
@@ -28,6 +28,8 @@ async function updateProfile(data) {
   return await response.json();
 }
 
+
+// Main Component
 function EditProfile() {
   const { user, refreshUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -40,8 +42,12 @@ function EditProfile() {
     line: ''
   });
   const [error, setError] = useState('');
+  const [image, setImage] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
 
-  // Load user data when component mounts
+
+  //******* Load User Data *******//
+  //****************************//
   useEffect(() => {
     if (user) {
       setFormData({
@@ -50,11 +56,15 @@ function EditProfile() {
         address: user.address || '',
         zip_code: user.zip_code || '',
         ig: user.ig || '',
-        line: user.line || ''
+        line: user.line || '',
+        pic: user.pic || ''
       });
     }
   }, [user]);
 
+
+  //******* Mutation *******//
+  //***********************//
   const mutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: (data) => {
@@ -78,14 +88,46 @@ function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      
-    mutation.mutate(formData);
+
+    const submitData = new FormData();
+    submitData.append('fname', formData.fname);
+    submitData.append('lname', formData.lname);
+    submitData.append('address', formData.address);
+    submitData.append('zip_code', formData.zip_code);
+    submitData.append('ig', formData.ig);
+    submitData.append('line', formData.line);
+    
+    if (croppedImage) {
+      fetch(croppedImage)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+          submitData.append('pic', file);
+          
+          mutation.mutate(submitData);
+        });
+    } else {
+      mutation.mutate(submitData);
+    }
   };
 
   const handleCancel = () => {
     navigate('/profile');
   };
 
+
+  //******* Handle File Change *******//
+  //********************************//
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  
   return (
     <div className={`${styles.editProfile} profile `}>
       <div className="arrow py-[2.5rem] ">
@@ -93,7 +135,15 @@ function EditProfile() {
       </div>
 
       {/* avatar */}
-      <div className={styles.avatar} />
+      <input type="file" accept="image/*" onChange={handleFileChange} className={`${styles.avatar} `} />
+      {image && !croppedImage && (
+        <Crop imageSrc={image} onCropDone={setCroppedImage} />
+      )}
+      {croppedImage && (
+        <div className='size-[10.75rem] rounded-full overflow-hidden absolute left-1/2 -translate-x-1/2 top-[8rem] '>
+          <img src={croppedImage} alt="Cropped" className='w-full h-full object-cover' />
+        </div>
+      )}
 
       {/* Error message */}
       {error && (
@@ -162,7 +212,7 @@ function EditProfile() {
           >
             ยกเลิก
           </button>
-          
+
           <CustomButton
             type="submit"
             className={`${styles.button} ${styles.saveBtn}`}

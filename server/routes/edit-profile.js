@@ -1,17 +1,36 @@
 import express from 'express';
 import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
+import { uploadToS3 } from './imageUpload.js';
+import upload from '../util/multer.js';
+
 
 const router = express.Router();
 
 
 // Update profile endpoint
-router.patch('/api/edit-profile', AuthMiddleware, async (req, res) => {
+router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (req, res) => {
+    console.log('Full request body:', req.body);
+    console.log('File:', req.file);
+    
     const { fname, lname, zip_code, address, line, ig } = req.body;
+    const pic = req.file;
     const userId = req.userID;
+    let imageUrl; 
 
     let connection;
+    
     try {
+        // Handle image upload if present
+        if (pic) {
+            try {
+                imageUrl = await uploadToS3(pic);
+            } catch (uploadError) {
+                console.error('Error uploading image to S3:', uploadError);
+                return res.status(500).json({ message: 'Error uploading image' });
+            }
+        }
+
         connection = await pool.getConnection();
         
         // First, get the current user data
@@ -59,6 +78,12 @@ router.patch('/api/edit-profile', AuthMiddleware, async (req, res) => {
             updateFields.push('ig = ?');
             queryParams.push(ig);
         }
+
+        // Only add pic to update if imageUrl exists
+        if (imageUrl) {
+            updateFields.push('pic = ?');
+            queryParams.push(imageUrl);
+        }
         
         // If no fields to update
         if (updateFields.length === 0) {
@@ -80,7 +105,7 @@ router.patch('/api/edit-profile', AuthMiddleware, async (req, res) => {
         
         // Get updated user data to return (excluding password)
         const [updatedUser] = await connection.execute(
-            'SELECT id, fname, lname, phone_number, zip_code, address, line, ig FROM members WHERE id = ?',
+            'SELECT id, fname, lname, phone_number, zip_code, address, line, ig, pic FROM members WHERE id = ?',
             [userId]
         );
         

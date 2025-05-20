@@ -10,7 +10,7 @@ import AuthMiddleware from '../util/AuthMiddleware.js';
 const router = express.Router();
 
 
-async function uploadToS3(file) {
+export async function uploadToS3(file) {
     const bucketName = process.env.S3_BUCKET_NAME;
     if (!bucketName) {
         console.log("AWS_BUCKET_NAME environment variable is not set.");

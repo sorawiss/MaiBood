@@ -173,7 +173,7 @@ router.get('/api/authentication', async (req, res) => {
 
         connection = await pool.getConnection();
         const [rows] = await connection.execute(
-            'SELECT id, fname, lname, zip_code, phone_number, address, line, ig FROM members WHERE id = ? LIMIT 1',
+            'SELECT id, fname, lname, zip_code, phone_number, address, line, ig, pic FROM members WHERE id = ? LIMIT 1',
             [userId]
         );
 
