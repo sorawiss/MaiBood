@@ -57,7 +57,7 @@ router.get('/api/get-inpost/:id', async (req, res) => {
     try {
         connection = await pool.getConnection();
         const [result] = await connection.query(
-            'SELECT f.id, f.owner, f.material, f.exp, f.is_store, f.image, f.price, f.type, m.fname, m.lname, m.address, m.ig, m.line FROM fridge f INNER JOIN members m ON f.owner = m.id WHERE f.is_store = true AND f.id = ?', [id]);
+            'SELECT f.id, f.owner, f.material, f.exp, f.is_store, f.image, f.price, f.type, m.fname, m.lname, m.address, m.ig, m.line, m.pic FROM fridge f INNER JOIN members m ON f.owner = m.id WHERE f.is_store = true AND f.id = ?', [id]);
 
         if (result.length === 0) {
             console.log(`No item found with ID ${id} or it's not marked as 'is_store=true'.`);

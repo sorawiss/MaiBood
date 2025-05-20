@@ -120,7 +120,7 @@ function Inpost() {
                 <BackArrow />
 
                 <div className="user-wrapper">
-                    <div className="profile"></div>
+                    <img src={postData.pic} alt="profile" className='profile ' />
                     <h2 className='inpost-text'>{postData.fname} {postData.lname}</h2>
                 </div>
                 <div className="show-pic">

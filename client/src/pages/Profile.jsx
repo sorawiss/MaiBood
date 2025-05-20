@@ -47,7 +47,7 @@ function Profile() {
         <div className="profile-detail-wrapper gap-[2.5rem] ">
 
           <div className="profile-pic-name gap-[1rem] ">
-            <div className="picture-profile" />
+            <img src={user.pic} alt="profile" className='size-[10.75rem] rounded-full' />
             <div className="name-rank flex flex-col items-center ">
               <h2 className='prim-text'>{user.fname} {user.lname}</h2>
               <div className="rank-banner flex flex-col items-center ">

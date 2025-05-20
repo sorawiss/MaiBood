@@ -3,6 +3,7 @@ import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
 import { uploadToS3 } from './imageUpload.js';
 import upload from '../util/multer.js';
+import deleteFromS3 from '../util/deleteS3.js';
 
 
 const router = express.Router();
@@ -16,26 +17,15 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
     const { fname, lname, zip_code, address, line, ig } = req.body;
     const pic = req.file;
     const userId = req.userID;
-    let imageUrl; 
-
+    let imageUrl;
     let connection;
     
     try {
-        // Handle image upload if present
-        if (pic) {
-            try {
-                imageUrl = await uploadToS3(pic);
-            } catch (uploadError) {
-                console.error('Error uploading image to S3:', uploadError);
-                return res.status(500).json({ message: 'Error uploading image' });
-            }
-        }
-
         connection = await pool.getConnection();
         
-        // First, get the current user data
+        // First, get the current user data to check for existing image
         const [currentUser] = await connection.execute(
-            'SELECT * FROM members WHERE id = ?',
+            'SELECT pic FROM members WHERE id = ?',
             [userId]
         );
         
@@ -43,12 +33,27 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
             return res.status(404).json({ message: 'User not found' });
         }
         
+        // Handle image upload if present
+        if (pic) {
+            try {
+                // Delete old image if it exists
+                const oldImageUrl = currentUser[0].pic;
+                if (oldImageUrl) {
+                    await deleteFromS3(oldImageUrl);
+                }
+
+                // Upload new image
+                imageUrl = await uploadToS3(pic);
+            } catch (uploadError) {
+                console.error('Error handling image:', uploadError);
+                return res.status(500).json({ message: 'Error handling image upload/deletion' });
+            }
+        }
         
         // Build the update query dynamically
         let updateFields = [];
         let queryParams = [];
         
-        // Modified to handle null values
         if (fname !== undefined) {
             updateFields.push('fname = ?');
             queryParams.push(fname);
@@ -79,7 +84,7 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
             queryParams.push(ig);
         }
 
-        // Only add pic to update if imageUrl exists
+        // Only add pic to update if new image was uploaded
         if (imageUrl) {
             updateFields.push('pic = ?');
             queryParams.push(imageUrl);
@@ -103,7 +108,7 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
             return res.status(404).json({ message: 'User not found or no changes made' });
         }
         
-        // Get updated user data to return (excluding password)
+        // Get updated user data to return
         const [updatedUser] = await connection.execute(
             'SELECT id, fname, lname, phone_number, zip_code, address, line, ig, pic FROM members WHERE id = ?',
             [userId]
@@ -129,3 +134,4 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
 });
 
 export default router;
+
