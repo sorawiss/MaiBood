@@ -58,15 +58,18 @@ function Inpost() {
     });
 
 
+    // On Success
+    const handleSuccess = async () => {
+        await queryClient.invalidateQueries({ queryKey: ['get-post'] });
+        navigation('/home')
+    }
+
+
     // Delter API
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: deleteFridgeItem,
-        onSuccess: () => {
-            console.log('Delete successful');
-            queryClient.invalidateQueries({ queryKey: ['get-post'] });
-            navigation('/home')
-        },
+        onSuccess: handleSuccess,
         onError: (error) => {
             console.error('Delete failed:', error);
         }
@@ -120,10 +123,10 @@ function Inpost() {
 
                 <BackArrow />
 
-                <div className="user-wrapper">
+                <Link to={`/profile/${postData.owner}`} className="user-wrapper cursor-pointer ">
                     <img src={postData.pic || profile} alt="profile" className='profile ' />
                     <h2 className='inpost-text'>{postData.fname} {postData.lname}</h2>
-                </div>
+                </Link>
                 <div className="show-pic">
                     <img src={postData.image} alt="" className='inpost-img rounded-[16px] ' />
                 </div>
