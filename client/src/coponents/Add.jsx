@@ -138,11 +138,19 @@ function AddtoFridge() {
   const { isPending } = mutation;
 
 
+  
+  // Submit Form
+  //----------------------------//
   function submitForm(e) {
     e.preventDefault();
 
     if (!form.material || !form.exp || !form.selectedFile || !postType) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน');
+      return;
+    }
+
+    if (form.exp < new Date().toISOString().split('T')[0]) {
+      setError('ไม่แจกอาหารที่บูดแล้วนะครับ 🙂');
       return;
     }
 

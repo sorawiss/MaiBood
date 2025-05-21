@@ -68,11 +68,18 @@ function AddtoFridge() {
   })
 
 
+
+  // Submit Form
+  //----------------------------//
   function submitForm(e) {
     e.preventDefault()
 
     if (!form.material || !form.exp) {
       setError('*กรุณากรอกข้อมูลให้ครบถ้วน')
+      return
+    }
+    if (form.exp < new Date().toISOString().split('T')[0]) {
+      setError('อาหารบูดห้ามเอาเข้าตู้เย็นนะครับ 🙂')
       return
     }
 
