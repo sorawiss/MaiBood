@@ -21,33 +21,39 @@ function FridgeList({ material, exp, id, isStore }) {
 
 
     // Mutation Delete
+    //----------------------------//
+    const handleSuccess = async () => {
+        try {
+            // Invalidate queries and wait for it to complete
+            await queryClient.invalidateQueries({ queryKey: ['fridge'] });
+            // Only close the modal after invalidation is complete
+            setOpen(false);
+        } catch (error) {
+            console.error('Error invalidating queries:', error);
+        }
+    };
     const mutation = useMutation({
         mutationFn: deleteFridgeItem,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['fridge'] });
-            console.log('Item deleted successfully')
-            setOpen(false);
-        },
+        onSuccess: handleSuccess,
         onError: (error) => {
-            console.error('Error deleting item:', error);
-            setOpen(false);
+            console.error('Error:', error);
         }
     })
+    //----------------------------//
 
 
     // Handdle Delete
     const handleConfirmDelete = () => {
         mutation.mutate(id);
     };
-
-
     // Haddle Sell
     function handdleSell() {
         navigate(`/add/${query}`)
     }
 
 
-    // Style
+    // Style for state of button
+    //----------------------------//
     const expireStyle = () => {
         const expDate = isExpiringSoon(exp);
 
@@ -64,7 +70,7 @@ function FridgeList({ material, exp, id, isStore }) {
 
     return (
         <div className={`fridge-list w-full bg-background px-[1rem] py-[0.5rem] flex justify-between 
-            items-center rounded-[16px] ${expireStyle()}`}>
+            items-center rounded-[16px] ${expireStyle()} transition-all duration-300 ease-in-out`}>
             {/* Bin SVG */}          
             <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg"
                 onClick={handleOpen}
