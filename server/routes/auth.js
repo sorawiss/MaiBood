@@ -60,8 +60,8 @@ router.post('/api/register', async (req, res) => {
         // Set the cookie
         res.cookie('token', token, {
             httpOnly: true,
-            sameSite: 'None', // Requires secure: true
-            secure: false,     // Ensure your server runs HTTPS or adjust for local HTTP dev
+            sameSite: 'Lax',
+            secure: false,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
@@ -129,7 +129,7 @@ router.post('/api/login', async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            sameSite: 'None',
+            sameSite: 'Lax',
             secure: false,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
@@ -210,7 +210,7 @@ router.get('/api/authentication', async (req, res) => {
 router.post('/api/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        sameSite: 'None',
+        sameSite: 'Lax',
         secure: false,
     });
     res.json({ message: 'Logged out' });
