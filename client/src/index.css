@@ -29,6 +29,10 @@ p {
   font-weight: 300;
 }
 
+b {
+  font-weight: 600;
+}
+
 :root {
     --color-background: #F4F3EF;
     --color-alert: #FB4B27;

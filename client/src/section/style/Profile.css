@@ -77,11 +77,11 @@
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
     background-color: var(--color-background);
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 3rem;
 }
 
 .contact-profilepage {

@@ -107,7 +107,7 @@ function FridgeList({ material, exp, id, isStore }) {
             rounded-[1rem] flex justify-center items-center `}
                 onClick={isStore ? null : handdleSell}
             >
-                {isExpiringSoon(exp) != 2 && <p>{isStore ? 'อยูระหว่างแบ่งปัน' : 'แบ่งปัน'}</p>}
+                {isExpiringSoon(exp) != 2 && <p>{isStore ? 'แจกอยู่' : 'แบ่งปัน'}</p>}
 
             </div>
 
