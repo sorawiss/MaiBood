@@ -113,13 +113,13 @@ function EditProfile() {
             };
 
             const compressedBlob = await imageCompression(
-              new File([blob], 'profile.jpg', { type: 'image/jpeg' }), 
+              new File([blob], 'profile.jpg', { type: 'image/jpeg' }),
               options
             );
 
             // Append compressed image
             submitData.append('pic', compressedBlob, 'profile.jpg');
-            
+
             // Submit the form
             mutation.mutate(submitData);
           } catch (error) {
@@ -159,16 +159,36 @@ function EditProfile() {
         <BackArrow />
       </div>
 
-      {/* avatar */}
-      <input type="file" accept="image/*" onChange={handleFileChange} className={`${styles.avatar} `} />
+      {/* Hidden file input */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+        id="profile-upload"
+      />
+
+      {/* Show cropper when new image is selected */}
       {image && !croppedImage && (
         <Crop imageSrc={image} onCropDone={setCroppedImage} />
       )}
-      {croppedImage && (
-        <div className='size-[10.75rem] rounded-full overflow-hidden absolute left-1/2 -translate-x-1/2 top-[8rem] '>
-          <img src={croppedImage ? croppedImage : user.pic} alt="Cropped" className='size-[10.7rem] object-cover' />
+
+      {/* Clickable profile picture container */}
+      <label
+        htmlFor="profile-upload"
+        className='size-[10.75rem] rounded-full overflow-hidden absolute left-1/2 -translate-x-1/2 top-[8rem] 
+        cursor-pointer hover:opacity-90  group'
+      >
+        <img
+          src={croppedImage || (user?.pic || '/default-avatar.png')}
+          alt="Profile"
+          className='size-[10.7rem] object-cover'
+        />
+        {/* Overlay with upload icon/text on hover */}
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-white text-sm">Change Photo</span>
         </div>
-      )}
+      </label>
 
       {/* Error message */}
       {error && (
