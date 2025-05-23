@@ -31,25 +31,12 @@
 }
 
 .show-pic {
-    width: 22.5rem;
+    width: 100%;
     border-radius: 16px;
 }
 
-.inpost-detail {
-    width: fit-content;
-    height: 10.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
 
-.text-details {
-    height: 8.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.5rem;
-}
+
 
 .name-price {
     display: flex;
