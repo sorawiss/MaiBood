@@ -15,7 +15,6 @@ const s3Client = new S3Client({
     credentials: {
         accessKeyId: accessKeyId,
         secretAccessKey: secretAccessKey,
-        sessionToken: token,
     }
 });
 
