@@ -123,7 +123,7 @@ function Inpost() {
 
                 <BackArrow />
 
-                <Link to={`/profile/${postData.owner}`} className="user-wrapper cursor-pointer ">
+                <Link to={`/view-profile/${postData.owner}`} className="user-wrapper cursor-pointer ">
                     <img src={postData.pic || profile} alt="profile" className='profile ' />
                     <h2 className='inpost-text'>{postData.fname} {postData.lname}</h2>
                 </Link>

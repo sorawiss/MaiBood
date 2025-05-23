@@ -8,9 +8,13 @@ const router = express.Router()
 
 
 // Get All History
-router.get('/api/history', AuthMiddleware, async (req, res) => {
+router.get('/api/history/:id', AuthMiddleware, async (req, res) => {
     try {
-        const userID = req.userID
+        const userID = String(req.params.id)
+        const id = String(req.userID)
+
+        console.log(userID)
+        console.log(id)
 
         const [rows] = await pool.query(
             'SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3 OR is_store = 4)',
@@ -31,6 +35,14 @@ router.get('/api/history', AuthMiddleware, async (req, res) => {
             'SELECT COUNT(*) as count FROM fridge WHERE owner = ? AND is_store = 2',
             [userID]
         )
+
+        if (id !== userID) {
+            return res.status(200).json({
+                givenCount: givenCount[0].count,
+                expiredCount: expiredCount[0].count,
+                eatCount: eatCount[0].count
+            })
+        }
 
         res.status(200).json({
             history: rows,

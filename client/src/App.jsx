@@ -21,6 +21,9 @@ import FoodApi from './pages/FoodApi.jsx'
 import History from './pages/History.jsx'
 import AddressInput from './coponents/AddressInput.jsx';
 import LineGuide from './pages/LineGuide.jsx';
+import ViewProfile from './pages/ViewProfile.jsx';
+
+
 
 function App() {
   return (
@@ -39,7 +42,7 @@ function App() {
               <Route path="/fridge/add-to-fridge" element={<AddtoFridge />} />
               <Route path="/profile/edit-profile" element={<EditProfile />} />
               <Route path="/fridge/food-suggest" element={<FoodApi />} />
-              <Route path="/history" element={<History />} />
+              <Route path="/history/:id" element={<History />} />
               <Route path="/line-guide" element={<LineGuide />} />
             </Route>
             
@@ -47,6 +50,7 @@ function App() {
             <Route path="/home/inpost/:id" element={<Inpost />} />
             <Route path="/home/all-food" element={<AllFood />} />
             <Route path="/home/community-food" element={<CommunityFood />} />
+            <Route path="/view-profile/:id" element={<ViewProfile />} />
           </Route>
           {/* End layout */}
 

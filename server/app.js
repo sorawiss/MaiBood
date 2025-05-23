@@ -12,6 +12,7 @@ import getFood from './routes/getFood.js'
 import spoonacular from './routes/spoonacular.js'
 import editProfile from './routes/edit-profile.js'
 import history from './routes/history.js'
+import getProfile from './routes/get-profile.js'
 
 
 
@@ -48,7 +49,7 @@ app.use(getFood)
 app.use(spoonacular)
 app.use(editProfile)
 app.use(history)
-
+app.use(getProfile)
 
 
 const port = process.env.PORT || 8080;

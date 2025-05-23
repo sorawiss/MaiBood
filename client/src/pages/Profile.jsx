@@ -19,7 +19,7 @@ function Profile() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['history'],
-    queryFn: getHistory
+    queryFn: () => getHistory(user.id)
   })
 
   const { user, logout } = useContext(AuthContext)
@@ -89,7 +89,7 @@ function Profile() {
               </div>
             </div>
 
-            <Link to={'/history'} className="sell-number flex flex-col items-center gap-[1rem] ">
+            <Link to={`/history/${user.id}`} className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text text-primary '>ประวัติศาสตร์ของตู้เย็น</p>
               </div>
