@@ -179,7 +179,7 @@ function Inpost() {
                                 <a className="contact-detail" href={`https://line.me/R/ti/p/${postData.line}`}
                                     target="_blank" rel="noopener noreferrer">
                                     <img src={line} alt='line'></img>
-                                    <p> {postData.line} </p>
+                                    <p className='p2'> {postData.line} </p>
                                 </a>
                             )}
                         </div>
