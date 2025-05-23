@@ -22,10 +22,10 @@ const generateToken = (userId) => {
 
 // Register
 router.post('/api/register', async (req, res) => {
-    const { fname, lname, phone_number, password, zip_code, address } = req.body;
+    const { fname, lname, phone_number, password, zip_code, address, district, province, subdistrict } = req.body;
 
     if (!fname || !lname || !phone_number || !password) {
-        return res.status(400).json({ message: 'Please provide name, email, and password' });
+        return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
 
@@ -47,8 +47,8 @@ router.post('/api/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
         const [result] = await connection.execute(
-            'INSERT INTO members (fname, lname, phone_number, zip_code, address, password) VALUES (?, ?, ?, ?, ?, ?)',
-            [fname, lname, phone_number, zip_code, address, hashedPassword]
+            'INSERT INTO members (fname, lname, phone_number, zip_code, address, district, province, subdistrict, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [fname, lname, phone_number, zip_code, address, district, province, subdistrict, hashedPassword]
         );
 
         const newUserId = result.insertId; // Get the ID of the newly created user
@@ -173,7 +173,7 @@ router.get('/api/authentication', async (req, res) => {
 
         connection = await pool.getConnection();
         const [rows] = await connection.execute(
-            'SELECT id, fname, lname, zip_code, phone_number, address, line, ig, pic FROM members WHERE id = ? LIMIT 1',
+            'SELECT id, fname, lname, zip_code, phone_number, address, line, ig, pic, district, province, subdistrict FROM members WHERE id = ? LIMIT 1',
             [userId]
         );
 

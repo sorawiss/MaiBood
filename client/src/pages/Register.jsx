@@ -77,6 +77,9 @@ function Register() {
             lname: formData.lname,
             phone_number: String(formData.phone_number),
             zip_code: address.postalCode,
+            district: address.district,
+            province: address.province,
+            subdistrict: address.subdistrict,
             address: formData.name_address,
             password: formData.password
         };
