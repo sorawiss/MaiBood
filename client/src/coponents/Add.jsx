@@ -45,7 +45,7 @@ function AddtoFridge() {
   const typeOfPost = [
     { label: "เนื้อ", value: 1 },
     { label: "ผัก, ผลไม้", value: 2 },
-    { label: "ขนมปัง", value: 3 },
+    { label: "ขนม", value: 3 },
     { label: "อื่น ๆ", value: 4 }
   ]
 
