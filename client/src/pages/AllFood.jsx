@@ -8,6 +8,7 @@ import cancel from '../assets/X.svg'
 import FoodWrapper from '../coponents/FoodWrapper';
 import Loading from '../coponents/Loading';
 import BackArrow from '../coponents/BackArrow';
+import Category from '../coponents/Category';
 
 
 // Get All Food Function
@@ -41,6 +42,11 @@ async function fetchAllFood() {
 function AllFood() {
 
     const [searchText, setSearchText] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const handleCategoryClick = (category) => {
+        setSelectedCategory(prev => prev === category ? null : category);
+    }
 
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['get-all-food'],
@@ -61,13 +67,20 @@ function AllFood() {
         );
     }
 
-    const filterData = (data) => {
-        if (!data) return [];
-        return data.filter(item => {
-            const matchesSearch = item.material.toLowerCase().includes(searchText.toLowerCase());
-            return matchesSearch;
-        });
-    }
+     // --- Filtering Logic ---
+     const filterItems = (items) => {
+        return items?.filter((item) => {
+            const material = item?.material || '';
+            const itemType = item?.type || '';
+            const searchLower = searchText.toLowerCase();
+            const materialLower = material.toLowerCase();
+
+            const matchesSearch = materialLower.includes(searchLower);
+            const matchesCategory = selectedCategory === null ? true : itemType === selectedCategory;
+
+            return matchesSearch && matchesCategory;
+        }) || [];
+    };
 
     return (
         <div className="allfood-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center gap-[1rem] pt-[3rem] pb-[8rem] ">
@@ -134,8 +147,12 @@ function AllFood() {
                 </img>
             </div>
 
+
+            <Category selectedCategory={selectedCategory} handleCategoryClick={handleCategoryClick} />
+
+
             <div className="allfood-container">
-                {filterData(data).map((items) => (
+                {filterItems(data).map((items) => (
                     <FoodWrapper
                         key={items.id}
                         id={items.id}
