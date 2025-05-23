@@ -201,7 +201,7 @@ function Register() {
                 handleOpen={() => setIsModalOpen(!isModalOpen)}
                 handler={<></>}
             >
-                <div className="bg-white rounded-xl p-6 shadow-lg w-3/4 h-3/4 flex flex-col justify-between py-[4rem] "
+                <div className="bg-white rounded-xl p-6 shadow-lg w-3/4 h-[20rem] flex flex-col justify-between py-[4rem] "
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className='form-wrapper w-[10rem] mx-auto flex flex-col items-center gap-[2rem] ' >
@@ -221,7 +221,7 @@ function Register() {
                                 className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
                                 max-md:text-lg max-sm:text-base outline-none  '
                             />
-                            {address && (<div className="ohters-info">
+                            <div className="ohters-info hidden ">
                                 <ThailandAddressTypeahead.DistrictInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
                                 max-md:text-lg max-sm:text-base outline-none  '   />
                                 <ThailandAddressTypeahead.ProvinceInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
@@ -229,7 +229,7 @@ function Register() {
                                 <ThailandAddressTypeahead.PostalCodeInput placeholder="" className='text-[#9A9A9A] w-full bg-[#F6F6F6] px-[13px] py-1.5 rounded-2xl 
                                 max-md:text-lg max-sm:text-base outline-none  '  />
                                 <ThailandAddressTypeahead.Suggestion />
-                            </div>)}
+                            </div>
 
 
                         </ThailandAddressTypeahead>
