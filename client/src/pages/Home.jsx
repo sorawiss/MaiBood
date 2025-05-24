@@ -15,7 +15,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
 
 async function fetchCommunityFood(user) {
   try {
-    const url = `${baseURL}/get-food${user ? `?zip_code=${user.zip_code}` : ''}&limit=4`;
+    const url = `${baseURL}/get-food${user ? `?zip_code=${user.zip_code}` : ''}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -39,7 +39,7 @@ async function fetchCommunityFood(user) {
 
 async function fetchAllFood() {
   try {
-    const url = `${baseURL}/get-food?limit=4`;
+    const url = `${baseURL}/get-food`;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -152,7 +152,7 @@ function Home() {
         <p className='p2 text-secondary ' >อาหารในบริเวณใกล้เคียงกับคุณ</p>
 
         <div className="allfood-container">
-          {communityList.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} 
+          {communityList.slice(0, 4).map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} 
           price={items.price} image={items.image} name={items.material} location={items.address} />)}
         </div>
       </div>}
@@ -169,7 +169,7 @@ function Home() {
         <p className='p2 text-secondary ' >อาหารทั้งหมดใน "ไม่บูด"</p>
 
         <div className="allfood-container">
-          {allList.map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} 
+          {allList.slice(0, 4).map((items) => <FoodWrapper key={items.id} id={items.id} exp={items.exp} 
             price={items.price} image={items.image} 
             name={items.material} location={items.address} />)}
         </div>
