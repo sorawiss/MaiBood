@@ -42,6 +42,7 @@ function Inpost() {
     const { id: postId } = useParams()
     const navigation = useNavigate()
     const [open, setOpen] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
 
     // Modal Handler Function
@@ -60,8 +61,15 @@ function Inpost() {
 
     // On Success
     const handleSuccess = async () => {
-        await queryClient.invalidateQueries({ queryKey: ['get-post'] });
-        navigation('/home')
+        try {
+            await queryClient.invalidateQueries({ queryKey: ['get-post'] });
+            setShowSuccess(true);
+            setTimeout(() => {
+                navigation('/home');
+            }, 2000);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
 
@@ -202,7 +210,7 @@ function Inpost() {
                     <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
                             p-[1rem] rounded-[16px]
                          ">
-                        <h2>อาหารจะถูกลบออกจากตู้เย็นและร้านค้า</h2>
+                        <h2>อาหารจะถูกลบออกจากตู้เย็น</h2>
                         <div className="button-wrapper flex gap-[1rem] ">
                             <div className="no bg-secondary rounded-[16px] px-[1rem] py-[0.3rem] cursor-pointer "
                                 onClick={handleOpen}
@@ -215,6 +223,20 @@ function Inpost() {
                 </Modal>
 
             </div>
+
+
+            {/* Success Message */}
+            {/* ************************** */}
+            {showSuccess && (
+                <div className="success-wrapper fixed top-0 left-0 w-screen h-screen flex 
+                    items-center justify-center bg-transparent backdrop-blur-sm  ">
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                    bg-aceent text-primary px-6 py-3 rounded-lg shadow-lg z-50
+                    animate-fade-in">
+                        <p className="text-center">แจกจ่ายสำเร็จ🥰💞</p>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
