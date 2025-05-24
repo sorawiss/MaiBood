@@ -5,8 +5,6 @@ Visit here [Mai-Bood](https://maibood.onrender.com/home)
 Mai-Bood is a web application that enables users to share and manage food items within their community, helping reduce food waste and build local connections.
 
 ## Screenshots
-
-### Profile Management
 ![Profile Management](/screenshot/Home.png)
 
 
