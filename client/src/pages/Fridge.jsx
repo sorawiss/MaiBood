@@ -53,7 +53,6 @@ function Fridge() {
   }
 
 
-  console.log(listItem)
 
 
   return (
