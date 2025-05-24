@@ -27,6 +27,9 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
             const s3Response = await uploadToS3(req.file);
             imageUrl = s3Response;
         }
+        else {
+            imageUrl = null;
+        }
 
         connection = await pool.getConnection();
         await connection.execute(
