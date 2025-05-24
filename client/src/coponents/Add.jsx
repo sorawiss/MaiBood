@@ -138,7 +138,7 @@ function AddtoFridge() {
   const { isPending } = mutation;
 
 
-  
+
   // Submit Form
   //----------------------------//
   function submitForm(e) {
@@ -222,16 +222,20 @@ function AddtoFridge() {
             </div>
 
             <div className="add-detail">
-              <input
-                type='file'
-                accept='image/*'
-                onChange={handleFileChange}
-              />
+              <label>
+                <input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <span className="text-primary hover:text-black">อัพโหลดรูปภาพ</span>
+              </label>
             </div>
-            
+
 
             <div className="image-uploaded-display w-full ">
-              <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt=""/>
+              <img src={form.selectedFile ? URL.createObjectURL(form.selectedFile) : null} alt="" />
             </div>
 
             <Button
@@ -243,7 +247,7 @@ function AddtoFridge() {
             </Button>
 
           </div>
-          
+
           <p className='alert' >{error}</p>
           <Link to={'/fridge/add-to-fridge'} className='p2 text-secondary' >ต้องการเพิ่มอาหารเข้าตู้เย็นส่วนตัวกดที่นี่</Link>
 

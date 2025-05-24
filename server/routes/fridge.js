@@ -3,25 +3,35 @@ import express from 'express'
 import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
 import deleteFromS3 from '../util/deleteS3.js';
+import { uploadToS3 } from './imageUpload.js'
+import upload from '../util/multer.js';
 
 
 const router = express.Router();
 
 
 // Add to fridge
-router.post('/api/add-to-fridge', AuthMiddleware, async (req, res) => {
+router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async (req, res) => {
     const { owner, material, exp } = req.body;
     if (!owner || !material || !exp) {
-        return res.status(400).json({ message: 'Missing required fields: id, material, or exp' });
+        return res.status(400).json({ message: 'Missing required fields' });
     }
 
 
     let connection;
     try {
+
+        // Upload image to S3
+        let imageUrl;
+        if (req.file) {
+            const s3Response = await uploadToS3(req.file);
+            imageUrl = s3Response;
+        }
+
         connection = await pool.getConnection();
         await connection.execute(
-            'INSERT INTO fridge (owner, material, exp, is_store) VALUES (?, ?, ?, ?)',
-            [owner, material, exp, 0]
+            'INSERT INTO fridge (owner, material, exp, is_store, image) VALUES (?, ?, ?, ?, ?)',
+            [owner, material, exp, 0, imageUrl]
         )
         res.status(201).json({
             message: 'Item added to fridge'

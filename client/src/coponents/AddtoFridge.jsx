@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import '../section/style/Add.css'
 import { Link } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query';
+import imageCompression from 'browser-image-compression';
 
 import Button from '../coponents/CustomButton';
 import BackArrow from './BackArrow';
@@ -10,13 +11,10 @@ import { AuthContext } from '../AuthContext';
 
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-async function fetchAddFridge(data) {
+async function fetchAddFridge(formData) {
   const response = await fetch(`${baseUrl}/add-to-fridge`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data),
+    body: formData,
     credentials: 'include'
   })
 
@@ -32,7 +30,8 @@ async function fetchAddFridge(data) {
 function AddtoFridge() {
   const [form, setForm] = useState({
     material: '',
-    exp: ''
+    exp: '',
+    selectedFile: null
   })
   const [error, setError] = useState('')
   const { user } = useContext(AuthContext);
@@ -47,6 +46,8 @@ function AddtoFridge() {
   }
 
 
+  // Mutation
+  //----------------------------//
   const mutation = useMutation({
     mutationFn: fetchAddFridge,
     onSuccess: (data) => {
@@ -54,7 +55,8 @@ function AddtoFridge() {
       setError('')
       setForm({
         material: '',
-        exp: ''
+        exp: '',
+        selectedFile: null
       })
 
       setSuccessEffect(true);  // Trigger success effect
@@ -66,6 +68,35 @@ function AddtoFridge() {
       console.log("Add fridge error", error)
     }
   })
+
+
+  // File Handler
+  //----------------------------//
+  const handleFileChange = async (event) => {
+
+    // Option of compression-image
+    const options = {
+      maxSizeMB: 0.1, // target maximum size in MB
+      maxWidthOrHeight: 1024, // maintain aspect ratio
+      useWebWorker: true,
+    };
+
+    // Compression Function
+    try {
+      const compressedFile = await imageCompression(event.target.files[0], options);
+      setForm({
+        ...form,
+        selectedFile: compressedFile,
+      });
+
+    } catch {
+      console.error('Image compression error:', error);
+      setForm({
+        ...form,
+        selectedFile: null,
+      });
+    }
+  };
 
 
 
@@ -83,13 +114,13 @@ function AddtoFridge() {
       return
     }
 
-    const dataTosend = {
-      material: form.material,
-      exp: form.exp,
-      owner: user.id
-    }
+    const formData = new FormData();
+    formData.append('material', form.material);
+    formData.append('exp', form.exp);
+    formData.append('owner', user.id);
+    formData.append('image', form.selectedFile);
 
-    mutation.mutate(dataTosend)
+    mutation.mutate(formData)
   }
 
 
@@ -130,6 +161,17 @@ function AddtoFridge() {
                 placeholder='วันที่หมดอายุ'
                 className="w-full text-secondary "
               />
+            </div>
+            <div className="add-detail">
+              <label >
+                <input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <span className="text-primary hover:text-black">อัพโหลดรูปภาพ</span>
+              </label>
             </div>
           </div>
 
