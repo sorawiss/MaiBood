@@ -16,6 +16,7 @@ router.get('/api/get-food', async (req, res) => {
             FROM fridge f 
             INNER JOIN members m ON f.owner = m.id 
             WHERE f.is_store = 1 
+            AND f.exp > CURRENT_DATE()
         `;
         let params = [];
 
