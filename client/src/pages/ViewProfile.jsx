@@ -23,16 +23,18 @@ function ViewProfile() {
 
     const { id } = useParams()
     // Query User Data
-    const { data: user, isLoading, isError, error } = useQuery({
-        queryKey: ['user-data'],
+    const { data: user, isPending, isError, error } = useQuery({
+        queryKey: ['user-data', id],
         queryFn: async () => {
             const userData = await fetchUserData(id);
             const history = await getHistory(id);
             return { ...userData, ...history };
-        }
+        },
+        staleTime: 0,
+        cacheTime: 0
     })
 
-    if (isLoading) return <div><Loading /></div>
+    if (isPending) return <div><Loading /></div>
     if (isError) return <div>Error: {error.message}</div>
 
 
