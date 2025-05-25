@@ -207,6 +207,7 @@ function AddtoFridge() {
                 autoComplete='off'
                 className="w-full text-secondary "
                 disabled={initialExp}
+                min={new Date().toISOString().split('T')[0]}
               />
             </div>
 
