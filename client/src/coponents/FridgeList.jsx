@@ -79,7 +79,7 @@ function FridgeList({ material, exp, id, isStore }) {
                     e.stopPropagation();
                     handleOpen();
                 }}
-            >{isExpiringSoon(exp) == 1 ? '😋' : '🤢'}</p>
+            >{isExpiringSoon(exp) == 2 ? '🤢' : '😋'}</p>
 
             <ModalCustom handleOpen={handleOpen} open={open}>
                 <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
