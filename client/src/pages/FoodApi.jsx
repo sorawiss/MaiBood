@@ -9,25 +9,106 @@ const baseURL = import.meta.env.VITE_BASE_URL;
 
 // Thai to English ingredient translations
 const thaiToEnglishIngredients = {
+    // Meat & Poultry
     "ไก่": "chicken",
-    "หมู": "pork",
     "เนื้อ": "beef",
-    "ปลา": "fish",
+    "หมู": "pork",
+    
+    // Seafood
     "กุ้ง": "shrimp",
+    "ปลา": "fish",
+    "ปลากะพง": "sea bass",
+    "ปลาดุก": "catfish",
+    "ปลาทูน่า": "tuna",
+    "ปลานิล": "tilapia",
+    "ปลาหมึก": "squid",
+    "ปลาไหล": "eel",
+    "ปู": "crab",
+    "หอย": "shellfish",
+    "หอยแครง": "cockle",
+    "หอยนางรม": "oyster",
+    "หอยแมลงภู่": "mussel",
+    "หอยเชลล์": "scallop",
+    
+    // Dairy & Eggs
     "ไข่": "egg",
+    "นม": "milk",
+    
+    // Grains & Starches
     "ข้าว": "rice",
-    "มะเขือเทศ": "tomato",
-    "แครอท": "carrot",
-    "ผักกาดขาว": "cabbage",
-    "พริก": "chili",
+    "ขนมปัง": "bread",
+    "บะหมี่": "noodle",
+    "แป้ง": "flour",
+    "แป้งข้าวเจ้า": "rice flour",
+    "แป้งข้าวเหนียว": "glutinous rice flour",
+    "แป้งมันสำปะหลัง": "tapioca flour",
+    "แป้งสาลี": "wheat flour",
+    "แป้งอเนกประสงค์": "all-purpose flour",
+    "วุ้นเส้น": "glass noodle",
+    
+    // Vegetables
     "กระเทียม": "garlic",
-    "หอมใหญ่": "onion",
-    "ต้นหอม": "spring onion",
-    "ผักชี": "cilantro",
-    "โหระพา": "basil",
+    "กะหล่ำปลี": "cabbage",
+    "ข่า": "galangal",
     "ขิง": "ginger",
+    "แคร์รอต": "carrot",
+    "ดอกกะหล่ำ": "cauliflower",
+    "ต้นหอม": "spring onion",
     "ตะไคร้": "lemongrass",
+    "แตงกวา": "cucumber",
+    "บร็อคโคลี่": "broccoli",
+    "ผักกาดขาว": "cabbage",
+    "ผักกาดหอม": "lettuce",
+    "ผักชี": "cilantro",
+    "ผักบุ้ง": "morning glory",
+    "พริก": "chili",
+    "มะเขือเทศ": "tomato",
+    "มะเขือเปราะ": "Thai eggplant",
+    "มะเขือพวง": "pea eggplant",
+    "มะระ": "bitter melon",
+    "หอมแดง": "red onion",
+    "หอมใหญ่": "onion",
     "เห็ด": "mushroom",
+    "โหระพา": "basil",
+    "หัวไชเท้า": "radish",
+    
+    // Fruits
+    "กล้วย": "banana",
+    "ขนุน": "jackfruit",
+    "ทุเรียน": "durian",
+    "มะม่วง": "mango",
+    "มะละกอ": "papaya",
+    "สตรอว์เบอร์รี": "strawberry",
+    "สับปะรด": "pineapple",
+    "แอปเปิ้ล": "apple",
+    "ลูกเกด": "raisin",
+    
+    // Protein Alternatives
+    "เต้าหู้": "tofu",
+    
+    // Processed Meats
+    "ไส้กรอก": "sausage",
+    "เบคอน": "bacon",
+    "แฮม": "ham",
+
+    
+    // Condiments & Sauces
+    "กะปิ": "shrimp paste",
+    "ซอสถั่วเหลือง": "soy sauce",
+    "ซอสหอยนางรม": "oyster sauce",
+    "น้ำปลา": "fish sauce",
+    "น้ำผึ้ง": "honey",
+    "น้ำส้มสายชู": "vinegar",
+    "มะขาม": "tamarind",
+    "มะนาว": "lime",
+    "พริกไทย": "pepper",
+    
+    // Herbs & Spices
+    "ขมิ้น": "turmeric",
+    "งา": "sesame",
+    
+    // Coconut Products
+    "กะทิ": "coconut milk"
 };
 
 
