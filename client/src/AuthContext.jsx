@@ -84,14 +84,23 @@ export const AuthProvider = ({ children }) => {
       const response = await fetch(`${baseURL}/logout`, {
         method: 'POST',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (!response.ok) {
         throw new Error('Logout failed');
       }
 
+      // Clear user state immediately
       setUser(null);
-      console.log('Logout successful');
+      
+      // Clear any cached queries if using React Query
+      queryClient.clear();
+      
+      // Force reload the page to clear any cached state
+      window.location.href = '/login';
 
     } catch (error) {
       console.error('Error during logout:', error);
