@@ -9,6 +9,8 @@ const router = express.Router();
 router.get('/api/get-food', async (req, res) => {
     const { zip_code, limit } = req.query;
     let connection;
+
+    console.log(zip_code)
     try {
         connection = await pool.getConnection();
         let query = `

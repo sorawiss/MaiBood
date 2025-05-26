@@ -2,6 +2,8 @@ import React from 'react';
 import '../section/style/Allfood.css'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 
 import cancel from '../assets/X.svg'
 
@@ -44,6 +46,7 @@ function CommunityFood() {
     const [searchText, setSearchText] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
 
+    const { user } = useContext(AuthContext);
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(prev => prev === category ? null : category);
@@ -52,7 +55,7 @@ function CommunityFood() {
 
     const { data, isLoading, error, isError } = useQuery({
         queryKey: ['communityFood'],
-        queryFn: () => fetchCommunityFood()
+        queryFn: () => fetchCommunityFood(user)
     })
 
 
