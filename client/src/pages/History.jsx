@@ -42,7 +42,7 @@ function History() {
                 ))
               ) : (
                 <div className='text-center text-secondary'>
-                  <p>ยังไม่มีประวัติศาสตร์ของตู้เย็น</p>
+                  <p>ไม่มีบันทึกของตู้เย็น</p>
                 </div>
               )}
             </div>

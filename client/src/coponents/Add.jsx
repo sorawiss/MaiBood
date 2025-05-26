@@ -179,8 +179,8 @@ function AddtoFridge() {
 
       <div className="add-wrapper">
         <div className="header-title flex flex-col items-center gap-[0.5rem] ">
-          <h2 className='text-primary ' >เพิ่มอาหารไปที่ร้านค้า</h2>
-          <p className='p2 text-secondary ' >อาหารจะถูกวางขายที่ร้านค้า</p>
+          <h2 className='text-primary ' >แจกอาหารให้กับชุมชน</h2>
+          <p className='p2 text-secondary ' >อาหารจะถูกแจกจ่ายให้กับชุมชนของคุณ</p>
         </div>
 
         <div className="details">
@@ -222,15 +222,16 @@ function AddtoFridge() {
               />
             </div>
 
-            <div className="add-detail">
+            <div className="add-detail w-full ">
               <label>
                 <input
                   type='file'
                   accept='image/*'
+                  capture="environment"
                   onChange={handleFileChange}
-                  className="hidden"
+                  className="hidden "
                 />
-                <span className="text-primary hover:text-black">อัพโหลดรูปภาพ</span>
+                <span className="text-primary hover:text-black w-full ">ถ่ายรูปอาหาร</span>
               </label>
             </div>
 

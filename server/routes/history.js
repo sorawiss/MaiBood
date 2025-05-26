@@ -17,7 +17,7 @@ router.get('/api/history/:id', AuthMiddleware, async (req, res) => {
         console.log(id)
 
         const [rows] = await pool.query(
-            'SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3 OR is_store = 4)',
+            'SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3 OR is_store = 4) ORDER BY exp DESC',
             [userID]
         )
 

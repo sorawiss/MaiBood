@@ -91,7 +91,7 @@ function Profile() {
 
             <Link to={`/history/${user.id}`} className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
-                <p className='prim-text text-primary '>ประวัติศาสตร์ของตู้เย็น</p>
+                <p className='prim-text text-primary '>บันทึกของตู้เย็น</p>
               </div>
             </Link>
           </div>

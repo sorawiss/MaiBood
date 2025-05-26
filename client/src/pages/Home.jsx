@@ -115,10 +115,8 @@ function Home() {
     <div className="overall mb-[4rem] ">
 
       <div className='top-container'>
-        <h2 className='hello'>สวัสดี {user && (user.fname)}</h2>
-        <h2>ค้นหาอาหารที่ฟรีหรือมีราคาที่คุ้มค่า<br /> เพื่อตัวคุณและ
-          <span className="highlight">ชุมชน</span>
-        </h2>
+        <h1 className='hello'>สวัสดี {user && (user.fname)}</h1>
+        <h1>รับและ<span className='text-alert'>แบ่งปัน</span>อาหารกับชุมชนของคุณ</h1>
       </div> {/*top-container*/}
 
       <div className='second-container'>
