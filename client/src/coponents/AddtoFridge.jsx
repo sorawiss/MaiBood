@@ -170,7 +170,7 @@ function AddtoFridge() {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                <span className="text-primary hover:text-black">อัพโหลดรูปภาพ</span>
+                <span className="text-primary hover:text-black">อัพโหลดรูปภาพ (ไม่บังคับ)</span>
               </label>
             </div>
           </div>

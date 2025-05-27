@@ -112,11 +112,11 @@ function Home() {
 
 
   return (
-    <div className="overall mb-[4rem] ">
+    <div className="overall mb-[4rem] text-primary ">
 
       <div className='top-container'>
         <h1 className='hello'>สวัสดี {user && (user.fname)}</h1>
-        <h1>รับและ<span className='text-alert'>แบ่งปัน</span>อาหารกับชุมชนของคุณ</h1>
+        <h1>รับและ<span className='text-aceent '>แบ่งปัน</span>อาหารกับชุมชนของคุณ</h1>
       </div> {/*top-container*/}
 
       <div className='second-container'>
