@@ -10,6 +10,7 @@ function Loading() {
                 </svg>
             </div>
             <p className="text-gray-500">กำลังทำงาน...</p>
+            <p className='text-gray-500'>อาจใช้เวลาในการเปิดครั้งแรกนานไม่เกิน 1 นาทีเนื่องจากระบบพักทำงาน</p>
         </div>
     )
 }
