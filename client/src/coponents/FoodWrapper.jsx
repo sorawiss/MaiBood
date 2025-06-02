@@ -5,7 +5,7 @@ import thaiDate from '../lib/thaiDate'
 
 import '../section/style/Home.css'
 
-function FoodWrapper({ id, exp, price, name, location, image }) {
+function FoodWrapper({ id, exp, name, location, image }) {
     const time = new Date(exp)
 
     

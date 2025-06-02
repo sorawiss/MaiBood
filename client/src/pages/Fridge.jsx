@@ -9,25 +9,8 @@ import BackArrow from '../coponents/BackArrow'
 import Loading from '../coponents/Loading'
 import '../section/style/Fridge.css'
 
+import { mockFridgeItems } from '../mockData'
 
-const baseURL = import.meta.env.VITE_BASE_URL
-async function fetchFridge(id) {
-  const response = await fetch(`${baseURL}/fridge/${id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include'
-  });
-
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `Network response was not ok (${response.status})`);
-  }
-
-  return response.json();
-}
 
 
 function Fridge() {
@@ -36,7 +19,7 @@ function Fridge() {
 
   const { data: listItem, isLoading, isError, error } = useQuery({
     queryKey: ['fridge'],
-    queryFn: () => fetchFridge(user.id),
+    queryFn: () => mockFridgeItems,
   });
 
   if (isError) {

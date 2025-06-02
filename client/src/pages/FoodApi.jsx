@@ -1,344 +1,103 @@
 import React, { useState, useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../AuthContext";
-import Loading from "../coponents/Loading";
 import BackArrow from "../coponents/BackArrow";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
-
-
-// Thai to English ingredient translations
-const thaiToEnglishIngredients = {
-    // Meat & Poultry
-    "ไก่": "chicken",
-    "เนื้อ": "beef",
-    "หมู": "pork",
-    
-    // Seafood
-    "กุ้ง": "shrimp",
-    "ปลา": "fish",
-    "ปลากะพง": "sea bass",
-    "ปลาดุก": "catfish",
-    "ปลาทูน่า": "tuna",
-    "ปลานิล": "tilapia",
-    "ปลาหมึก": "squid",
-    "ปลาไหล": "eel",
-    "ปู": "crab",
-    "หอย": "shellfish",
-    "หอยแครง": "cockle",
-    "หอยนางรม": "oyster",
-    "หอยแมลงภู่": "mussel",
-    "หอยเชลล์": "scallop",
-    
-    // Dairy & Eggs
-    "ไข่": "egg",
-    "นม": "milk",
-    
-    // Grains & Starches
-    "ข้าว": "rice",
-    "ขนมปัง": "bread",
-    "บะหมี่": "noodle",
-    "แป้ง": "flour",
-    "แป้งข้าวเจ้า": "rice flour",
-    "แป้งข้าวเหนียว": "glutinous rice flour",
-    "แป้งมันสำปะหลัง": "tapioca flour",
-    "แป้งสาลี": "wheat flour",
-    "แป้งอเนกประสงค์": "all-purpose flour",
-    "วุ้นเส้น": "glass noodle",
-    
-    // Vegetables
-    "กระเทียม": "garlic",
-    "กะหล่ำปลี": "cabbage",
-    "ข่า": "galangal",
-    "ขิง": "ginger",
-    "แคร์รอต": "carrot",
-    "ดอกกะหล่ำ": "cauliflower",
-    "ต้นหอม": "spring onion",
-    "ตะไคร้": "lemongrass",
-    "แตงกวา": "cucumber",
-    "บร็อคโคลี่": "broccoli",
-    "ผักกาดขาว": "cabbage",
-    "ผักกาดหอม": "lettuce",
-    "ผักชี": "cilantro",
-    "ผักบุ้ง": "morning glory",
-    "พริก": "chili",
-    "มะเขือเทศ": "tomato",
-    "มะเขือเปราะ": "Thai eggplant",
-    "มะเขือพวง": "pea eggplant",
-    "มะระ": "bitter melon",
-    "หอมแดง": "red onion",
-    "หอมใหญ่": "onion",
-    "เห็ด": "mushroom",
-    "โหระพา": "basil",
-    "หัวไชเท้า": "radish",
-    
-    // Fruits
-    "กล้วย": "banana",
-    "ขนุน": "jackfruit",
-    "ทุเรียน": "durian",
-    "มะม่วง": "mango",
-    "มะละกอ": "papaya",
-    "สตรอว์เบอร์รี": "strawberry",
-    "สับปะรด": "pineapple",
-    "แอปเปิ้ล": "apple",
-    "ลูกเกด": "raisin",
-    
-    // Protein Alternatives
-    "เต้าหู้": "tofu",
-    
-    // Processed Meats
-    "ไส้กรอก": "sausage",
-    "เบคอน": "bacon",
-    "แฮม": "ham",
-
-    
-    // Condiments & Sauces
-    "กะปิ": "shrimp paste",
-    "ซอสถั่วเหลือง": "soy sauce",
-    "ซอสหอยนางรม": "oyster sauce",
-    "น้ำปลา": "fish sauce",
-    "น้ำผึ้ง": "honey",
-    "น้ำส้มสายชู": "vinegar",
-    "มะขาม": "tamarind",
-    "มะนาว": "lime",
-    "พริกไทย": "pepper",
-    
-    // Herbs & Spices
-    "ขมิ้น": "turmeric",
-    "งา": "sesame",
-    
-    // Coconut Products
-    "กะทิ": "coconut milk"
-};
-
-
-// Fetch fridge items function
-async function fetchFridge(id) {
-    const response = await fetch(`${baseURL}/fridge/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Network response was not ok (${response.status})`);
-    }
-
-    return response.json();
-}
-
+import { mockRecipes } from "../mockData";
 
 function FoodApi() {
-    const { user } = useContext(AuthContext);
-    const [selectedIngredient, setSelectedIngredient] = useState("");
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const { user } = useContext(AuthContext);
+  const [selectedIngredient, setSelectedIngredient] = useState("");
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const API_KEY = import.meta.env.VITE_SPOONACULAR;
+  const handleSearch = async () => {
+    if (!selectedIngredient) return;
 
-    // Fetch fridge items using React Query
-    const { data: fridgeItems, isLoading: fridgeLoading, isError: fridgeError } = useQuery({
-        queryKey: ['fridge'],
-        queryFn: () => fetchFridge(user.id),
-        enabled: !!user?.id
-    });
+    setLoading(true);
+    setError(null);
+    setRecipes([]);
 
-    // Translate Thai ingredient to English
-    const translateIngredient = (thaiIngredient) => {
-        // Remove whitespace and convert to lowercase for better matching
-        const cleanIngredient = thaiIngredient.trim().toLowerCase();
-        
-        // Check if there's a direct translation
-        for (const [thai, eng] of Object.entries(thaiToEnglishIngredients)) {
-            if (cleanIngredient.includes(thai.toLowerCase())) {
-                return eng;
-            }
-        }
-        
-        // If no translation found, return original text
-        return thaiIngredient;
-    };
-    
-    // Fetch Spoonacular API
-    const handleSearch = async () => {
-        if (!selectedIngredient) return;
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Filter mock recipes based on selected ingredient
+      const filteredRecipes = mockRecipes.filter(recipe => 
+        recipe.ingredients.some(ingredient => 
+          ingredient.toLowerCase().includes(selectedIngredient.toLowerCase())
+        )
+      );
 
-        setLoading(true);
-        setError(null);
-        setRecipes([]);
-
-        try {
-            // Translate ingredient to English for API search
-            const englishIngredient = translateIngredient(selectedIngredient);
-            
-            const thaiRes = await fetch(
-                `https://api.spoonacular.com/recipes/complexSearch?query=${englishIngredient}&cuisine=Thai&number=5&apiKey=${API_KEY}`
-            );
-            const thaiData = await thaiRes.json();
-            
-            if (thaiData.status === "failure") {
-                throw new Error(thaiData.message || "API Error");
-            }
-            
-            const thaiResults = thaiData.results || [];
-
-            let allResults = [...thaiResults];
-
-            if (thaiResults.length < 5) {
-                const nonThaiRes = await fetch(
-                    `https://api.spoonacular.com/recipes/complexSearch?query=${englishIngredient}&number=10&apiKey=${API_KEY}`
-                );
-                const nonThaiData = await nonThaiRes.json();
-
-                if (nonThaiData.status === "failure") {
-                    throw new Error(nonThaiData.message || "API Error");
-                }
-
-                const nonThaiUnique = (nonThaiData.results || []).filter(
-                    (item) => !thaiResults.some((thai) => thai.id === item.id)
-                );
-
-                const needed = 5 - thaiResults.length;
-                allResults = [...thaiResults, ...nonThaiUnique.slice(0, needed)];
-            }
-
-            const detailedRecipes = await Promise.all(
-                allResults.map(async (item) => {
-                    const infoRes = await fetch(
-                        `https://api.spoonacular.com/recipes/${item.id}/information?apiKey=${API_KEY}`
-                    );
-                    const infoData = await infoRes.json();
-                    
-                    if (infoData.status === "failure") {
-                        throw new Error(infoData.message || "API Error");
-                    }
-
-                    return {
-                        title: infoData.title,
-                        image: infoData.image,
-                        instructions: infoData.instructions || "ไม่มีวิธีทำ",
-                        sourceUrl: infoData.sourceUrl,
-                        ingredients: infoData.extendedIngredients?.map(ing => ing.original) || [],
-                        readyInMinutes: infoData.readyInMinutes,
-                        servings: infoData.servings
-                    };
-                })
-            );
-
-            setRecipes(detailedRecipes);
-        } catch (err) {
-            console.error(err);
-            setError("เกิดข้อผิดพลาดในการดึงข้อมูล: " + (err.message || ""));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (fridgeLoading) {
-        return <Loading />;
+      setRecipes(filteredRecipes);
+    } catch (err) {
+      console.error(err);
+      setError("เกิดข้อผิดพลาดในการดึงข้อมูล: " + (err.message || ""));
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (fridgeError) {
-        return (
-            <div className="min-h-screen bg-white-bg w-full flex flex-col items-center justify-center py-[2.5rem] px-[2rem] gap-[3.25rem]">
-                <p className="text-red-500">ไม่สามารถโหลดข้อมูลจากตู้เย็นได้</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen bg-white-bg w-full flex flex-col items-center py-[2.5rem] px-[2rem] gap-[3.25rem]">
-            <BackArrow />
-            
-            <div className="w-full max-w-3xl">
-                <h2 className="text-2xl font-semibold mb-6">ค้นหาเมนูจากวัตถุดิบในตู้เย็น</h2>
-                
-                {/* Fridge ingredients selection */}
-                <div className="mb-8">
-                    <h3 className="text-lg mb-3">เลือกวัตถุดิบจากตู้เย็น:</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {fridgeItems && fridgeItems.length > 0 ? (
-                            fridgeItems.map((item) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => setSelectedIngredient(item.material)}
-                                    className={`px-4 py-2 rounded-full ${
-                                        selectedIngredient === item.material
-                                            ? "bg-primary text-white"
-                                            : "bg-gray-100 hover:bg-gray-200"
-                                    }`}
-                                >
-                                    {item.material}
-                                </button>
-                            ))
-                        ) : (
-                            <p className="text-gray-500">ไม่มีวัตถุดิบในตู้เย็น</p>
-                        )}
-                    </div>
-                </div>
-
-                {/* Manual ingredient input */}
-                <div className="flex gap-2 mb-8">
-                    <input
-                        type="text"
-                        placeholder="หรือใส่วัตถุดิบเอง เช่น ไก่, กระเทียม"
-                        title="สามารถใส่ชื่อวัตถุดิบเป็นภาษาไทยได้"
-                        value={selectedIngredient}
-                        onChange={(e) => setSelectedIngredient(e.target.value)}
-                        className="flex-1 px-4 py-2 border rounded-lg"
-                    />
-                    <button
-                        onClick={handleSearch}
-                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
-                    >
-                        ค้นหา
-                    </button>
-                </div>
-
-                {/* Loading and error states */}
-                {loading && <p className="text-center">กำลังค้นหาสูตรอาหาร...</p>}
-                {error && <p className="text-red-500 text-center">{error}</p>}
-
-                {/* Recipe results */}
-                <div className="grid gap-8">
-                    {recipes.map((recipe, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img
-                                src={recipe.image}
-                                alt={recipe.title}
-                                className="w-full h-48 object-cover"
-                            />
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold mb-4">{recipe.title}</h3>
-                                
-                                {/* Recipe info */}
-                                <div className="mb-4 text-gray-600">
-                                    <p>เวลาทำ: {recipe.readyInMinutes} นาที</p>
-                                    <p>สำหรับ: {recipe.servings} ที่</p>
-                                </div>
-
-                                {/* Ingredients */}
-                                <div className="mb-4">
-                                    <h4 className="font-semibold mb-2">วัตถุดิบ:</h4>
-                                    <ul className="list-disc list-inside">
-                                        {recipe.ingredients.map((ing, i) => (
-                                            <li key={i} className="text-gray-600">{ing}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                             
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-white-bg w-full flex flex-col items-center py-[2.5rem] px-[2rem] gap-[3.25rem]">
+      <BackArrow />
+      
+      <div className="w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4">ค้นหาสูตรอาหาร</h1>
+        
+        <div className="flex gap-2 mb-6">
+          <input
+            type="text"
+            value={selectedIngredient}
+            onChange={(e) => setSelectedIngredient(e.target.value)}
+            placeholder="พิมพ์ชื่อวัตถุดิบ..."
+            className="flex-1 p-2 border rounded"
+          />
+          <button
+            onClick={handleSearch}
+            disabled={loading}
+            className="px-4 py-2 bg-aceent text-primary rounded disabled:opacity-50"
+          >
+            {loading ? "กำลังค้นหา..." : "ค้นหา"}
+          </button>
         </div>
-    );
+
+        {error && (
+          <div className="text-red-500 mb-4">{error}</div>
+        )}
+
+        <div className="space-y-6">
+          {recipes.map((recipe, index) => (
+            <div key={index} className="border rounded-lg p-4">
+              <img
+                src={recipe.image}
+                alt={recipe.title}
+                className="w-full h-48 object-cover rounded-lg mb-4"
+              />
+              <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
+              <div className="mb-2">
+                <span className="font-medium">เวลาในการทำ:</span> {recipe.readyInMinutes} นาที
+              </div>
+              <div className="mb-2">
+                <span className="font-medium">จำนวนที่ทำได้:</span> {recipe.servings} ที่
+              </div>
+              <div className="mb-4">
+                <span className="font-medium">วัตถุดิบ:</span>
+                <ul className="list-disc list-inside">
+                  {recipe.ingredients.map((ingredient, i) => (
+                    <li key={i}>{ingredient}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <span className="font-medium">วิธีทำ:</span>
+                <p className="whitespace-pre-line">{recipe.instructions}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default FoodApi;

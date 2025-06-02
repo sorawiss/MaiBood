@@ -5,41 +5,30 @@ import line from '../assets/line 1.svg'
 import '../section/style/Profile.css'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-
 import { AuthContext } from '../AuthContext'
-import getHistory from '../lib/getHistory'
-
-import Loading from '../coponents/Loading'
-
 import profile from '/svg/profile.svg'
 
+// Mock history data
+const mockHistory = {
+  givenCount: 15,
+  eatCount: 8,
+  expiredCount: 2
+};
 
 function Profile() {
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['history'],
-    queryFn: () => getHistory(user.id)
-  })
-
   const { user, logout } = useContext(AuthContext)
-
-  if (isLoading) return <Loading />
-  if (error) return <div>Error: {error.message}</div>
-
 
   // Rank System
   let rank;
-  if (data.givenCount > 20) {
+  if (mockHistory.givenCount > 20) {
     rank = '👑 พระราชา'
-  } else if (data.givenCount >= 10) {
+  } else if (mockHistory.givenCount >= 10) {
     rank = '⚜️ ลอร์ด'
-  } else if (data.givenCount >= 5) {
+  } else if (mockHistory.givenCount >= 5) {
     rank = '♞ อัศวิน'
   } else {
     rank = '👨🏻‍🌾 ชาวบ้าน'
   }
-
 
   return (
     <div className="profile-page-wrapper">
@@ -61,7 +50,7 @@ function Profile() {
           <div className="success-feedback">
             <div className="success-text">
               <h2 className='prim-text'>{rank}</h2>
-              <p className='prim-text'>{user.fname} ได้ช่วยให้อาหารกว่า {data.givenCount + data.eatCount} มื้อ
+              <p className='prim-text'>{user.fname} ได้ช่วยให้อาหารกว่า {mockHistory.givenCount + mockHistory.eatCount} มื้อ
                 ไม่เน่าเสียอย่างไร้คุณค่า</p>
             </div>
             <img src={Noodle} />
@@ -71,21 +60,21 @@ function Profile() {
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>แบ่งปันไปทั้งหมด</p>
-                <h2 className='prim-text'>{data.givenCount} ครั้ง</h2>
+                <h2 className='prim-text'>{mockHistory.givenCount} ครั้ง</h2>
               </div>
             </div>
 
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>ทานอาหารหมดก่อนหมดอายุ</p>
-                <h2 className='prim-text'>{data.eatCount} ครั้ง</h2>
+                <h2 className='prim-text'>{mockHistory.eatCount} ครั้ง</h2>
               </div>
             </div>
 
             <div className="sell-number flex flex-col items-center gap-[1rem] ">
               <div className="sellnum-banner flex flex-row ">
                 <p className='prim-text'>ทำอาหารบูดไปทั้งหมด</p>
-                <h2 className='prim-text'>{data.expiredCount} ครั้ง</h2>
+                <h2 className='prim-text'>{mockHistory.expiredCount} ครั้ง</h2>
               </div>
             </div>
 
@@ -96,22 +85,18 @@ function Profile() {
             </Link>
           </div>
 
-
-
           {/* Contact Wrapper */}
-          {/* ************************************************* */}
           <div className="contact-wrapper flex flex-col gap-[1rem] ">
 
             {/* Address */}
             <div className="address-wrapper bg-background rounded-[16px] p-[1rem] ">
-              <p className='con-tect p2 text-center '><b  >{user.address}</b> ตำบล {user.subdistrict}
+              <p className='con-tect p2 text-center '><b>{user.address}</b> ตำบล {user.subdistrict}
                 อำเภอ {user.district} จังหวัด {user.province} รหัสไปรษณีย์ {user.zip_code} </p>
             </div>
 
             {/* Line And Instagram */}
             <div className="contact-in-profile ">
               <div className="contact-profilepage flex flex-row ">
-
                 <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_3_5756)">
                     <path d="M7.00226 0.321411C4.08565 0.321411 3.23266 0.324432 3.06685 0.338241C2.46832 0.388192 2.09587 0.482808 1.69011 0.685633C1.37741 0.841527 1.1308 1.02224 0.887406 1.27555C0.444145 1.73752 0.175502 2.30586 0.0782537 2.98144C0.0309725 3.30941 0.017218 3.3763 0.0144241 5.05154C0.0133495 5.60996 0.0144241 6.34488 0.0144241 7.33063C0.0144241 10.2565 0.0176478 11.112 0.0316173 11.2782C0.079973 11.8629 0.171312 12.2308 0.364735 12.6332C0.734387 13.4035 1.44038 13.9818 2.2721 14.1975C2.56009 14.272 2.87816 14.313 3.2865 14.3324C3.4595 14.3399 5.22287 14.3453 6.98732 14.3453C8.75177 14.3453 10.5162 14.3432 10.6849 14.3346C11.1577 14.3122 11.4323 14.2752 11.7359 14.1965C12.1483 14.0903 12.5326 13.895 12.862 13.6242C13.1915 13.3535 13.4581 13.0138 13.6432 12.6289C13.8329 12.2362 13.9291 11.8543 13.9726 11.3001C13.982 11.1792 13.986 9.25272 13.986 7.32879C13.986 5.40455 13.9817 3.48159 13.9723 3.36076C13.9282 2.7976 13.832 2.41892 13.6362 2.01867C13.4756 1.69102 13.2972 1.44633 13.0382 1.19615C12.5762 0.752953 12.0109 0.483239 11.3373 0.385711C11.0109 0.338349 10.9459 0.324324 9.27605 0.321411H7.00226Z" fill="url(#paint0_radial_3_5756)" />
@@ -144,10 +129,6 @@ function Profile() {
               </div>
             </div>
           </div>
-
-
-
-
         </div>
       </div>
 

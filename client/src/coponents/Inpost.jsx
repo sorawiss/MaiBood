@@ -1,41 +1,19 @@
 import React, { useState } from 'react'
 import '../section/style/Inpost.css'
-import { useParams, Link, data } from 'react-router-dom'; // Import useParams and Link
-import { useQuery } from '@tanstack/react-query'; // Import useQuery
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams, Link } from 'react-router-dom';
 import { AuthContext } from '../AuthContext'
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import line from '../assets/line 1.svg'
 import Button from './CustomButton.jsx';
-import Loading from './Loading.jsx';
 import profile from '/svg/profile.svg'
 
 import BackArrow from './BackArrow';
-import deleteFridgeItem from '../lib/deleteFridgeItem';
 import Modal from './Modal'
 import thaiDate from '../lib/thaiDate.js';
 
-
-
-// Fetch Data
-const baseURL = import.meta.env.VITE_BASE_URL;
-async function fetchInpostData(postId) {
-    const response = await fetch(`${baseURL}/get-inpost/${postId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
-        throw new Error(errorData.message || `Network response was not ok (${response.status})`);
-    }
-    return await response.json();
-}
-
+import { mockPosts } from '../mockData'
 
 function Inpost() {
     const { user } = useContext(AuthContext)
@@ -44,71 +22,21 @@ function Inpost() {
     const [open, setOpen] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
 
-
     // Modal Handler Function
     const handleOpen = () => {
         setOpen(!open);
     };
 
+    // Find post data from mock data
+    const postData = mockPosts.find(post => post.id === parseInt(postId));
 
-    // Use useQuery to fetch data
-    const { data: postData, isLoading, isError, error } = useQuery({
-        queryKey: ['inpost', postId],
-        queryFn: () => fetchInpostData(postId),
-        enabled: !!postId,
-    });
-
-
-    // On Success
-    const handleSuccess = async () => {
-        try {
-            await queryClient.invalidateQueries({ queryKey: ['get-post'] });
-            setShowSuccess(true);
-            setTimeout(() => {
-                navigation('/home');
-            }, 2000);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-
-    // Delter API
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: deleteFridgeItem,
-        onSuccess: handleSuccess,
-        onError: (error) => {
-            console.error('Delete failed:', error);
-        }
-    });
-
-    const { isPending } = mutation
-
-    function handleDelete() {
-        mutation.mutate(postData.id)
-    }
-
-
-    if (isLoading || isPending) {
-        return (
-            <Loading />
-        );
-    }
-
-    if (isError) {
-        console.error("Error fetching inpost data:", error);
-        return (
-            <div className="Inpost-wrapper min-h-screen bg-white-bg w-full flex flex-col items-center justify-center p-4">
-                <p className="text-red-600 text-center">
-                    เกิดข้อผิดพลาดในการโหลดข้อมูล: <br />
-                    {error instanceof Error ? error.message : 'Unknown error'}
-                </p>
-                {/* Add a back button */}
-                <Link to="/home" className="mt-4 text-blue-600 hover:underline">กลับหน้าหลัก</Link>
-            </div>
-        );
-    }
+    // Handle delete
+    const handleDelete = () => {
+        setShowSuccess(true);
+        setTimeout(() => {
+            navigation('/home');
+        }, 2000);
+    };
 
     if (!postData) {
         return (
@@ -119,16 +47,13 @@ function Inpost() {
         );
     }
 
-    console.log(postData)
-    const date = new Date(postData.exp)
-
+    const date = new Date(postData.exp);
 
     return (
         <div className="inpost-overall">
             <div className="Inpost-wrapper min-h-screen bg-white-bg w-full 
             py-[2.5rem] gap-[1rem] mb-[4rem]
             ">
-
                 <BackArrow />
 
                 <Link to={`/view-profile/${postData.owner}`} className="user-wrapper cursor-pointer ">
@@ -144,7 +69,7 @@ function Inpost() {
                             <h2 className='nameofmaterial'>{postData.material}</h2>
                         </div>
 
-                        {/* Locaton */}
+                        {/* Location */}
                         <div className="contact-container flex flex-col gap-[0.5rem] py-[1rem] text-secondary  ">
                             <div className="contact-detail">
                                 <svg width="20" height="25" viewBox="0 0 14 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,15 +121,13 @@ function Inpost() {
                     </div>
                 </div>
 
-                {user && user.id == postData.owner && (
+                {user && user.id === postData.owner && (
                     <Button className="!w-[23.5rem] rounded-[16px] bg-aceent active:bg-accent-active "
                         onClick={handleOpen}
                     >
                         <h2 className='inpost-text'>มีคนรับแล้ว</h2>
                     </Button>
-
                 )}
-
 
                 <Modal open={open} handleOpen={handleOpen}>
                     <div className="modal-container flex flex-col items-center justify-center gap-[1rem] bg-white
@@ -221,12 +144,9 @@ function Inpost() {
                         </div>
                     </div>
                 </Modal>
-
             </div>
 
-
             {/* Success Message */}
-            {/* ************************** */}
             {showSuccess && (
                 <div className="success-wrapper fixed top-0 left-0 w-screen h-screen flex 
                     items-center justify-center bg-transparent backdrop-blur-sm  ">

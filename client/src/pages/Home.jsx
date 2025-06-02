@@ -1,92 +1,18 @@
 import React, { useState, useContext } from 'react'
 import '../section/style/Home.css'
-import { useQuery } from '@tanstack/react-query'
-
-
+import { mockFoodItems } from '../mockData'
 import cancel from '../assets/X.svg'
-
 import FoodWrapper from '../coponents/FoodWrapper'
 import { AuthContext } from '../AuthContext'
 import { Link } from 'react-router-dom'
-import Loading from '../coponents/Loading'
 import Category from '../coponents/Category'
-// Fetch Data Function
-const baseURL = import.meta.env.VITE_BASE_URL
 
-async function fetchCommunityFood(user) {
-  try {
-    const url = `${baseURL}/get-food${user ? `?zip_code=${user.zip_code}` : ''}`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Network response was not ok (${response.status})`);
-    }
-
-    return await response.json();
-  }
-  catch (error) {
-    console.error("Error in fetchCommunityFood:", error);
-    return [];
-  }
-}
-
-async function fetchAllFood() {
-  try {
-    const url = `${baseURL}/get-food`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Network response was not ok (${response.status})`);
-    }
-
-    return await response.json();
-  }
-  catch (error) {
-    console.error("Error in fetchAllFood:", error);
-    return [];
-  }
-}
-
-// Main Render
 function Home() {
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-
   const { user } = useContext(AuthContext);
 
-
-  // Fetch Data Queries
-  const { data: communityData, isLoading: isLoadingCommunity } = useQuery({
-    queryKey: ['get-community-food', user?.zip_code],
-    queryFn: () => fetchCommunityFood(user),
-  });
-
-  const { data: allData, isLoading: isLoadingAll } = useQuery({
-    queryKey: ['get-all-food'],
-    queryFn: fetchAllFood,
-  });
-
-  if (isLoadingCommunity || isLoadingAll) {
-    return (
-      <Loading />
-    );
-  }
-
-  // --- Filtering Logic ---
+  // Filter items based on search and category
   const filterItems = (items) => {
     return items?.filter((item) => {
       const material = item?.material || '';
@@ -102,22 +28,20 @@ function Home() {
     }) || [];
   };
 
-  const communityList = filterItems(communityData);
-  const allList = filterItems(allData);
+  const communityList = filterItems(mockFoodItems);
+  const allList = filterItems(mockFoodItems);
 
-  // --- Category Click Handler ---
+  // Category click handler
   const handleCategoryClick = (category) => {
     setSelectedCategory((prevCategory) => prevCategory === category ? null : category);
   };
 
-
   return (
-    <div className="overall mb-[4rem] text-primary ">
-
+    <div className="overall mb-[4rem] text-primary">
       <div className='top-container'>
         <h1 className='hello'>สวัสดี {user && (user.fname)}</h1>
-        <h1>รับและ<span className='text-aceent '>แบ่งปัน</span>อาหารกับชุมชนของคุณ</h1>
-      </div> {/*top-container*/}
+        <h1>รับและ<span className='text-aceent'>แบ่งปัน</span>อาหารกับชุมชนของคุณ</h1>
+      </div>
 
       <div className='second-container'>
 
