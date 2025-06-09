@@ -1,88 +1,109 @@
 import express from 'express'
+import prisma from '../util/prisma.js'
 
-import pool from '../util/db.js';
-
-const router = express.Router();
-
+const router = express.Router()
 
 // Get All Foods
 router.get('/api/get-food', async (req, res) => {
     const { zip_code, limit } = req.query;
-    let connection;
 
-    console.log(zip_code)
     try {
-        connection = await pool.getConnection();
-        let query = `
-            SELECT f.*, m.zip_code, m.address
-            FROM fridge f 
-            INNER JOIN members m ON f.owner = m.id 
-            WHERE f.is_store = 1 
-            AND f.exp > CURRENT_DATE()
-        `;
-        let params = [];
+        const whereClause = {
+            is_store: 1,
+            exp: {
+                gt: new Date()
+            }
+        };
 
         if (zip_code) {
-            query += ' AND m.zip_code = ?';
-            params.push(zip_code);
+            whereClause.member = {
+                zip_code: zip_code
+            };
         }
 
-        query += ' ORDER BY f.exp ASC';
-        
-        if (limit) {
-            query += ' LIMIT ?';
-            params.push(parseInt(limit));
-        }
-        
-        const [result] = await connection.query(query, params);
-        res.json(result);
+        const foods = await prisma.fridge.findMany({
+            where: whereClause,
+            include: {
+                member: {
+                    select: {
+                        zip_code: true,
+                        address: true
+                    }
+                }
+            },
+            orderBy: {
+                exp: 'asc'
+            },
+            take: limit ? parseInt(limit) : undefined
+        });
+
+        // Transform the result to match the previous format
+        const transformedFoods = foods.map(food => ({
+            ...food,
+            zip_code: food.member.zip_code,
+            address: food.member.address
+        }));
+
+        res.json(transformedFoods);
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
-})
-
+});
 
 // Get Inpost Food
 router.get('/api/get-inpost/:id', async (req, res) => {
     const { id } = req.params;
 
-    let connection;
     try {
-        connection = await pool.getConnection();
-        const [result] = await connection.query(
-            'SELECT f.id, f.owner, f.material, f.exp, f.is_store, f.image, f.price, f.type, m.fname, m.lname, m.address,m.subdistrict, m.district, m.province, m.zip_code, m.ig, m.line, m.pic FROM fridge f INNER JOIN members m ON f.owner = m.id WHERE f.is_store = true AND f.id = ?', [id]);
+        const food = await prisma.fridge.findFirst({
+            where: {
+                id: parseInt(id),
+                is_store: 1
+            },
+            include: {
+                member: {
+                    select: {
+                        fname: true,
+                        lname: true,
+                        address: true,
+                        subdistrict: true,
+                        district: true,
+                        province: true,
+                        zip_code: true,
+                        ig: true,
+                        line: true,
+                        pic: true
+                    }
+                }
+            }
+        });
 
-        if (result.length === 0) {
+        if (!food) {
             console.log(`No item found with ID ${id} or it's not marked as 'is_store=true'.`);
             return res.status(404).json({ message: 'Food item not found or not available in store' });
         }
 
-        res.json(result[0]);
+        // Transform the result to match the previous format
+        const transformedFood = {
+            ...food,
+            fname: food.member.fname,
+            lname: food.member.lname,
+            address: food.member.address,
+            subdistrict: food.member.subdistrict,
+            district: food.member.district,
+            province: food.member.province,
+            zip_code: food.member.zip_code,
+            ig: food.member.ig,
+            line: food.member.line,
+            pic: food.member.pic
+        };
 
+        res.json(transformedFood);
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
-})
-
+});
 
 export default router;

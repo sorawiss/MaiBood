@@ -73,28 +73,40 @@ function AddtoFridge() {
   // File Handler
   //----------------------------//
   const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
+    // Get the original file extension
+    const ext = file.name.split('.').pop().toLowerCase();
+    
     // Option of compression-image
     const options = {
-      maxSizeMB: 0.1, // target maximum size in MB
-      maxWidthOrHeight: 1024, // maintain aspect ratio
-      useWebWorker: true,
+        maxSizeMB: 0.1, // target maximum size in MB
+        maxWidthOrHeight: 1024, // maintain aspect ratio
+        useWebWorker: true,
+        fileType: `image/${ext === 'jpg' ? 'jpeg' : ext}`, // Set correct MIME type
     };
 
     // Compression Function
     try {
-      const compressedFile = await imageCompression(event.target.files[0], options);
-      setForm({
-        ...form,
-        selectedFile: compressedFile,
-      });
-
-    } catch {
-      console.error('Image compression error:', error);
-      setForm({
-        ...form,
-        selectedFile: null,
-      });
+        const compressedFile = await imageCompression(file, options);
+        // Create a new file with the original extension
+        const compressedFileWithExt = new File(
+            [compressedFile], 
+            `compressed-${Date.now()}.${ext}`, 
+            { type: `image/${ext === 'jpg' ? 'jpeg' : ext}` }
+        );
+        
+        setForm({
+            ...form,
+            selectedFile: compressedFileWithExt,
+        });
+    } catch (error) {
+        console.error('Image compression error:', error);
+        setForm({
+            ...form,
+            selectedFile: null,
+        });
     }
   };
 

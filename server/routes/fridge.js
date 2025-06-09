@@ -1,32 +1,10 @@
 import express from 'express'
-import pool from '../util/db.js';
-import AuthMiddleware from '../util/AuthMiddleware.js';
-// import deleteFromS3 from '../util/deleteS3.js';
-// import { uploadToS3 } from './imageUpload.js'
-import upload from '../util/multer.js';
-import fs from 'fs';
-import path from 'path';
+import AuthMiddleware from '../util/AuthMiddleware.js'
+import upload from '../util/multer.js'
+import prisma from '../util/prisma.js'
+import { deleteOldImage } from '../util/imageUtils.js'
 
-const router = express.Router();
-
-// Helper function to delete old image file
-async function deleteOldImage(imageUrl) {
-    if (!imageUrl) return;
-    
-    try {
-        // Extract filename from URL
-        const filename = path.basename(imageUrl);
-        const filepath = path.join('uploads', filename);
-        
-        // Check if file exists before deleting
-        if (fs.existsSync(filepath)) {
-            fs.unlinkSync(filepath);
-            console.log(`Deleted old image: ${filename}`);
-        }
-    } catch (error) {
-        console.error('Error deleting old image:', error);
-    }
-}
+const router = express.Router()
 
 // Add to fridge
 router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async (req, res) => {
@@ -35,7 +13,6 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    let connection;
     try {
         // Get image URL if file was uploaded
         let imageUrl = null;
@@ -43,30 +20,25 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
             imageUrl = `/uploads/${req.file.filename}`;
         }
 
-        connection = await pool.getConnection();
-        await connection.execute(
-            'INSERT INTO fridge (owner, material, exp, is_store, image) VALUES (?, ?, ?, ?, ?)',
-            [owner, material, exp, 0, imageUrl]
-        )
+        await prisma.fridge.create({
+            data: {
+                owner: parseInt(owner),
+                material,
+                exp: new Date(exp),
+                is_store: 0,
+                image: imageUrl
+            }
+        });
+
         res.status(201).json({
             message: 'Item added to fridge'
-        })
+        });
     }
     catch (error) {
         console.error('Error adding item to fridge:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-                console.log("Database connection released for add-to-fridge.");
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
-})
+});
 
 // Delete from fridge
 router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) => {
@@ -75,33 +47,28 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         return res.status(400).json({ message: 'Missing required field: id' });
     }
 
-    let connection;
     try {
-        connection = await pool.getConnection();
+        const item = await prisma.fridge.findUnique({
+            where: { id: parseInt(id) }
+        });
 
-        const [rows] = await connection.execute(
-            'SELECT image, is_store, exp FROM fridge WHERE id = ?',
-            [id]
-        );
-
-        if (rows.length === 0) {
+        if (!item) {
             return res.status(404).json({ message: 'Item not found' });
         }
 
         // Delete image from server if it exists
-        const imageUrl = rows[0].image;
-        if (imageUrl) {
-            await deleteOldImage(imageUrl);
+        if (item.image) {
+            await deleteOldImage(item.image);
         }
 
-        // Change status from db
+        // Change status based on current state
         let status;
-        switch (rows[0].is_store) {
+        switch (item.is_store) {
             case 0:
                 status = 2; // Eat
                 break;
             case 1:
-                if (rows[0].exp < new Date()) {
+                if (item.exp < new Date()) {
                     status = 4; // Expired
                 } else {
                     status = 3; // Give
@@ -109,10 +76,10 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
                 break;
         }
 
-        await connection.execute(
-            'UPDATE fridge SET is_store = ? WHERE id = ?',
-            [status, id]
-        );
+        await prisma.fridge.update({
+            where: { id: parseInt(id) },
+            data: { is_store: status }
+        });
 
         res.status(200).json({
             message: 'Item deleted from fridge successfully.'
@@ -122,32 +89,31 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
         console.error('Error deleting item from fridge', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-                console.log(`Database connection released for fetching fridge items `);
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
-})
+});
 
 // Get from fridge
 router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
     const { ownerId } = req.params;
-    console.log('debug1 start ')
+    console.log('debug1 start ');
 
-    let connection;
     try {
-        connection = await pool.getConnection();
-        console.log(`Database connection acquired for fetching fridge items for owner: ${ownerId}`);
-
-        const [items] = await connection.execute(
-            'SELECT id, material, exp, is_store FROM fridge WHERE owner = ? AND (is_store = 0 OR is_store = 1) ORDER BY exp ASC',
-            [ownerId]
-        );
+        const items = await prisma.fridge.findMany({
+            where: {
+                owner: parseInt(ownerId),
+                is_store: {
+                    in: [0, 1] // Only get items that are in fridge (0) or in store (1)
+                }
+            },
+            select: {
+                id: true,
+                material: true,
+                exp: true,
+                is_store: true
+            },
+            orderBy: {
+                exp: 'asc'
+            }
+        });
 
         console.log(`Found ${items.length} items for owner ${ownerId}.`);
 
@@ -157,16 +123,6 @@ router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
         console.error(`Error fetching fridge items for owner ${ownerId}:`, error);
         res.status(500).json({ message: 'Internal server error while fetching fridge items', error: error.message });
     }
-    finally {
-        if (connection) {
-            try {
-                await connection.release();
-                console.log(`Database connection released for fetching fridge items for owner: ${ownerId}`);
-            } catch (releaseError) {
-                console.error('Error releasing database connection:', releaseError);
-            }
-        }
-    }
-})
+});
 
 export default router;

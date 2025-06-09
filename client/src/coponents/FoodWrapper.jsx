@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+import { getImageUrl } from '../lib/imageUtils'
 import thaiDate from '../lib/thaiDate'
 
 import '../section/style/Home.css'
@@ -13,7 +13,7 @@ function FoodWrapper({ id, exp, price, name, location, image }) {
         <Link to={'/home/inpost/' + id} >
             <div className="food-container">
                 <div className="food-pic">
-                    <img src={image} alt={name} loading='lazy' ></img>
+                    <img src={getImageUrl(image)} alt={name} loading='lazy' />
                     <div className="detail">
                         <div className="exp-date">
                             <p className='exp'> {thaiDate(time)} </p>

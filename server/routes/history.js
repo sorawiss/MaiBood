@@ -1,11 +1,8 @@
 import express from 'express'
-
 import AuthMiddleware from '../util/AuthMiddleware.js'
-import pool from '../util/db.js'
-
+import prisma from '../util/prisma.js'
 
 const router = express.Router()
-
 
 // Get All History
 router.get('/api/history/:id', AuthMiddleware, async (req, res) => {
@@ -16,46 +13,57 @@ router.get('/api/history/:id', AuthMiddleware, async (req, res) => {
         console.log(userID)
         console.log(id)
 
-        const [rows] = await pool.query(
-            'SELECT * FROM fridge WHERE owner = ? AND (is_store = 2 OR is_store = 3 OR is_store = 4) ORDER BY exp DESC',
-            [userID]
-        )
+        const [history, stats] = await Promise.all([
+            // Get history items
+            prisma.fridge.findMany({
+                where: {
+                    owner: parseInt(userID),
+                    is_store: {
+                        in: [2, 3, 4] // 2: eaten, 3: given, 4: expired
+                    }
+                },
+                orderBy: {
+                    exp: 'desc'
+                }
+            }),
+            // Get statistics
+            prisma.fridge.groupBy({
+                by: ['is_store'],
+                where: {
+                    owner: parseInt(userID),
+                    is_store: {
+                        in: [2, 3, 4]
+                    }
+                },
+                _count: {
+                    _all: true
+                }
+            })
+        ]);
 
-        const [givenCount] = await pool.query(
-            'SELECT COUNT(*) as count FROM fridge WHERE owner = ? AND is_store = 3',
-            [userID]
-        )
-        
-        const [expiredCount] = await pool.query(
-            'SELECT COUNT(*) as count FROM fridge WHERE owner = ? AND is_store = 4',
-            [userID]
-        )
+        // Transform stats into the expected format
+        const statsMap = stats.reduce((acc, curr) => {
+            acc[curr.is_store] = curr._count._all;
+            return acc;
+        }, {});
 
-        const [eatCount] = await pool.query(
-            'SELECT COUNT(*) as count FROM fridge WHERE owner = ? AND is_store = 2',
-            [userID]
-        )
+        const statsResult = {
+            givenCount: statsMap[3] || 0,
+            expiredCount: statsMap[4] || 0,
+            eatCount: statsMap[2] || 0
+        };
 
         if (id !== userID) {
-            return res.status(200).json({
-                givenCount: givenCount[0].count,
-                expiredCount: expiredCount[0].count,
-                eatCount: eatCount[0].count
-            })
+            return res.status(200).json(statsResult);
         }
 
         res.status(200).json({
-            history: rows,
-            givenCount: givenCount[0].count,
-            expiredCount: expiredCount[0].count,
-            eatCount: eatCount[0].count
-        })
+            history,
+            ...statsResult
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-})
+});
 
-
-
-
-export default router
+export default router;

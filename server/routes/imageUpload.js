@@ -2,9 +2,9 @@ import express from 'express'
 // import { PutObjectCommand } from "@aws-sdk/client-s3";
 import upload from '../util/multer.js';
 // import s3Client from '../util/s3.js';
-import pool from '../util/db.js';
+import prisma from '../util/prisma.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
-import path from 'path';
+import { deleteOldImage } from '../util/imageUtils.js';
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ export async function uploadToS3(file) {
 }
 */
 
-// API Endpoint
+// API Endpoint for food images
 router.post('/api/image/', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
@@ -48,40 +48,65 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        // Get the file path from multer
+        // Get the file path from multer - now using public path
         const imageUrl = `/uploads/${req.file.filename}`;
 
-        let connection;
-        connection = await pool.getConnection();
-
         if (id) {
-            await connection.execute(
-                'UPDATE fridge SET image = ?, type = ?, material = ?, is_store = ? WHERE id = ?',
-                [imageUrl, type, material, 1, id]
-            )
-
-            return res.status(200).json({
-                message: 'Data Update Successfully'
+            // Get current item to check for existing image
+            const currentItem = await prisma.fridge.findUnique({
+                where: { id: parseInt(id) },
+                select: { image: true }
             });
-        }
-        else {
-            await connection.execute(
-                'INSERT INTO fridge (owner, material, exp, is_store, image, type) VALUES (?, ?, ?, ?, ?, ?)',
-                [owner, material, exp, 1, imageUrl, type]
-            )
+
+            // Delete old image if it exists
+            if (currentItem?.image) {
+                await deleteOldImage(currentItem.image);
+            }
+
+            // Update existing item
+            await prisma.fridge.update({
+                where: { id: parseInt(id) },
+                data: {
+                    image: imageUrl,
+                    type: type,
+                    material: material,
+                    is_store: 1
+                }
+            });
 
             return res.status(200).json({
-                message: 'Data Upload Successfully'
+                message: 'Data Update Successfully',
+                imageUrl // Send back the image URL
+            });
+        } else {
+            // Create new item
+            await prisma.fridge.create({
+                data: {
+                    owner: parseInt(owner),
+                    material,
+                    exp: new Date(exp),
+                    is_store: 1,
+                    image: imageUrl,
+                    type
+                }
+            });
+
+            return res.status(200).json({
+                message: 'Data Upload Successfully',
+                imageUrl // Send back the image URL
             });
         }
     }
     catch (error) {
         console.error('Error during upload process:', error);
-        if (error.code) {
-            res.status(500).json({ message: 'Failed to upload image to storage.', error: error.message });
-        } else {
-            res.status(500).json({ message: 'Server error during image upload.', error: error.message });
+        // Delete uploaded file if database operation fails
+        if (req.file) {
+            await deleteOldImage(`/uploads/${req.file.filename}`);
         }
+        res.status(500).json({ 
+            message: 'Server error during image upload.', 
+            error: error.message 
+        });
     }
 });
 
@@ -92,25 +117,35 @@ router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async
     }
 
     try {
-        // Get the file path from multer
+        // Get the file path from multer - now using public path
         const imageUrl = `/uploads/${req.file.filename}`;
 
-        let connection;
-        connection = await pool.getConnection();
+        // Get current user to check for existing image
+        const currentUser = await prisma.member.findUnique({
+            where: { id: req.userId },
+            select: { pic: true }
+        });
+
+        // Delete old image if it exists
+        if (currentUser?.pic) {
+            await deleteOldImage(currentUser.pic);
+        }
 
         // Update user's avatar in the database
-        await connection.execute(
-            'UPDATE users SET pic = ? WHERE id = ?',
-            [imageUrl, req.userId]
-        );
-
-        connection.release();
+        await prisma.member.update({
+            where: { id: req.userId },
+            data: { pic: imageUrl }
+        });
 
         return res.status(200).json({
             message: 'Profile image updated successfully',
             avatarUrl: imageUrl
         });
     } catch (error) {
+        // Delete uploaded file if database operation fails
+        if (req.file) {
+            await deleteOldImage(`/uploads/${req.file.filename}`);
+        }
         console.error('Error during profile image upload:', error);
         res.status(500).json({ 
             message: 'Failed to upload profile image', 

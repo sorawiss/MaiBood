@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { AuthContext } from '../AuthContext';
 import styles from '../section/style/EditProfile.module.css';
 import imageCompression from 'browser-image-compression';
+import { getImageUrl } from '../lib/imageUtils';
 
 import BackArrow from '../coponents/BackArrow';
 import CustomButton from '../coponents/CustomButton';
@@ -180,7 +181,7 @@ function EditProfile() {
         cursor-pointer hover:opacity-90  group'
       >
         <img
-          src={croppedImage || (user?.pic || '/default-avatar.png')}
+          src={croppedImage || getImageUrl(user?.pic) || '/default-avatar.png'}
           alt="Profile"
           className='size-[10.7rem] object-cover'
         />

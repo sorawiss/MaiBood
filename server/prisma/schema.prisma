@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,5 +6,45 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+model Member {
+  id          Int      @id @default(autoincrement())
+  fname       String
+  lname       String
+  phone_number String  @unique
+  password    String
+  zip_code    String?
+  address     String?
+  district    String?
+  province    String?
+  subdistrict String?
+  line        String?
+  ig          String?
+  pic         String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  fridgeItems Fridge[]
+
+  @@map("members")
+}
+
+model Fridge {
+  id        Int      @id @default(autoincrement())
+  owner     Int
+  material  String
+  exp       DateTime
+  is_store  Int      @default(0) // 0: in fridge, 1: in store, 2: eaten, 3: given, 4: expired
+  image     String?
+  type      String?
+  price     Float?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  member    Member   @relation(fields: [owner], references: [id])
+
+  @@map("fridge")
+  @@index([owner])
+  @@index([is_store])
+  @@index([exp])
 }
         

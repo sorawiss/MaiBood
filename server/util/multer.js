@@ -1,4 +1,13 @@
 import multer from 'multer'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Create absolute path to public/uploads directory
+const uploadsDir = path.join(__dirname, '..', 'public', 'uploads')
 
 // ===== Memory Storage Configuration (Currently Commented Out) =====
 /*
@@ -16,20 +25,21 @@ const upload = multer({
 });
 */
 
-// ===== Disk Storage Configuration (Currently Active) =====
-// Configure storage to save files on server disk
+// ===== Disk Storage Configuration =====
 const storage = multer.diskStorage({
-    // Set destination folder for uploaded files
+    // Set destination folder for uploaded files using absolute path
     destination: (req, file, cb) => {
-        cb(null, 'uploads/')
+        cb(null, uploadsDir)
     },
     // Generate unique filename for each upload
     filename: (req, file, cb) => {
-        const uniqueName = `${Date.now()}-${file.originalname}`
+        // Get file extension
+        const ext = path.extname(file.originalname)
+        // Create unique filename with timestamp and original extension
+        const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2)}${ext}`
         cb(null, uniqueName)
     }
 })
-
 
 // Create multer middleware with disk storage
 const upload = multer({

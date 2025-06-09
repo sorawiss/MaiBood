@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import '../section/style/Inpost.css'
-import { useParams, Link, data } from 'react-router-dom'; // Import useParams and Link
-import { useQuery } from '@tanstack/react-query'; // Import useQuery
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams, Link,  useNavigate } from 'react-router-dom'; // Import useParams and Link
+import { useQuery, useMutation } from '@tanstack/react-query'; // Import useQuery and useMutation
+import { useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '../AuthContext'
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom';
 
 import line from '../assets/line 1.svg'
 import Button from './CustomButton.jsx';
@@ -16,6 +14,7 @@ import BackArrow from './BackArrow';
 import deleteFridgeItem from '../lib/deleteFridgeItem';
 import Modal from './Modal'
 import thaiDate from '../lib/thaiDate.js';
+import { getImageUrl } from '../lib/imageUtils'
 
 
 
@@ -136,7 +135,11 @@ function Inpost() {
                     <h2 className='inpost-text'>{postData.fname} {postData.lname}</h2>
                 </Link>
                 <div className="show-pic">
-                    <img src={postData.image} alt="" className='inpost-img rounded-[16px] ' />
+                    <img 
+                        src={getImageUrl(postData.image)} 
+                        alt={postData.material} 
+                        className='w-full h-[23.5rem] object-cover rounded-[1rem]'
+                    />
                 </div>
                 <div className="inpost-detail-container flex flex-col gap-[1rem]  ">
                     <div className="text-details">

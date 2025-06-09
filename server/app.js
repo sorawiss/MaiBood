@@ -3,6 +3,12 @@ import "dotenv/config"
 import cors from "cors"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Routes Import
 import auth from './routes/auth.js'
@@ -14,14 +20,14 @@ import editProfile from './routes/edit-profile.js'
 import history from './routes/history.js'
 import getProfile from './routes/get-profile.js'
 
-
-
 dotenv.config()
 
 var app = express()
 app.use(express.json())
 app.use(cookieParser())
 
+// Serve static files from the public directory
+app.use('/api/uploads', express.static(path.join(__dirname, 'public', 'uploads')))
 
 // CORS
 const defaultOrigin = "http://localhost:5173";
@@ -40,7 +46,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-
 // Use Routes
 app.use(auth)
 app.use(fridge)
@@ -50,7 +55,6 @@ app.use(spoonacular)
 app.use(editProfile)
 app.use(history)
 app.use(getProfile)
-
 
 const port = process.env.PORT || 8080;
 
