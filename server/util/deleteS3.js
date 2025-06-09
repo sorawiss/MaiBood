@@ -1,6 +1,6 @@
+/*
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import s3Client from '../util/s3.js';
-
 
 async function deleteFromS3(imageUrl) {
     const bucketName = process.env.S3_BUCKET_NAME;
@@ -22,5 +22,5 @@ async function deleteFromS3(imageUrl) {
     }
 }
 
-
 export default deleteFromS3
+*/

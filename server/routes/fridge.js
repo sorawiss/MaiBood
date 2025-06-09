@@ -1,14 +1,32 @@
 import express from 'express'
-
 import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
-import deleteFromS3 from '../util/deleteS3.js';
-import { uploadToS3 } from './imageUpload.js'
+// import deleteFromS3 from '../util/deleteS3.js';
+// import { uploadToS3 } from './imageUpload.js'
 import upload from '../util/multer.js';
-
+import fs from 'fs';
+import path from 'path';
 
 const router = express.Router();
 
+// Helper function to delete old image file
+async function deleteOldImage(imageUrl) {
+    if (!imageUrl) return;
+    
+    try {
+        // Extract filename from URL
+        const filename = path.basename(imageUrl);
+        const filepath = path.join('uploads', filename);
+        
+        // Check if file exists before deleting
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+            console.log(`Deleted old image: ${filename}`);
+        }
+    } catch (error) {
+        console.error('Error deleting old image:', error);
+    }
+}
 
 // Add to fridge
 router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async (req, res) => {
@@ -17,18 +35,12 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-
     let connection;
     try {
-
-        // Upload image to S3
-        let imageUrl;
+        // Get image URL if file was uploaded
+        let imageUrl = null;
         if (req.file) {
-            const s3Response = await uploadToS3(req.file);
-            imageUrl = s3Response;
-        }
-        else {
-            imageUrl = null;
+            imageUrl = `/uploads/${req.file.filename}`;
         }
 
         connection = await pool.getConnection();
@@ -39,7 +51,6 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
         res.status(201).json({
             message: 'Item added to fridge'
         })
-
     }
     catch (error) {
         console.error('Error adding item to fridge:', error);
@@ -55,9 +66,7 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
             }
         }
     }
-
 })
-
 
 // Delete from fridge
 router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) => {
@@ -65,7 +74,6 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
     if (!id) {
         return res.status(400).json({ message: 'Missing required field: id' });
     }
-
 
     let connection;
     try {
@@ -80,14 +88,11 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
             return res.status(404).json({ message: 'Item not found' });
         }
 
-        // Delete image from S3
+        // Delete image from server if it exists
         const imageUrl = rows[0].image;
-
         if (imageUrl) {
-            await deleteFromS3(imageUrl);
-            // console.log('delete image from s3')
+            await deleteOldImage(imageUrl);
         }
-
 
         // Change status from db
         let status;
@@ -129,12 +134,10 @@ router.delete('/api/delete-from-fridge/:id', AuthMiddleware, async (req, res) =>
     }
 })
 
-
 // Get from fridge
 router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
     const { ownerId } = req.params;
     console.log('debug1 start ')
-
 
     let connection;
     try {
@@ -149,7 +152,6 @@ router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
         console.log(`Found ${items.length} items for owner ${ownerId}.`);
 
         res.status(200).json(items);
-
     }
     catch (error) {
         console.error(`Error fetching fridge items for owner ${ownerId}:`, error);
@@ -165,9 +167,6 @@ router.get('/api/fridge/:ownerId', AuthMiddleware, async (req, res) => {
             }
         }
     }
-
 })
-
-
 
 export default router;

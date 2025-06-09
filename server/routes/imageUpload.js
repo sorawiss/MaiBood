@@ -1,15 +1,15 @@
 import express from 'express'
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-
+// import { PutObjectCommand } from "@aws-sdk/client-s3";
 import upload from '../util/multer.js';
-import s3Client from '../util/s3.js';
+// import s3Client from '../util/s3.js';
 import pool from '../util/db.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
-
+import path from 'path';
 
 const router = express.Router();
 
-
+// Comment out S3 upload function
+/*
 export async function uploadToS3(file) {
     const bucketName = process.env.S3_BUCKET_NAME;
     if (!bucketName) {
@@ -28,7 +28,6 @@ export async function uploadToS3(file) {
         const command = new PutObjectCommand(params);
         await s3Client.send(command);
 
-
         const fileURL = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
         return fileURL;
     } catch (error) {
@@ -36,7 +35,7 @@ export async function uploadToS3(file) {
         throw error;
     }
 }
-
+*/
 
 // API Endpoint
 router.post('/api/image/', upload.single('image'), async (req, res) => {
@@ -46,14 +45,11 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
 
     const { owner, material, exp, type, id } = req.body;
 
-
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        const s3Response = await uploadToS3(req.file);
-        const imageUrl = s3Response;
-
-        // const imageUrl = req.file.originalname;
+        // Get the file path from multer
+        const imageUrl = `/uploads/${req.file.filename}`;
 
         let connection;
         connection = await pool.getConnection();
@@ -78,7 +74,6 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
                 message: 'Data Upload Successfully'
             });
         }
-
     }
     catch (error) {
         console.error('Error during upload process:', error);
@@ -90,7 +85,6 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     }
 });
 
-
 // Profile Avatar Upload Endpoint
 router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async (req, res) => {
     if (!req.file) {
@@ -98,8 +92,8 @@ router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async
     }
 
     try {
-        const s3Response = await uploadToS3(req.file);
-        const imageUrl = s3Response;
+        // Get the file path from multer
+        const imageUrl = `/uploads/${req.file.filename}`;
 
         let connection;
         connection = await pool.getConnection();
@@ -124,7 +118,5 @@ router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async
         });
     }
 });
-
-
 
 export default router;
