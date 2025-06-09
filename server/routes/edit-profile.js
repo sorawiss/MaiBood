@@ -7,7 +7,7 @@ import { deleteOldImage } from '../util/imageUtils.js';
 const router = express.Router();
 
 router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (req, res) => {
-    const userId = req.userId;
+    const userId = req.userID;
     const { fname, lname, zip_code, address, district, province, subdistrict, line, ig } = req.body;
     let imageUrl = null;
 
