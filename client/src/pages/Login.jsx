@@ -17,15 +17,15 @@ function Login() {
     })
     const [errors, setErrors] = useState()
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+    const { login, refreshUser } = useContext(AuthContext);
 
 
     const mutation = useMutation({
         mutationFn: login,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             console.log("Login success", data)
+            await refreshUser()
             navigate('/home')
-
         },
         onError: (error) => {
             console.log("Login error" , error.message)
