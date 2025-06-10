@@ -1,15 +1,14 @@
 import express from 'express'
-// import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import upload from '../util/multer.js';
-// import s3Client from '../util/s3.js';
+import s3Client from '../util/s3.js';
 import prisma from '../util/prisma.js';
 import AuthMiddleware from '../util/AuthMiddleware.js';
 import { deleteOldImage } from '../util/imageUtils.js';
 
 const router = express.Router();
 
-// Comment out S3 upload function
-/*
+// S3 upload function
 export async function uploadToS3(file) {
     const bucketName = process.env.S3_BUCKET_NAME;
     if (!bucketName) {
@@ -35,10 +34,9 @@ export async function uploadToS3(file) {
         throw error;
     }
 }
-*/
 
 // API Endpoint for food images
-router.post('/api/image/', upload.single('image'), async (req, res) => {
+router.post('/api/upload', AuthMiddleware, upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No image file provided or file type is invalid.' });
     }
@@ -48,8 +46,8 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
     console.log('File received:', req.file.originalname, req.file.mimetype, req.file.size);
 
     try {
-        // Get the file path from multer - now using public path
-        const imageUrl = `/uploads/${req.file.filename}`;
+        // Upload to S3 instead of local storage
+        const imageUrl = await uploadToS3(req.file);
 
         if (id) {
             // Get current item to check for existing image
@@ -76,7 +74,7 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
 
             return res.status(200).json({
                 message: 'Data Update Successfully',
-                imageUrl // Send back the image URL
+                imageUrl
             });
         } else {
             // Create new item
@@ -93,16 +91,12 @@ router.post('/api/image/', upload.single('image'), async (req, res) => {
 
             return res.status(200).json({
                 message: 'Data Upload Successfully',
-                imageUrl // Send back the image URL
+                imageUrl
             });
         }
     }
     catch (error) {
         console.error('Error during upload process:', error);
-        // Delete uploaded file if database operation fails
-        if (req.file) {
-            await deleteOldImage(`/uploads/${req.file.filename}`);
-        }
         res.status(500).json({ 
             message: 'Server error during image upload.', 
             error: error.message 
@@ -117,8 +111,8 @@ router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async
     }
 
     try {
-        // Get the file path from multer - now using public path
-        const imageUrl = `/uploads/${req.file.filename}`;
+        // Upload to S3 instead of local storage
+        const imageUrl = await uploadToS3(req.file);
 
         // Get current user to check for existing image
         const currentUser = await prisma.member.findUnique({
@@ -142,10 +136,6 @@ router.post('/api/profile-image', AuthMiddleware, upload.single('avatar'), async
             avatarUrl: imageUrl
         });
     } catch (error) {
-        // Delete uploaded file if database operation fails
-        if (req.file) {
-            await deleteOldImage(`/uploads/${req.file.filename}`);
-        }
         console.error('Error during profile image upload:', error);
         res.status(500).json({ 
             message: 'Failed to upload profile image', 

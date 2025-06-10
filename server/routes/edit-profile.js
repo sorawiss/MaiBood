@@ -3,6 +3,7 @@ import AuthMiddleware from '../util/AuthMiddleware.js';
 import upload from '../util/multer.js';
 import prisma from '../util/prisma.js';
 import { deleteOldImage } from '../util/imageUtils.js';
+import { uploadToS3 } from './imageUpload.js';
 
 const router = express.Router();
 
@@ -25,7 +26,8 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
                 await deleteOldImage(currentUser.pic);
             }
 
-            imageUrl = `/uploads/${req.file.filename}`;
+            // Upload to S3 instead of local storage
+            imageUrl = await uploadToS3(req.file);
         }
 
         // Prepare update data
@@ -46,19 +48,19 @@ router.patch('/api/edit-profile', AuthMiddleware, upload.single('pic'), async (r
             return res.status(400).json({ message: 'No fields to update' });
         }
 
-        // Update the user
-        await prisma.member.update({
+        // Update user profile
+        const updatedUser = await prisma.member.update({
             where: { id: userId },
             data: updateData
         });
 
-        return res.status(200).json({
+        res.json({
             message: 'Profile updated successfully',
-            ...(imageUrl && { pic: imageUrl })
+            user: updatedUser
         });
     } catch (error) {
         console.error('Error updating profile:', error);
-        res.status(500).json({ message: 'Error updating profile', error: error.message });
+        res.status(500).json({ message: 'Failed to update profile', error: error.message });
     }
 });
 

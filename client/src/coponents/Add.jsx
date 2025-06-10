@@ -15,7 +15,7 @@ import { AuthContext } from '../AuthContext';
 // Fetch API function 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 async function fetchAddFridge(formData) {
-  const response = await fetch(`${baseUrl}/image`, {
+  const response = await fetch(`${baseUrl}/upload`, {
     method: 'POST',
     body: formData,
     credentials: 'include',

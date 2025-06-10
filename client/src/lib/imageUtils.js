@@ -2,19 +2,19 @@
 const baseURL = import.meta.env.VITE_BASE_URL;
 
 /**
- * Formats an image URL to use the server's URL
- * @param {string} imagePath - The image path from the server (e.g. /uploads/filename.jpg)
+ * Formats an image URL to use the server's URL or return S3 URL as is
+ * @param {string} imagePath - The image path from the server or S3 URL
  * @returns {string} The complete URL to the image
  */
 export const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     
-    // If the image path is already a full URL, return it as is
+    // If the image path is already a full URL (S3 or other), return it as is
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         return imagePath;
     }
     
-    // If the image path starts with /uploads, it's already in the correct format
+    // If the image path starts with /uploads, it's a legacy local path
     if (imagePath.startsWith('/uploads')) {
         return `${baseURL}${imagePath}`;
     }

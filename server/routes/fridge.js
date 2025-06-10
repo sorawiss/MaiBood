@@ -3,6 +3,7 @@ import AuthMiddleware from '../util/AuthMiddleware.js'
 import upload from '../util/multer.js'
 import prisma from '../util/prisma.js'
 import { deleteOldImage } from '../util/imageUtils.js'
+import { uploadToS3 } from './imageUpload.js'
 
 const router = express.Router()
 
@@ -17,7 +18,7 @@ router.post('/api/add-to-fridge', AuthMiddleware, upload.single('image'), async 
         // Get image URL if file was uploaded
         let imageUrl = null;
         if (req.file) {
-            imageUrl = `/uploads/${req.file.filename}`;
+            imageUrl = await uploadToS3(req.file);
         }
 
         await prisma.fridge.create({
