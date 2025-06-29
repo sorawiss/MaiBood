@@ -6,6 +6,9 @@ Mai-Bood is a web application that enables users to share and manage food items 
 
 ## Screenshots
 ![Profile Management](/screenshot/Home.png)
+![Post](/screenshot/Post.png)
+![Fridge](/screenshot/Fridge.png)
+![Add](/screenshot/AddToFridge.png)
 
 
 
